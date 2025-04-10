@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations;
 
-public class EfRelationConfigExample : IEntityTypeConfiguration<SampleEntity>
+public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
 {
-    public void Configure(EntityTypeBuilder<SampleEntity> builder)
+    public void Configure(EntityTypeBuilder<Vehicle> builder)
     {
-        
+        builder.HasKey(x => x.Id);
     }
 }
