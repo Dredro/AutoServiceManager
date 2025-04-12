@@ -1,4 +1,5 @@
 using Domain.Common;
+using Domain.Enums;
 
 namespace Domain.Entities;
 
@@ -13,6 +14,7 @@ public class Vehicle : Entity
     public string? EngineCode { get; set; }
     public int EngineDisplacement { get; set; }
     public decimal Power { get; set; }
+    public required VehicleType Type { get; set; }
     public required Client Client { get; set; }
     public ICollection<Order> Orders { get; set; } = [];
 

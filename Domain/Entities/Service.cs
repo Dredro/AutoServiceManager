@@ -8,4 +8,5 @@ public class Service : Entity
     public string? Description { get; set; }
     public decimal MinimalPrice { get; set; }
     public decimal MaximalPrice { get; set; }
+    public ICollection<ServiceInProgress> ServicesInProgress { get; set; }
 }
