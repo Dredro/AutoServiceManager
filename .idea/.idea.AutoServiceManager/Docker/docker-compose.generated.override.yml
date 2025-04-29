@@ -1,0 +1,20 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  api:
+    build:
+      context: "D:\\SIX SEMESTR\\WPF\\AutoServiceManager\\API"
+      dockerfile: "Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net9.0/API.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "api:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\Kamil\\.nuget\\packages:/home/app/.nuget/packages"
+    - "D:\\SIX SEMESTR\\WPF\\AutoServiceManager\\API:/app:rw"
+    - "D:\\SIX SEMESTR\\WPF\\AutoServiceManager:/src:rw"
+    working_dir: "/app"
