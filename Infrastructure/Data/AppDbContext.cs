@@ -1,17 +1,21 @@
 
 using Application;
+using Domain.Entities.Auth;
 using Infrastructure.Configurations;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
-public class AppDbContext : DbContext,IAppDbContext
+public class AppDbContext : IdentityDbContext<User>,IAppDbContext
 {
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
     public AppDbContext(DbContextOptions options) : base(options)
     {   
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new ClientConfiguration());
         modelBuilder.ApplyConfiguration(new NotificationConfiguration());
         modelBuilder.ApplyConfiguration(new OrderConfiguration());
@@ -20,6 +24,6 @@ public class AppDbContext : DbContext,IAppDbContext
         modelBuilder.ApplyConfiguration(new SparePartConfiguration());
         modelBuilder.ApplyConfiguration(new VehicleConfiguration());
         modelBuilder.ApplyConfiguration(new WorkerConfiguration());
-
+        base.OnModelCreating(modelBuilder);
     }
 }
