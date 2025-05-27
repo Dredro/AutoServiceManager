@@ -1,0 +1,67 @@
+﻿<Window x:Class="Wpf.Views.CreatePartForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Wpf.Views"
+        mc:Ignorable="d"
+        Title="CreatePartForm" Height="600" Width="800">
+    <Window.Resources>
+        <Style x:Key="StackPanelMarginStyle" TargetType="StackPanel">
+            <Setter Property="Margin" Value="0,5,0,10"/>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Create Part" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
+
+        <StackPanel Grid.Row="1">
+
+            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                <Label Content="Catalog number:" />
+                <TextBox/>
+            </StackPanel>
+            <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                <Label Content="Name:" />
+                <TextBox />
+            </StackPanel>
+            <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                <Label Content="Make:" />
+                <TextBox />
+            </StackPanel>
+            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                <Label Content="Quality:" />
+                <ComboBox>
+                    <ComboBoxItem Content="P"/>
+                    <ComboBoxItem Content="S"/>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                <Label Content="Quantity in stock:" />
+                <TextBox />
+            </StackPanel>
+            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                <Label Content="Price:" />
+                <TextBox/>
+            </StackPanel>
+            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                <Label Content="Category:" />
+                <ComboBox>
+                    <ComboBoxItem Content="Exhaust"/>
+                    <ComboBoxItem Content="Engine"/>
+                </ComboBox>
+            </StackPanel>
+
+
+        </StackPanel>
+        <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
+            <Button Content="Cancel" Margin="0,0,10,0"/>
+            <Button Content="Save" Margin="0,0,10,0"/>
+        </StackPanel>
+    </Grid>
+</Window>
