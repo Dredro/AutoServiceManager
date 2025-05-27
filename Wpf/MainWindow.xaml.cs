@@ -1,23 +1,37 @@
-﻿using System.Text;
+﻿using System.Configuration;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Wpf.Views;
 
-namespace Wpf;
-
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
-public partial class MainWindow : Window
+namespace Wpf
 {
-    public MainWindow()
+    public partial class MainWindow : Window
     {
-        InitializeComponent();
+        public MainWindow()
+        {
+            InitializeComponent();
+            NavigateToDashboard(null, null); // Przekierowanie na dashboard domyślnie
+        }
+
+        private void NavigateToDashboard(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new DirectorDashboardPage());
+        }
+
+        private void NavigateToSettings(object sender, RoutedEventArgs e)
+        {
+          //  MainFrame.Navigate(new SettingsPage());
+        }
+
+        private void Logout(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to log out?", "Confirm", MessageBoxButton.YesNo);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                // Zakończ sesję / wróć do loginu
+                this.Close(); // lub MainFrame.Navigate(new LoginPage())
+            }
+        }
     }
 }

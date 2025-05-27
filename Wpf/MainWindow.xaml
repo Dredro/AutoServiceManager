@@ -1,20 +1,59 @@
 ﻿<Window x:Class="Wpf.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Wpf"
-        mc:Ignorable="d"
-        Title="Auto Service Manager" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <Style TargetType="Button" x:Key="NavButton">
+            <Setter Property="Background" Value="#24495E"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="10,5"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                Padding="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1ABC9C"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
     <Grid>
+        <!-- Definiujemy 2 rzędy: górny dla navbara, dolny dla Frame -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- Navbar -->
             <RowDefinition Height="*"/>
+            <!-- Zawartość -->
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0" LastChildFill="False">
-            <Label DockPanel.Dock="Left" Padding="10,0,10,0" Content="Auto Service Manager" FontSize="16" FontWeight="Bold"/>
-            <Button DockPanel.Dock="Right" Padding="10,0,10,0" Content="Andrej Andriejowicz"/>
-        </DockPanel>
-        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Grid.Row="1"/>
+
+        <!-- Navbar -->
+        <StackPanel Orientation="Horizontal" 
+                    Background="#1877" 
+                    Margin="0,0,0,10"
+                    Grid.Row="0">
+            <!-- Umieszczamy w pierwszym rzędzie -->
+            <Button Content="Dashboard" Click="NavigateToDashboard" Style="{StaticResource NavButton}" />
+            <Button Content="Settings" Click="NavigateToSettings" Style="{StaticResource NavButton}" />
+            <Button Content="Logout" Click="Logout" Style="{StaticResource NavButton}" />
+        </StackPanel>
+
+        <!-- Frame do ładowania stron -->
+        <Frame Name="MainFrame" 
+               NavigationUIVisibility="Hidden" 
+               Grid.Row="1"/>
+        <!-- Umieszczamy w drugim rzędzie -->
     </Grid>
 </Window>
