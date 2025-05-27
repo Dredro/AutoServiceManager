@@ -24,32 +24,7 @@
             <Setter Property="Margin" Value="0,0,0,10"/>
         </Style>
 
-        <Style TargetType="Button" x:Key="PrimaryButtonStyle">
-            <Setter Property="Background" Value="DodgerBlue"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="15,8"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="4">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="RoyalBlue"/>
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Opacity" Value="0.6"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+       
 
         <Style TargetType="Border" x:Key="SectionBorderStyle">
             <Setter Property="Background" Value="White"/>
@@ -123,7 +98,7 @@
         <TextBlock Grid.Row="0" Text="Panel Zarządzania Magazynem" Style="{StaticResource PageTitleStyle}"/>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,20">
-            <Button Content="Dodaj Nową Część" Style="{StaticResource PrimaryButtonStyle}" Click="AddPartButton_Click" Height="28" Width="134" />
+            <Button Content="Dodaj Nową Część" Style="{StaticResource PrimaryButtonStyle}" Click="AddPartButton_Click" />
          
         </StackPanel>
 
@@ -172,7 +147,7 @@
                         DisplayMemberPath="Name"
                         -->
                     </ListBox>
-                    <Button Content="Dodaj Zaznaczone" Style="{StaticResource PrimaryButtonStyle}" Margin="0,15,0,0" HorizontalAlignment="Right" Click="OrderSelectedMissingParts_Click" IsEnabled="False" x:Name="OrderMissingPartsButton" Height="27" Width="138"/>
+                    <Button Content="Dodaj Zaznaczone" Style="{StaticResource PrimaryButtonStyle}" Margin="0,15,0,0" HorizontalAlignment="Right" Click="OrderSelectedMissingParts_Click" IsEnabled="False" x:Name="OrderMissingPartsButton" />
                 </StackPanel>
             </Border>
         </Grid>
