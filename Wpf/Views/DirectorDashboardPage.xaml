@@ -1,14 +1,349 @@
 ﻿<Page x:Class="Wpf.Views.DirectorDashboardPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:Wpf.Views"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="DirectorDashboardPage">
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      mc:Ignorable="d"
+      d:DesignWidth="1082.5" d:DesignHeight="876"
+      Title="Panel Dyrektora"
+      Background="#F0F2F5">
+    <Page.Resources>
+        <!-- Paleta Kolorów -->
+        <SolidColorBrush x:Key="WidgetBackgroundBrush" Color="White"/>
+        <SolidColorBrush x:Key="PrimaryTextBrush" Color="#333333"/>
+        <SolidColorBrush x:Key="SecondaryTextBrush" Color="#666666"/>
+        <SolidColorBrush x:Key="AccentColorBrush" Color="#007ACC"/>
+        <SolidColorBrush x:Key="BorderColorBrush" Color="#DDE1E6"/>
+        <SolidColorBrush x:Key="GridLinesBrush" Color="#EEEEEE"/>
+        <SolidColorBrush x:Key="AlternatingRowBackgroundBrush" Color="#F9F9F9"/>
+        <SolidColorBrush x:Key="PositiveFeedbackBrush" Color="#28A745"/>
+        <SolidColorBrush x:Key="PositiveFeedbackDarkBrush" Color="#1E7E34"/>
+        <SolidColorBrush x:Key="ChartPlaceholderFillBrush" Color="#E6F2E6"/>
+        <SolidColorBrush x:Key="ChartPlaceholderStrokeBrush" Color="#8FBC8F"/>
 
-    <Grid>
-        
-    </Grid>
+        <!-- Style Tekstów -->
+        <Style TargetType="TextBlock" x:Key="PageTitleStyle">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="WidgetTitleStyle">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="StatisticValueStyle">
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{StaticResource AccentColorBrush}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="StatisticLabelStyle">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,5,0,15"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="PlaceholderTextStyle">
+            <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,20,0,0"/>
+        </Style>
+
+        <!-- Style Kontrolek -->
+        <Style TargetType="Border" x:Key="WidgetBorderStyle">
+            <Setter Property="Background" Value="{StaticResource WidgetBackgroundBrush}"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColorBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style TargetType="DataGrid" x:Key="StyledDataGridStyle">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColorBrush}"/>
+            <Setter Property="Background" Value="{StaticResource WidgetBackgroundBrush}"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource GridLinesBrush}"/>
+            <Setter Property="VerticalGridLinesBrush" Value="{StaticResource GridLinesBrush}"/>
+            <Setter Property="AlternatingRowBackground" Value="{StaticResource AlternatingRowBackgroundBrush}"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="SelectionUnit" Value="FullRow"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="RowHeight" Value="35"/>
+            <Setter Property="MinHeight" Value="180"/>
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Padding" Value="10,8"/>
+                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource BorderColorBrush}"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Padding" Value="10,8"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Border Padding="{TemplateBinding Padding}" 
+                                            Background="{TemplateBinding Background}" 
+                                            SnapsToDevicePixels="True">
+                                        <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{StaticResource AccentColorBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource WidgetBackgroundBrush}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Button" x:Key="PrimaryLinkButtonStyle">
+            <Setter Property="Foreground" Value="{StaticResource AccentColorBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,10,0,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <TextBlock Text="{TemplateBinding Content}" FontWeight="SemiBold">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextDecorations" Value="None"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="TextDecorations" Value="Underline"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <!-- Tytuł strony -->
+            <TextBlock Grid.Row="0" 
+                       Text="Panel Dyrektora - Przegląd" 
+                       Style="{StaticResource PageTitleStyle}"/>
+            <!-- Główna siatka widgetów -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <!-- Widget 1: Statystyki Zleceń -->
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource WidgetBorderStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" 
+                                   Style="{StaticResource WidgetTitleStyle}" 
+                                   Text="Podsumowanie Zleceń"/>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="5,0">
+                                <TextBlock Style="{StaticResource StatisticValueStyle}" 
+                                           Text="{Binding RealizedOrdersCount, FallbackValue='120'}"/>
+                                <TextBlock Style="{StaticResource StatisticLabelStyle}" 
+                                           Text="Ilość realizowanych zleceń"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="5,0">
+                                <TextBlock Style="{StaticResource StatisticValueStyle}" 
+                                           Text="{Binding OrdersToAssignCount, FallbackValue='15'}"/>
+                                <TextBlock Style="{StaticResource StatisticLabelStyle}" 
+                                           Text="Zlecenia do przypisania (na prac.)"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="5,0">
+                                <TextBlock Style="{StaticResource StatisticValueStyle}" 
+                                           Text="{Binding AllRealizedOrdersCount, FallbackValue='850'}"/>
+                                <TextBlock Style="{StaticResource StatisticLabelStyle}" 
+                                           Text="Wszystkie zrealizowane zlecenia"/>
+                            </StackPanel>
+                        </Grid>
+                        <TextBlock Grid.Row="2" 
+                                   Style="{StaticResource PlaceholderTextStyle}" 
+                                   Text="[Dodatkowe statystyki lub wykres słupkowy zleceń...]"/>
+                    </Grid>
+                </Border>
+                <!-- Widget 2: Lista Zleceń -->
+                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource WidgetBorderStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" 
+                                   Style="{StaticResource WidgetTitleStyle}" 
+                                   Text="Lista Aktywnych Zleceń"/>
+                        <DataGrid Grid.Row="1" 
+                                  x:Name="OrdersDataGrid" 
+                                  Style="{StaticResource StyledDataGridStyle}"
+                                  ItemsSource="{Binding ActiveOrders}" 
+                                  d:ItemsSource="{d:SampleData ItemCount=5}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID Zlecenia" Binding="{Binding OrderId}" Width="*"/>
+                                <DataGridTextColumn Header="Klient" Binding="{Binding ClientName}" Width="2*"/>
+                                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
+                                <DataGridTextColumn Header="Pracownik" Binding="{Binding AssignedEmployee}" Width="*"/>
+                                <DataGridTemplateColumn Header="Priorytet" Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{Binding PriorityColor, FallbackValue=LightGray}" 
+                                                    CornerRadius="10" 
+                                                    Height="10" 
+                                                    Width="10"
+                                                    ToolTip="{Binding PriorityText}" 
+                                                    VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button Grid.Row="2" 
+                                Content="Zobacz wszystkie zlecenia" 
+                                Style="{StaticResource PrimaryLinkButtonStyle}"/>
+                    </Grid>
+                </Border>
+                <!-- Widget 3: Zysk (Wykres Kołowy) -->
+                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource WidgetBorderStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" 
+                                   Style="{StaticResource WidgetTitleStyle}" 
+                                   Text="Analiza Zysków"/>
+                        <!-- Wykres kołowy z LiveCharts -->
+                        <lvc:PieChart Grid.Row="1"
+                            x:Name="ProfitPieChart"
+                            LegendLocation="Right"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                            <lvc:PieChart.Series>
+                                <lvc:PieSeries 
+        Title="Styczeń" 
+        Values="12000, 14000, 13500" />
+                                <lvc:PieSeries 
+        Title="Luty" 
+        Values="15000, 16000, 14500" />
+                            </lvc:PieChart.Series>
+                        </lvc:PieChart>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <TextBlock FontWeight="SemiBold" 
+                                           Text="Zysk dzienny: " 
+                                           Foreground="{StaticResource PrimaryTextBrush}"/>
+                                <TextBlock Text="{Binding DailyProfit, FallbackValue='$ 1,250.00'}" 
+                                           Foreground="{StaticResource PositiveFeedbackBrush}" 
+                                           FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <TextBlock FontWeight="SemiBold" 
+                                           Text="Zysk miesięczny: " 
+                                           Foreground="{StaticResource PrimaryTextBrush}"/>
+                                <TextBlock Text="{Binding MonthlyProfit, FallbackValue='$ 28,700.00'}" 
+                                           Foreground="{StaticResource PositiveFeedbackDarkBrush}" 
+                                           FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+                <!-- Widget 4: Historia Pobrań/Dostaw Części -->
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource WidgetBorderStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" 
+                                   Style="{StaticResource WidgetTitleStyle}" 
+                                   Text="Historia Pobrań i Dostaw Części"/>
+                        <DataGrid Grid.Row="1" 
+                                  x:Name="PartsHistoryDataGrid" 
+                                  Style="{StaticResource StyledDataGridStyle}"
+                                  ItemsSource="{Binding PartsTransactionHistory}" 
+                                  d:ItemsSource="{d:SampleData ItemCount=7}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Data" 
+                                                    Binding="{Binding TransactionDate, StringFormat='yyyy-MM-dd HH:mm'}" 
+                                                    Width="1.5*"/>
+                                <DataGridTextColumn Header="Typ" Binding="{Binding TransactionType}" Width="*"/>
+                                <DataGridTextColumn Header="Nazwa Części" Binding="{Binding PartName}" Width="2*"/>
+                                <DataGridTextColumn Header="Ilość" Binding="{Binding Quantity}" Width="Auto"/>
+                                <DataGridTextColumn Header="Pracownik" Binding="{Binding EmployeeName}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button Grid.Row="2" 
+                                Content="Pokaż pełną historię" 
+                                Style="{StaticResource PrimaryLinkButtonStyle}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
 </Page>
