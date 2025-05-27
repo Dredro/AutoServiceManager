@@ -3,10 +3,40 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Wpf"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Background="Gray"
+        Title="Serwis Samochodowy - Panel Serwisanta" Height="800" Width="1200"
+        WindowStartupLocation="CenterScreen">
 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- AppBar -->
+        <materialDesign:ColorZone Mode="PrimaryDark" Padding="16" Grid.Row="0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <materialDesign:PackIcon Kind="CarWrench" Width="32" Height="32" Margin="0,0,16,0"/>
+                <TextBlock Text="Serwis Samochodowy" FontSize="24" VerticalAlignment="Center"/>
+
+                <StackPanel Orientation="Horizontal" Margin="40,0,0,0">
+                    <Button Content="Dashboard" Style="{StaticResource MaterialDesignFlatButton}" 
+                        Command="{Binding SwitchViewCommand}" CommandParameter="Dashboard"/>
+                    <Button Content="Zlecenia" Style="{StaticResource MaterialDesignFlatButton}" 
+                        Command="{Binding SwitchViewCommand}" CommandParameter="Orders"/>
+                    <Button Content="Zlecenie" Style="{StaticResource MaterialDesignFlatButton}" 
+                        Command="{Binding SwitchViewCommand}" CommandParameter="Parts"/>
+                    <Button Content="Klienci" Style="{StaticResource MaterialDesignFlatButton}" 
+                        Command="{Binding SwitchViewCommand}" CommandParameter="Customers"/>
+                    <Button Content="Statystyki" Style="{StaticResource MaterialDesignFlatButton}" 
+                        Command="{Binding SwitchViewCommand}" CommandParameter="Statistics"/>
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:ColorZone>
+
+        <!-- Main Content -->
+        <ContentControl Background="Gray" Grid.Row="1" Content="{Binding CurrentView}"/>
     </Grid>
 </Window>
