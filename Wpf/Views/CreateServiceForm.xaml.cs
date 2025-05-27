@@ -18,7 +18,7 @@ namespace Wpf.Views
     /// <summary>
     /// Logika interakcji dla klasy CreateServiceForm.xaml
     /// </summary>
-    public partial class CreateServiceForm : Page
+    public partial class CreateServiceForm : Window
     {
         public CreateServiceForm()
         {

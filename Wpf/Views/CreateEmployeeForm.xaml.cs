@@ -18,7 +18,7 @@ namespace Wpf.Views
     /// <summary>
     /// Logika interakcji dla klasy CreateEmployeeForm.xaml
     /// </summary>
-    public partial class CreateEmployeeForm : Page
+    public partial class CreateEmployeeForm : Window
     {
         public CreateEmployeeForm()
         {
