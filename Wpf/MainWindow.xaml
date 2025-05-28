@@ -1,33 +1,42 @@
 ﻿<Window x:Class="Wpf.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="450" Width="800">
-
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Background="Gray"
+        Title="Serwis Samochodowy - Panel Serwisanta" Height="800" Width="1200"
+        WindowStartupLocation="CenterScreen">
 
     <Grid>
-        <!-- Definiujemy 2 rzędy: górny dla navbara, dolny dla Frame -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Navbar -->
             <RowDefinition Height="*"/>
-            <!-- Zawartość -->
         </Grid.RowDefinitions>
 
-        <!-- Navbar -->
-        <StackPanel Orientation="Horizontal" 
-                    Background="#1877" 
-                    Margin="0,0,0,10"
-                    Grid.Row="0">
-            <!-- Umieszczamy w pierwszym rzędzie -->
-            <Button Content="Dashboard" Click="NavigateToDashboard" Style="{StaticResource NavButton}" />
-            <Button Content="Settings" Click="NavigateToSettings" Style="{StaticResource NavButton}" />
-            <Button Content="Logout" Click="Logout" Style="{StaticResource NavButton}" />
-        </StackPanel>
+        <!-- AppBar -->
+        <materialDesign:ColorZone Mode="PrimaryDark" Padding="16" Grid.Row="0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <materialDesign:PackIcon Kind="CarWrench" Width="32" Height="32" Margin="0,0,16,0"/>
+                <TextBlock Text="Serwis Samochodowy" FontSize="24" VerticalAlignment="Center"/>
 
-        <!-- Frame do ładowania stron -->
-        <Frame Name="MainFrame" 
-               NavigationUIVisibility="Hidden" 
-               Grid.Row="1"/>
-        <!-- Umieszczamy w drugim rzędzie -->
+                <StackPanel Orientation="Horizontal" Margin="40,0,0,0">
+                    <Button Content="Dashboard" Style="{StaticResource MaterialDesignFlatButton}" 
+                        Command="{Binding SwitchViewCommand}" CommandParameter="Dashboard"/>
+                    <Button Content="Zlecenia" Style="{StaticResource MaterialDesignFlatButton}" 
+                        Command="{Binding SwitchViewCommand}" CommandParameter="Orders"/>
+                    <Button Content="Zlecenie" Style="{StaticResource MaterialDesignFlatButton}" 
+                        Command="{Binding SwitchViewCommand}" CommandParameter="Parts"/>
+                    <Button Content="Klienci" Style="{StaticResource MaterialDesignFlatButton}" 
+                        Command="{Binding SwitchViewCommand}" CommandParameter="Customers"/>
+                    <Button Content="Statystyki" Style="{StaticResource MaterialDesignFlatButton}" 
+                        Command="{Binding SwitchViewCommand}" CommandParameter="Statistics"/>
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:ColorZone>
+
+        <!-- Main Content -->
+        <ContentControl Background="Gray" Grid.Row="1" Content="{Binding CurrentView}"/>
     </Grid>
 </Window>

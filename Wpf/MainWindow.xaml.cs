@@ -15,7 +15,7 @@ namespace Wpf
 
         private void NavigateToDashboard(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new DirectorDashboardPage());
+            //MainFrame.Navigate(new DirectorDashboardPage());
         }
 
         private void NavigateToSettings(object sender, RoutedEventArgs e)
