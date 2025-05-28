@@ -12,7 +12,7 @@ namespace Wpf
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
+            DataContext = new MainWindowViewModel();
             NavigateToDashboard(null, null); // Przekierowanie na dashboard domyślnie
         }
 

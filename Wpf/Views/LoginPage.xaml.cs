@@ -8,7 +8,7 @@ namespace Wpf.Views
     /// <summary>
     /// Logika interakcji dla klasy LoginPage.xaml
     /// </summary>
-    public partial class LoginPage : Page
+    public partial class LoginPage : UserControl
     {
         public LoginPage()
         {
@@ -108,11 +108,8 @@ namespace Wpf.Views
             if (email == "user@example.com" && password == "zaq1@WSXcv")
             {
                 MessageBox.Show($"Zalogowano pomyślnie!\nEmail: {email}", "Sukces", MessageBoxButton.OK, MessageBoxImage.Information);
-            
-                if (NavigationService != null)
-                {
-                   // NavigationService.Navigate(new HomePage());
-                }
+
+
             }
             else
             {

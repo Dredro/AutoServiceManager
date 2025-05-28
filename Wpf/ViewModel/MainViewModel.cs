@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Wpf.Core;
+using Wpf.Views;
 using Wpf.Views.Worker;
 
 namespace Wpf.ViewModel
@@ -16,27 +18,32 @@ namespace Wpf.ViewModel
     class MainViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-        
-        private object _currentView;
+        public event Action? LogoutRequested;
 
-        public object CurrentView
+        public ICommand LogoutCommand { get; }
+
+        private object _currentContent;
+
+        public object CurrentContent
         {
-            get => _currentView;
+            get => _currentContent;
             set
             {
-                _currentView = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentView)));
+                _currentContent = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentContent)));
             }
         }
 
         public ICommand SwitchViewCommand { get; }
+        //public ICommand LogoutCommand { get; }
 
         public MainViewModel()
         {
             InitializeSampleOrders();
-
-            CurrentView = new DashboardView { DataContext = this };
+            LogoutCommand = new RelayCommand(() => LogoutRequested?.Invoke());
+            CurrentContent = new DashboardView { DataContext = this };
             SwitchViewCommand = new RelayCommand<string>(OnSwitchView);
+            //LogoutCommand = new RelayCommand(Logout);
         }
 
         private void OnSwitchView(string viewName)
@@ -44,13 +51,13 @@ namespace Wpf.ViewModel
             switch (viewName)
             {
                 case "Dashboard":
-                    CurrentView = new DashboardView { DataContext = this };
+                    CurrentContent = new DashboardView { DataContext = this };
                     break;
                 case "Orders":
-                    CurrentView = new OrdersView { DataContext = this };
+                    CurrentContent = new OrdersView { DataContext = this };
                     break;
                 case "Parts":
-                    CurrentView = new OrderFormView { DataContext = this };
+                    CurrentContent = new OrderFormView { DataContext = this };
                     break;
             }
         }
