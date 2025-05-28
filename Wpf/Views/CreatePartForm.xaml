@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:Wpf.Views"
         mc:Ignorable="d"
-        Title="CreatePartForm" Height="600" Width="400">
+        Title="Create Part Form" Height="600" Width="400">
     <Window.Resources>
         <Style x:Key="StackPanelMarginStyle" TargetType="StackPanel">
             <Setter Property="Margin" Value="0,5,0,10"/>
@@ -18,40 +19,37 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label Content="Create Part" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
+        <Label Content="Dodaj część" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
 
         <StackPanel Grid.Row="1">
 
             <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Catalog number:" />
-                <TextBox/>
+
+                <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Numer katalogowy"/>
             </StackPanel>
             <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Name:" />
-                <TextBox />
+                <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Nazwa"/>
             </StackPanel>
             <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Make:" />
-                <TextBox />
+                <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Marka" />
             </StackPanel>
             <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Quality:" />
-                <ComboBox>
+                <ComboBox materialDesign:HintAssist.Hint="Jakość" Style="{StaticResource MaterialDesignComboBox}">
                     <ComboBoxItem Content="P"/>
                     <ComboBoxItem Content="S"/>
                 </ComboBox>
             </StackPanel>
             <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Quantity in stock:" />
-                <TextBox />
+                <Label Content="Ilość w magazynie" />
+                <materialDesign:NumericUpDown/>
             </StackPanel>
             <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Price:" />
-                <TextBox/>
+                <Label Content="Cena" />
+                <materialDesign:DecimalUpDown/>
             </StackPanel>
             <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Category:" />
-                <ComboBox>
+                
+                <ComboBox materialDesign:HintAssist.Hint="Kategoria" Style="{StaticResource MaterialDesignComboBox}">
                     <ComboBoxItem Content="Exhaust"/>
                     <ComboBoxItem Content="Engine"/>
                 </ComboBox>
@@ -60,8 +58,8 @@
 
         </StackPanel>
         <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
-            <Button Content="Cancel" Margin="0,0,10,0" Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
-            <Button Content="Save" Margin="0,0,10,0" Style="{StaticResource MaterialDesignRaisedButton}"/>
+            <Button Content="Anuluj" Margin="0,0,10,0" Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
+            <Button Content="Zapisz" Margin="0,0,10,0" Style="{StaticResource MaterialDesignRaisedButton}"/>
         </StackPanel>
     </Grid>
 </Window>

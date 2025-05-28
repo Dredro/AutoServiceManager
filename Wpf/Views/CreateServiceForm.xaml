@@ -7,7 +7,7 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="500" d:DesignWidth="400"
-      Title="CreateServiceForm">
+      Title="Create Service Form">
     
     <Window.Resources>
         <Style x:Key="StackPanelMarginStyle" TargetType="StackPanel">
@@ -28,7 +28,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label Content="Create Service" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
+        <Label Content="Dodaj usługę" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
 
         <StackPanel Style="{StaticResource StackPanelMarginStyle}" Grid.Row="1">
             <TextBox 
@@ -66,8 +66,8 @@
         </StackPanel>
 
         <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="4">
-            <Button Content="Cancel" Margin="0,0,10,0" Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
-            <Button Content="Save" Margin="0,0,10,0" Style="{StaticResource MaterialDesignRaisedButton}"/>
+            <Button Content="Anuluj" Margin="0,0,10,0" Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
+            <Button Content="Zapisz" Margin="0,0,10,0" Style="{StaticResource MaterialDesignRaisedButton}"/>
         </StackPanel>
     </Grid>
 </Window>

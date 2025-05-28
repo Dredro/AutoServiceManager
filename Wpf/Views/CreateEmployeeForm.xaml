@@ -4,9 +4,10 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Wpf.Views"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="800"
-      Title="CreateEmployeeForm">
+      d:DesignHeight="600" d:DesignWidth="400"
+      Title="Create Employee Form">
     <Window.Resources>
         <Style x:Key="StackPanelMarginStyle" TargetType="StackPanel">
             <Setter Property="Margin" Value="0,5,0,10"/>
@@ -19,41 +20,36 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label Content="Create Employee" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
+        <Label Content="Dodaj pracownika" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
 
         <StackPanel Grid.Row="1">
 
-            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Firstname:" />
-                <TextBox/>
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                    <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Imię"/>
             </StackPanel>
-            <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Lastname:" />
-                <TextBox />
+                <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                    <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Nazwisko" />
             </StackPanel>
-            <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="E-mail:" />
-                <TextBox />
-            </StackPanel>
-            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Phone number:" />
-                <TextBox />
+                <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                    <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="E-mail" />
+                </StackPanel>
+
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                        <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Numer telefonu" />
             </StackPanel>
             <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Salary:" />
-                <TextBox />
-            </StackPanel>
-            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Role:" />
-                <!--Room for roles from api-->
-                <ComboBox>
+                    <Label Content="Wypłata"/>
+                    <materialDesign:DecimalUpDown />
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                    <ComboBox  materialDesign:HintAssist.Hint="Rola">
                     <ComboBoxItem Content="Mechanic" />
                 </ComboBox>
             </StackPanel>
         </StackPanel>
         <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
-            <Button Content="Cancel" Margin="0,0,10,0" Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
-            <Button Content="Save" Margin="0,0,10,0" Style="{StaticResource MaterialDesignRaisedButton}"/>
+            <Button Content="Anuluj" Margin="0,0,10,0" Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
+            <Button Content="Zapisz" Margin="0,0,10,0" Style="{StaticResource MaterialDesignRaisedButton}"/>
         </StackPanel>
     </Grid>
     </ScrollViewer>
