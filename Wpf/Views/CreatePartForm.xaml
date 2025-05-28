@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Wpf.Views"
         mc:Ignorable="d"
-        Title="CreatePartForm" Height="600" Width="800">
+        Title="CreatePartForm" Height="600" Width="400">
     <Window.Resources>
         <Style x:Key="StackPanelMarginStyle" TargetType="StackPanel">
             <Setter Property="Margin" Value="0,5,0,10"/>
@@ -60,8 +60,8 @@
 
         </StackPanel>
         <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
-            <Button Content="Cancel" Margin="0,0,10,0"/>
-            <Button Content="Save" Margin="0,0,10,0"/>
+            <Button Content="Cancel" Margin="0,0,10,0" Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
+            <Button Content="Save" Margin="0,0,10,0" Style="{StaticResource MaterialDesignRaisedButton}"/>
         </StackPanel>
     </Grid>
 </Window>

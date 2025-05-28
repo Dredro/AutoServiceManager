@@ -12,9 +12,8 @@
             <Setter Property="Margin" Value="0,5,0,10"/>
         </Style>
     </Window.Resources>
-
-    <Grid Margin="20">
-
+    <ScrollViewer>
+        <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -53,8 +52,9 @@
             </StackPanel>
         </StackPanel>
         <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
-            <Button Content="Cancel" Margin="0,0,10,0"/>
-            <Button Content="Save" Margin="0,0,10,0"/>
+            <Button Content="Cancel" Margin="0,0,10,0" Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
+            <Button Content="Save" Margin="0,0,10,0" Style="{StaticResource MaterialDesignRaisedButton}"/>
         </StackPanel>
     </Grid>
+    </ScrollViewer>
 </Window>

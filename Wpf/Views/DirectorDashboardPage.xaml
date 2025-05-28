@@ -1,4 +1,4 @@
-﻿<Page x:Class="Wpf.Views.DirectorDashboardPage"
+﻿<UserControl x:Class="Wpf.Views.DirectorDashboardPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -7,9 +7,9 @@
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       mc:Ignorable="d"
       d:DesignWidth="1082.5" d:DesignHeight="876"
-      Title="Panel Dyrektora"
+
       Background="#F0F2F5">
-    <Page.Resources>
+    <UserControl.Resources>
         <!-- Paleta Kolorów -->
         <SolidColorBrush x:Key="WidgetBackgroundBrush" Color="White"/>
         <SolidColorBrush x:Key="PrimaryTextBrush" Color="#333333"/>
@@ -160,7 +160,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-    </Page.Resources>
+    </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <Grid Margin="10">
             <Grid.RowDefinitions>
@@ -346,4 +346,4 @@
             </Grid>
         </Grid>
     </ScrollViewer>
-</Page>
+</UserControl>

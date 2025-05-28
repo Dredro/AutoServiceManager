@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace Wpf.Views
 {
-    public partial class DirectorDashboardPage : Page
+    public partial class DirectorDashboardPage : UserControl
     {
         public DirectorDashboardPage()
         {
