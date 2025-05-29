@@ -23,7 +23,15 @@
         <Label Content="Dodaj samochód" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
 
         <StackPanel Grid.Row="1">
-            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+
+
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                    <ComboBox materialDesign:HintAssist.Hint="Rodzaj pojazdu" Style="{StaticResource MaterialDesignComboBox}">
+                        <ComboBoxItem Content="Ciężarówka"/>
+                        <ComboBoxItem Content="Samochód osobowy"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
                 <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Marka"/>
             </StackPanel>
             <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
@@ -35,6 +43,8 @@
             <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
                 <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Numer rejestracyjny"/>
             </StackPanel>
+            
+            
 
 
                 <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
@@ -57,13 +67,6 @@
                 </StackPanel>
 
 
-
-                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                <ComboBox materialDesign:HintAssist.Hint="Rodzaj pojazdu" Style="{StaticResource MaterialDesignComboBox}">
-                    <ComboBoxItem Content="Ciężarówka"/>
-                    <ComboBoxItem Content="Samochód osobowy"/>
-                </ComboBox>
-                </StackPanel>
 
                
         </StackPanel>
