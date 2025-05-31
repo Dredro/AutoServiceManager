@@ -22,8 +22,6 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
 
     public async Task<string> Handle(CreateServiceCommand request, CancellationToken cancellationToken)
     {
-        try
-        {
             var service = new Service
             {
                 Name = request.Name,
@@ -34,10 +32,5 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             await _dbContext.Services.AddAsync(service, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
             return service.Id.ToString();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
     }
 }
