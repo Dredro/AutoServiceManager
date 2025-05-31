@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Application.Exceptions;
 using MediatR;
 
 namespace Application.Services.Commands;
@@ -31,7 +30,7 @@ public class EditServiceCommandHandler : IRequestHandler<EditServiceCommand,stri
 
       if (service == null)
       {
-         throw new NotFoundException($"Service with id {request.Id} not found");
+         throw new Exceptions.NotFoundException($"Service with id {request.Id} not found");
       }
 
       if (request.Name != null)

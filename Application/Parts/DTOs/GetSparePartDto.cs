@@ -4,12 +4,12 @@ namespace Application.Parts.DTOs;
 
 public class GetSparePartDto
 {
-    public string Id { get; init; }
-    public string CatalogNumber { get; init; }
-    public string Name { get; init; }
-    public string Make { get; init; }
-    public char Quality { get; init; }
-    public int QuantityInStock { get; init; }
-    public decimal Price { get; init; }
-    public PartCategory Category { get; init; }
+    public string Id { get; set; }
+    public string CatalogNumber { get; set; }
+    public string Name { get; set; }
+    public string Make { get; set; }
+    public char Quality { get; set; }
+    public int QuantityInStock { get; set; }
+    public decimal Price { get; set; }
+    public PartCategory Category { get; set; }
 }
