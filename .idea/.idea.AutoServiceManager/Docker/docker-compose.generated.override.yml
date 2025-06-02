@@ -14,7 +14,7 @@ services:
     image: "api:dev"
     ports: []
     volumes:
-    - "C:\\Users\\Kamil\\.nuget\\packages:/home/app/.nuget/packages"
     - "D:\\SIX SEMESTR\\WPF\\AutoServiceManager\\API:/app:rw"
     - "D:\\SIX SEMESTR\\WPF\\AutoServiceManager:/src:rw"
+    - "C:\\Users\\Kamil\\.nuget\\packages:/home/app/.nuget/packages"
     working_dir: "/app"
