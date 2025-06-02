@@ -10,20 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Wpf.Views
 {
     /// <summary>
-    /// Logika interakcji dla klasy CreateServiceForm.xaml
+    /// Logika interakcji dla klasy CreateClientForm.xaml
     /// </summary>
-    public partial class CreateServiceForm : Window
+    public partial class CreateClientForm : Window
     {
-        public CreateServiceForm()
+        public CreateClientForm()
         {
             InitializeComponent();
         }
-
     }
 }

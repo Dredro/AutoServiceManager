@@ -1,0 +1,79 @@
+﻿<Window x:Class="Wpf.Views.CreateCarForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:Wpf.Views"
+        mc:Ignorable="d"
+        Title="Create Car Form" Height="700" Width="400">
+    <Window.Resources>
+        <Style x:Key="StackPanelMarginStyle" TargetType="StackPanel">
+            <Setter Property="Margin" Value="0,5,0,10"/>
+        </Style>
+    </Window.Resources>
+    <ScrollViewer>
+        <Grid Margin="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Dodaj samochód" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
+
+        <StackPanel Grid.Row="1">
+
+
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                    <ComboBox materialDesign:HintAssist.Hint="Rodzaj pojazdu" Style="{StaticResource MaterialDesignComboBox}">
+                        <ComboBoxItem Content="Ciężarówka"/>
+                        <ComboBoxItem Content="Samochód osobowy"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Marka"/>
+            </StackPanel>
+            <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Model"/>
+            </StackPanel>
+            <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="VIN" />
+            </StackPanel>
+            <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Numer rejestracyjny"/>
+            </StackPanel>
+            
+            
+
+
+                <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                    <DatePicker materialDesign:HintAssist.Hint="Data rejestracji" />
+                </StackPanel>
+                <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                    <Label Content="Rok produkcji" />
+                    <materialDesign:NumericUpDown />
+                </StackPanel>
+                <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                    <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Kod silnika" />
+                </StackPanel>
+                <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                    <Label Content="Pojemność silnika (wyrażona w cm3)" />
+                    <materialDesign:NumericUpDown />
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                    <Label Content="Moc silnika (wyrażona w KM)" />
+                    <materialDesign:DecimalUpDown />
+                </StackPanel>
+
+
+
+               
+        </StackPanel>
+        <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
+            <Button Content="Anuluj" Margin="0,0,10,0" Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
+            <Button Content="Zapisz" Margin="0,0,10,0" Style="{StaticResource MaterialDesignRaisedButton}"/>
+        </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Window>

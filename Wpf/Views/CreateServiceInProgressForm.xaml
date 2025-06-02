@@ -1,0 +1,62 @@
+﻿<Window x:Class="Wpf.Views.CreateServiceInProgressForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Wpf.Views"
+        mc:Ignorable="d"
+        Title="CreateServiceInProgressForm" Height="450" Width="400"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <Window.Resources>
+        <Style x:Key="StackPanelMarginStyle" TargetType="StackPanel">
+            <Setter Property="Margin" Value="0,5,0,10"/>
+        </Style>
+    </Window.Resources>
+    <ScrollViewer>
+        <Grid Margin="20">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Label Content="Dodaj rozpoczętą usługę" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
+
+            <StackPanel Grid.Row="1">
+
+
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                    <ComboBox materialDesign:HintAssist.Hint="Usługa" Style="{StaticResource MaterialDesignComboBox}">
+                        <ComboBoxItem Content="Remont generalny silnika rzędowego"/>
+                        <ComboBoxItem Content="Wymiana klocków hamulcowych"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                    <ComboBox materialDesign:HintAssist.Hint="Stan usługi" Style="{StaticResource MaterialDesignComboBox}">
+                        <ComboBoxItem Content="Oczekiwanie na rozpoczęcie"/>
+                        <ComboBoxItem Content="Oczekiwanie na części"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                    <materialDesign:TimePicker  materialDesign:HintAssist.Hint="Data rozpoczęcia" />
+                </StackPanel>
+                <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                    <materialDesign:TimePicker  materialDesign:HintAssist.Hint="Data zakończenia" />
+                </StackPanel>
+            
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                    <Label Content="Cena" />
+                    <materialDesign:DecimalUpDown />
+                </StackPanel>
+
+
+
+
+            </StackPanel>
+            <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
+                <Button Content="Anuluj" Margin="0,0,10,0" Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
+                <Button Content="Zapisz" Margin="0,0,10,0" Style="{StaticResource MaterialDesignRaisedButton}"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Window>
