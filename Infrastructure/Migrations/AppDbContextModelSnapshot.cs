@@ -133,7 +133,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Client");
+                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("Domain.Entities.Notification", b =>
@@ -199,7 +199,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderSparePart", b =>
@@ -232,7 +232,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("SparePartId");
 
-                    b.ToTable("OrderSparePart");
+                    b.ToTable("OrderSpareParts");
                 });
 
             modelBuilder.Entity("Domain.Entities.Service", b =>
@@ -262,7 +262,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Service");
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("Domain.Entities.ServiceInProgress", b =>
@@ -301,7 +301,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceInProgress");
+                    b.ToTable("ServiceInProgresses");
                 });
 
             modelBuilder.Entity("Domain.Entities.SparePart", b =>
@@ -342,7 +342,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SparePart");
+                    b.ToTable("SpareParts");
                 });
 
             modelBuilder.Entity("Domain.Entities.Vehicle", b =>
@@ -397,7 +397,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Vehicle");
+                    b.ToTable("Vehicles");
                 });
 
             modelBuilder.Entity("Domain.Entities.Worker", b =>
@@ -417,7 +417,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Worker");
+                    b.ToTable("Workers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -607,7 +607,7 @@ namespace Infrastructure.Migrations
 
                             b1.HasKey("ClientId");
 
-                            b1.ToTable("Client");
+                            b1.ToTable("Clients");
 
                             b1.WithOwner()
                                 .HasForeignKey("ClientId");
@@ -720,7 +720,7 @@ namespace Infrastructure.Migrations
 
                             b1.HasKey("WorkerId");
 
-                            b1.ToTable("Worker");
+                            b1.ToTable("Workers");
 
                             b1.WithOwner()
                                 .HasForeignKey("WorkerId");
