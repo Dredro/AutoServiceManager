@@ -5,6 +5,12 @@
     <Compile Update="MainView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\ClientsListView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\VehiclesListView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Worker\DashboardView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

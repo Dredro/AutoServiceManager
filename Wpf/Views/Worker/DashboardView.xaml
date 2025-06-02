@@ -15,7 +15,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Panel Serwisanta - podgląd" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" FontSize="25" Margin="10" />
+            <TextBlock Text="Panel Serwisanta - podgląd" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" FontSize="25" Margin="10" Foreground="White" />
 
             <!-- Statystyki -->
             <materialDesign:Card Grid.Row="1" Margin="0,0,0,16">

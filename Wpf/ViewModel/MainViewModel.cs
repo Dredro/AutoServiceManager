@@ -59,6 +59,12 @@ namespace Wpf.ViewModel
                 case "Parts":
                     CurrentContent = new OrderFormView { DataContext = this };
                     break;
+                case "Customers":
+                    CurrentContent = new ClientsListView { DataContext = this };
+                    break;
+                case "Cars":
+                    CurrentContent = new VehiclesListView { DataContext = this };
+                    break;
             }
         }
 

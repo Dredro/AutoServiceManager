@@ -35,8 +35,8 @@
                     Command="{Binding SwitchViewCommand}" CommandParameter="Parts"/>
                         <Button Content="Klienci" Style="{StaticResource MaterialDesignFlatButton}" 
                     Command="{Binding SwitchViewCommand}" CommandParameter="Customers"/>
-                        <Button Content="Statystyki" Style="{StaticResource MaterialDesignFlatButton}" 
-                    Command="{Binding SwitchViewCommand}" CommandParameter="Statistics"/>
+                        <Button Content="Samochody" Style="{StaticResource MaterialDesignFlatButton}" 
+                    Command="{Binding SwitchViewCommand}" CommandParameter="Cars"/>
                     </StackPanel>
 
                 </StackPanel>
