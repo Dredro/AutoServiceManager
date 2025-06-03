@@ -24,9 +24,6 @@
       <Folder Include="Vechicles\Commands\" />
       <Folder Include="Vechicles\DTOs\" />
       <Folder Include="Vechicles\Queries\" />
-      <Folder Include="Workers\Commands\" />
-      <Folder Include="Workers\DTOs\" />
-      <Folder Include="Workers\Queries\" />
     </ItemGroup>
 
 </Project>
