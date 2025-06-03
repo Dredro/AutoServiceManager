@@ -21,8 +21,6 @@
       <Folder Include="Orders\Commands\" />
       <Folder Include="Orders\DTOs\" />
       <Folder Include="Orders\Queries\" />
-      <Folder Include="Vehicles\DTOs\" />
-      <Folder Include="Vehicles\Queries\" />
     </ItemGroup>
 
 </Project>
