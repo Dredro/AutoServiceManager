@@ -1,10 +1,11 @@
 using Application.Exceptions;
 using Application.Vehicles.DTOs;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Vehicles.Queries;
 
-public record GetVehicleQuery(int VehicleId) : IRequest<GetVehicleDto>;
+public record GetVehicleQuery(string VehicleId) : IRequest<GetVehicleDto>;
 
 public class GetVehicleQueryHandler : IRequestHandler<GetVehicleQuery, GetVehicleDto>
 {
@@ -17,7 +18,12 @@ public class GetVehicleQueryHandler : IRequestHandler<GetVehicleQuery, GetVehicl
     
     public async Task<GetVehicleDto> Handle(GetVehicleQuery request, CancellationToken cancellationToken)
     {
-        var vehicle = await _context.Vehicles.FindAsync(new object?[] { request.VehicleId }, cancellationToken: cancellationToken);
+        var vehicle = await _context.Vehicles
+            .AsNoTracking() 
+            .Include(v => v.Client) 
+            .Include(v => v.Orders)  
+            .FirstOrDefaultAsync(v => v.Id == Guid.Parse(request.VehicleId), cancellationToken)
+            .ConfigureAwait(false);
         if(vehicle == null)
             throw new NotFoundException($"Vehicle {request.VehicleId} not found");
         var dto = new GetVehicleDto
