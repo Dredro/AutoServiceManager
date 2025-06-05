@@ -11,9 +11,7 @@ public record AddClientCommand
 string FirstName,
 string LastName,
 string Email,
-string PhoneNumber,
-List<string> VehiclesIds,
-List<string> OrdersIds 
+string PhoneNumber
     ) : IRequest<string>;
 
 public class AddClientCommandHandler : IRequestHandler<AddClientCommand,string>
