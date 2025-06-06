@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Wpf.Services;
 using Wpf.Views;
 
 namespace Wpf.ViewModel
@@ -13,12 +14,23 @@ namespace Wpf.ViewModel
     {
         private object _currentView;
 
+        private readonly AuthService _authService;
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public object CurrentView
         {
             get => _currentView;
             set => SetProperty(ref _currentView, value);
+        }
+
+        public MainWindowViewModel(AuthService authService)
+        {
+            _authService = authService;
+
+            var loginVm = new LoginViewModel(_authService);
+            loginVm.LoginSucceeded += OnLoginSucceeded;
+
+            CurrentView = new LoginPage { DataContext = loginVm };
         }
 
         public MainWindowViewModel()
@@ -40,6 +52,10 @@ namespace Wpf.ViewModel
         private void OnLogout()
         {
             var loginVm = new LoginViewModel();
+
+            if (_authService != null) 
+                loginVm = new LoginViewModel(_authService);
+
             loginVm.LoginSucceeded += OnLoginSucceeded;
 
             CurrentView = new LoginPage { DataContext = loginVm };

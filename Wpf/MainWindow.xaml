@@ -6,7 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:viewmodel="clr-namespace:Wpf.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
         mc:Ignorable="d"
         Background="Gray"
-        Title="Serwis Samochodowy - Panel Serwisanta" Height="800" Width="1200"
+        Title="Serwis Samochodowy - Panel Serwisanta" Height="800" Width="1200" MinHeight="800" MinWidth="1200" 
         WindowStartupLocation="CenterScreen">
     <ContentControl Content="{Binding CurrentView}" />
 

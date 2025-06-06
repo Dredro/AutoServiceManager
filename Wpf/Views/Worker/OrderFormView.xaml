@@ -24,7 +24,7 @@
 
             <!-- Nagłówek Text="{Binding Title}" -->
             <TextBlock Grid.Row="0" Text="Zamówienie nr 2137~"
-                       Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                       Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White"
                        Margin="0,0,0,16"/>
 
             <!-- Informacje o kliencie -->

@@ -3,6 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:Wpf"
+             xmlns:core="clr-namespace:Wpf.Core"
+             xmlns:vmworker="clr-namespace:Wpf.ViewModel.Worker"
+             xmlns:vworker="clr-namespace:Wpf.Views.Worker"
+             xmlns:view="clr-namespace:Wpf.Views"
+             xmlns:vmodel="clr-namespace:Wpf.ViewModel"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -16,7 +21,15 @@
                 <ResourceDictionary Source="/Styles/ButtonStyles.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
 
+            <DataTemplate DataType="{x:Type vmworker:WorkerDashboardViewModel}">
+                <vworker:DashboardView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vmodel:LoginViewModel}">
+                <view:LoginPage/>
+            </DataTemplate>
+            
+            <core:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>        
     </Application.Resources>
 </Application>
