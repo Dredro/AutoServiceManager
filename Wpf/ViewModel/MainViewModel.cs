@@ -21,6 +21,7 @@ namespace Wpf.ViewModel
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         public event Action? LogoutRequested;
+        IServiceProvider _serviceProvider;
 
         public ICommand LogoutCommand { get; }
 
@@ -48,8 +49,9 @@ namespace Wpf.ViewModel
         public ICommand SwitchViewCommand { get; }
         public WorkerDashboardViewModel WorkerDashboardViewModel { get; set; }
 
-        public MainViewModel()
+        public MainViewModel(IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
             LogoutCommand = new RelayCommand(() => LogoutRequested?.Invoke());
             SwitchViewCommand = new RelayCommand<string>(OnSwitchView);
             WorkerDashboardViewModel = new WorkerDashboardViewModel();

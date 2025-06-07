@@ -23,7 +23,7 @@
             </Grid.RowDefinitions>
 
             <!-- Nagłówek Text="{Binding Title}" -->
-            <TextBlock Grid.Row="0" Text="{Binding OrderNameText}"
+            <TextBlock Grid.Row="0" Text="{Binding Model.OrderNameText}"
                        Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White"
                        Margin="0,0,0,16"/>
 
@@ -31,8 +31,21 @@
             <materialDesign:Card Grid.Row="1" Margin="0,0,0,16">
                 <StackPanel Margin="16">
                     <TextBlock Text="Klient" Margin="0,0,0,16" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
-
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBox Grid.Row="0" Margin="0,0,0,16"
+                            materialDesign:HintAssist.Hint="Wyszukaj klienta"
+                            Text="{Binding Model.SearchCustomersString}"
+                            AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
+                        <DataGrid ItemsSource="{Binding Model.SearchedClients}" AutoGenerateColumns="False" Grid.Row="1"
+                            CanUserAddRows="False" CanUserDeleteRows="False">
+                        </DataGrid>
+                    </Grid>
+                    <!--<Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
@@ -55,6 +68,7 @@
                         <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Order.Customer.Phone}" 
                                    Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                     </Grid>
+                    -->
                 </StackPanel>
             </materialDesign:Card>
 
@@ -63,6 +77,23 @@
                 <StackPanel Margin="16">
                     <TextBlock Text="Pojazd" Margin="0,0,0,16" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
 
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBox Grid.Row="0" Margin="0,0,0,16"
+                            materialDesign:HintAssist.Hint="Wyszukaj klienta"
+                            Text="{Binding Model.SearchVechicleString}"
+                            AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
+
+                        <DataGrid ItemsSource="{Binding Model.SearchedVechicles}" AutoGenerateColumns="False" Grid.Row="1"
+                            CanUserAddRows="False" CanUserDeleteRows="False">
+                        </DataGrid>
+                    </Grid>
+                    
+                    <!--
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -91,6 +122,7 @@
                         <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Order.Vehicle.PlateNumber}" 
                                    Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                     </Grid>
+                    -->
                 </StackPanel>
             </materialDesign:Card>
 
@@ -107,14 +139,14 @@
 
                 <ComboBox Grid.Column="0" Margin="0,0,8,0"
                           materialDesign:HintAssist.Hint="Status zlecenia"
-                          ItemsSource="{Binding OrderStatus}"
-                          SelectedItem="{Binding Order.Status}"/>
+                          ItemsSource="{Binding Model.OrderStatus}"
+                          SelectedItem="{Binding Model.Order.Status}"/>
 
                 <ComboBox Grid.Column="1" Margin="8,0,0,0"
                           materialDesign:HintAssist.Hint="Przypisany mechanik"
                           DisplayMemberPath="Name"
-                          ItemsSource="{Binding AvailableMechanics}"
-                          SelectedItem="{Binding Order.AssignedMechanic}"/>
+                          ItemsSource="{Binding Model.AvailableMechanics}"
+                          SelectedItem="{Binding Model.Order.AssignedMechanic}"/>
             </Grid>
 
 
@@ -128,27 +160,27 @@
 
                 <DatePicker Grid.Column="0" Margin="0,0,8,0"
                             materialDesign:HintAssist.Hint="Data utworzenia"
-                            SelectedDate="{Binding Order.CreatedOn}" IsEnabled="False"/>
+                            SelectedDate="{Binding Model.Order.CreatedOn}" IsEnabled="False"/>
 
                 <DatePicker Grid.Column="1" Margin="8,0,8,0"
                             materialDesign:HintAssist.Hint="Data rozpoczęcia"
-                            SelectedDate="{Binding Order.StartedOn}"/>
+                            SelectedDate="{Binding Model.Order.StartedOn}"/>
 
                 <DatePicker Grid.Column="2" Margin="8,0,0,0"
                             materialDesign:HintAssist.Hint="Data zakończenia"
-                            SelectedDate="{Binding Order.CompletedOn}"/>
+                            SelectedDate="{Binding Model.Order.CompletedOn}"/>
             </Grid>
 
             <!-- Opis prac -->
             <TextBox Grid.Row="5" Margin="16,0,16,16"
                      materialDesign:HintAssist.Hint="Opis prac"
-                     Text="{Binding Order.DescriptionOfWork}"
+                     Text="{Binding Model.Order.DescriptionOfWork}"
                      AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
 
             <!-- Uwagi -->
             <TextBox Grid.Row="6" Margin="16,0,16,16"
                      materialDesign:HintAssist.Hint="Uwagi"
-                     Text="{Binding Order.Remarks}"
+                     Text="{Binding Model.Order.Remarks}"
                      AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
 
             <!-- Lista usług -->
@@ -160,7 +192,7 @@
                                 Command="{Binding AddServiceCommand}"/>
                     </StackPanel>
 
-                    <DataGrid ItemsSource="{Binding Order.Services}" AutoGenerateColumns="False"
+                    <DataGrid ItemsSource="{Binding Model.Order.Services}" AutoGenerateColumns="False"
                               CanUserAddRows="False" CanUserDeleteRows="False">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Usługa" Width="*">
@@ -168,7 +200,7 @@
                                     <DataTemplate>
                                         <ComboBox ItemsSource="{Binding DataContext.AvailableServices, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                   DisplayMemberPath="ServiceName"
-                                                  SelectedItem="{Binding Service}"/>
+                                                  SelectedItem="{Binding Model.Service}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -196,7 +228,7 @@
                                 Command="{Binding AddPartCommand}"/>
                     </StackPanel>
 
-                    <DataGrid ItemsSource="{Binding Order.ReplacementParts}" AutoGenerateColumns="False"
+                    <DataGrid ItemsSource="{Binding Model.Order.ReplacementParts}" AutoGenerateColumns="False"
                               CanUserAddRows="False" CanUserDeleteRows="False">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Część" Width="*">
@@ -242,15 +274,15 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Łączny koszt usług:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ServicesTotalCost, StringFormat={}{0:C}}" 
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Model.ServicesTotalCost, StringFormat={}{0:C}}" 
                                    Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
 
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Łączny koszt części:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PartsTotalCost, StringFormat={}{0:C}}" 
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Model.PartsTotalCost, StringFormat={}{0:C}}" 
                                    Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="Suma:" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Margin="0,0,8,0"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Order.TotalCost, StringFormat={}{0:C}}" 
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Model.Order.TotalCost, StringFormat={}{0:C}}" 
                                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"/>
                     </Grid>
                 </StackPanel>

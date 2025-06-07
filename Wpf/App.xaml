@@ -33,6 +33,10 @@
                 <local:MainView /> 
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vmworker:WorkerOrderFormViewModel}">
+                <vworker:OrderFormView/>
+            </DataTemplate>
+
 
             <core:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>        

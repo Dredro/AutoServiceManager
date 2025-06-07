@@ -159,6 +159,8 @@ namespace Wpf.ViewModel
                 Password = _password ?? string.Empty
             };
 
+            LoginSucceeded?.Invoke(); // Docker dalej mi nie działa więc zostawiam omiajnie 
+
             var result = await _authService.LoginAsync(loginDto);
 
             if (result.Success)
