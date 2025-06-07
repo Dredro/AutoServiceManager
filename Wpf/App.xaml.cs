@@ -26,11 +26,17 @@ public partial class App : Application
         services.AddSingleton<ApiClient>();
         services.AddSingleton<AuthService>();
         services.AddSingleton<MainWindowViewModel>();
-        services.AddSingleton<LoginViewModel>();
+        services.AddTransient<LoginViewModel>(); 
+        services.AddTransient<MainViewModel>(); 
     }
 
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        
+        var mainWindow = new MainWindow(); 
+        mainWindow.DataContext = _serviceProvider.GetService<MainWindowViewModel>();
+        mainWindow.Show();
+      
     }
 }

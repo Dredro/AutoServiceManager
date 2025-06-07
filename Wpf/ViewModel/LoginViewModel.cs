@@ -1,99 +1,197 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
+using System.Net.Mail;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using Wpf.Core;
+using Wpf.Core; 
 using Wpf.Models.DTOs;
 using Wpf.Services;
-using System.Windows;
 
-namespace Wpf.ViewModel;
-
-
-public class LoginViewModel : INotifyPropertyChanged
+namespace Wpf.ViewModel
 {
-    public event Action? LoginSucceeded;
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    public ICommand LoginCommand { get; }
-
-    private readonly AuthService? _authService;
-
-    #region FormData
-
-    private string _email = String.Empty;
-    public string Email
+    public class LoginViewModel : INotifyPropertyChanged
     {
-        get => _email;
-        set { _email = value; OnPropertyChanged(_email); }
-    }
+        public event Action? LoginSucceeded;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-    private string? _password; // Cannot declare a var because VM have no rights to access via PasswordBoxAssistant :(
-    public string? Password
-    {
-        get => _password;
-        set { _password = value;}
-    }
+        private readonly AuthService _authService;
 
-    private string _errorMessage = String.Empty;
-    public string ErrorMessage
-    {
-        get => _errorMessage;
-        set { _errorMessage = value; OnPropertyChanged(_errorMessage); }
-    }
-    #endregion
-
-    public LoginViewModel(AuthService authService)
-    {
-        _authService = authService;
-        LoginCommand = new AsyncRelayCommand(ExecuteLogin, CanExecuteLogin);
-    }
-
-    public LoginViewModel()
-    {
-        LoginCommand = new RelayCommand(Login);
-    }
-
-    private async Task ExecuteLogin()
-    {
-        var loginVar = new LoginDTO();
-        loginVar.Email = _email;
-        loginVar.Password = (!string.IsNullOrWhiteSpace(_password) ? _password : String.Empty);
-
-        ErrorMessage = string.Empty;
-
-        if (_authService == null) return;
-        var result = await _authService.LoginAsync(loginVar);
-
-        if (!result.Success)
+        private string _email = string.Empty;
+        public string Email
         {
-            ErrorMessage = (result.ErrorMessage == null ? String.Empty : result.ErrorMessage);
-            return;
+            get => _email;
+            set
+            {
+                if (SetProperty(ref _email, value))
+                {
+                    ClearOverallErrorMessage();
+                    ValidateEmail();
+                    _loginCommand.NotifyCanExecuteChanged();
+                }
+            }
         }
 
-        Login();
+        private string? _password;
+        public string? Password
+        {
+            get => _password;
+            set
+            {
+                if (SetProperty(ref _password, value))
+                {
+                    ClearOverallErrorMessage();
+                    ValidatePassword();
+                    _loginCommand.NotifyCanExecuteChanged();
+                }
+            }
+        }
+
+        private string _errorMessage = string.Empty;
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            private set => SetProperty(ref _errorMessage, value);
+        }
+
+        private string _emailValidationError = string.Empty;
+        public string EmailValidationError
+        {
+            get => _emailValidationError;
+            private set => SetProperty(ref _emailValidationError, value);
+        }
+
+        private string _passwordValidationError = string.Empty;
+        public string PasswordValidationError
+        {
+            get => _passwordValidationError;
+            private set => SetProperty(ref _passwordValidationError, value);
+        }
+
+        private readonly IAsyncRelayCommand _loginCommand; 
+        public ICommand LoginCommand => _loginCommand;
+
+        public LoginViewModel(AuthService authService)
+        {
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+            _loginCommand = new AsyncRelayCommand(ExecuteLoginAsync, CanExecuteLogin);
+            
+            ValidateEmail();
+            ValidatePassword();
+        }
+
+        private void ClearOverallErrorMessage()
+        {
+            if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                ErrorMessage = string.Empty;
+            }
+        }
+
+        private void ValidateEmail()
+        {
+            if (string.IsNullOrWhiteSpace(_email))
+            {
+                EmailValidationError = "Email jest wymagany.";
+                return;
+            }
+            try
+            {
+                var addr = new MailAddress(_email);
+                if (addr.Address == _email)
+                {
+                    string emailPattern = @"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$";
+                    if (!Regex.IsMatch(_email, emailPattern))
+                    {
+                        EmailValidationError = "Nieprawidłowy format adresu email.";
+                        return;
+                    }
+                    EmailValidationError = string.Empty;
+                    return;
+                }
+            }
+            catch (FormatException)
+            {
+                EmailValidationError = "Nieprawidłowy format adresu email.";
+                return;
+            }
+            EmailValidationError = "Nieprawidłowy format adresu email."; 
+        }
+
+        private void ValidatePassword()
+        {
+            if (string.IsNullOrWhiteSpace(_password))
+            {
+                PasswordValidationError = "Hasło jest wymagane.";
+                return;
+            }
+            if (_password.Length < 6)
+            {
+                PasswordValidationError = "Hasło musi mieć co najmniej 6 znaków.";
+                return;
+            }
+            if (!Regex.IsMatch(_password, @"[A-Z]"))
+            {
+                PasswordValidationError = "Hasło musi zawierać co najmniej jedną wielką literę.";
+                return;
+            }
+            if (!Regex.IsMatch(_password, @"[0-9]"))
+            {
+                PasswordValidationError = "Hasło musi zawierać co najmniej jedną cyfrę.";
+                return;
+            }
+            PasswordValidationError = string.Empty; 
+        }
+
+        private async Task ExecuteLoginAsync()
+        {
+            ErrorMessage = string.Empty;
+            
+            ValidateEmail();
+            ValidatePassword();
+            if (!string.IsNullOrEmpty(EmailValidationError) || !string.IsNullOrEmpty(PasswordValidationError))
+            {
+                return; 
+            }
+
+            var loginDto = new LoginDTO
+            {
+                Email = _email,
+                Password = _password ?? string.Empty
+            };
+
+            var result = await _authService.LoginAsync(loginDto);
+
+            if (result.Success)
+            {
+                LoginSucceeded?.Invoke();
+            }
+            else
+            {
+                ErrorMessage = result.ErrorMessage ?? "Nieprawidłowy email lub hasło.";
+            }
+        }
+
+        private bool CanExecuteLogin()
+        {
+            return string.IsNullOrEmpty(EmailValidationError) &&
+                   string.IsNullOrEmpty(PasswordValidationError) &&
+                   !string.IsNullOrWhiteSpace(_email) &&
+                   !string.IsNullOrWhiteSpace(_password);
+        }
+
+        protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value))
+                return false;
+
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
-
-    private void Login()
-    {
-        MessageBox.Show($"pass: {Password}, Login: {Email}");
-
-        bool authenticated = true;
-
-        if (authenticated)
-            LoginSucceeded?.Invoke();
-    }
-
-
-    private bool CanExecuteLogin() =>
-        !string.IsNullOrWhiteSpace(Email) && !string.IsNullOrWhiteSpace(Password);
-
-    private void OnPropertyChanged([CallerMemberName] string name = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }
