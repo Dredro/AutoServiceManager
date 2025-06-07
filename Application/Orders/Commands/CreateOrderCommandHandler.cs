@@ -1,4 +1,4 @@
-using Application.Exceptions;
+/*using Application.Exceptions;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -115,4 +115,4 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
 
         return order.Id.ToString();
     }
-}
+}*/
