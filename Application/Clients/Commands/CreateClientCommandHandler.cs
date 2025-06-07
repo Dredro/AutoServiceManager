@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Clients.Commands;
 
-public record AddClientCommand
+public record CreateClientCommand
 (
 string FirstName,
 string LastName,
@@ -14,16 +14,16 @@ string Email,
 string PhoneNumber
     ) : IRequest<string>;
 
-public class AddClientCommandHandler : IRequestHandler<AddClientCommand,string>
+public class CreateClientCommandHandler : IRequestHandler<CreateClientCommand,string>
 {
     private readonly IAppDbContext _dbContext;
 
-    public AddClientCommandHandler(IAppDbContext dbContext)
+    public CreateClientCommandHandler(IAppDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-     public async Task<string> Handle(AddClientCommand request, CancellationToken cancellationToken)
+     public async Task<string> Handle(CreateClientCommand request, CancellationToken cancellationToken)
      {
          var personalInfo = new PersonalInfo
          {
