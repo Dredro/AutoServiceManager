@@ -115,20 +115,11 @@
                     <TextBlock Text="Lista Dostępnych Części" Style="{StaticResource SectionTitleStyle}"/>
                     <TextBox Margin="0,0,0,10" Padding="5" Text="Wyszukaj część..." Foreground="Gray" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus"/>
                     <ListBox x:Name="AvailablePartsListBox"
-                             d:ItemsSource="{d:SampleData ItemCount=8}"
-                             Style="{StaticResource StyledListBoxStyle}"
-                             ItemContainerStyle="{StaticResource StyledListBoxItemStyle}"
-                             SelectionChanged="AvailablePartsListBox_SelectionChanged">
-                        <!--
-                        ItemsSource="{Binding AvailableParts}"
-                        DisplayMemberPath="Name"
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Name}" />
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                        -->
-                    </ListBox>
+                 ItemsSource="{Binding AvailableParts}"
+                 DisplayMemberPath="Name"
+                 Style="{StaticResource StyledListBoxStyle}"
+                 ItemContainerStyle="{StaticResource StyledListBoxItemStyle}"
+                 SelectionChanged="AvailablePartsListBox_SelectionChanged"/>
                 </StackPanel>
             </Border>
 
@@ -138,18 +129,15 @@
                     <TextBlock Text="Lista Brakujących Części" Style="{StaticResource SectionTitleStyle}"/>
                     <TextBox Margin="0,0,0,10" Padding="5" Text="Wyszukaj brakującą część..." Foreground="Gray" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus"/>
                     <ListBox x:Name="MissingPartsListBox"
-                             d:ItemsSource="{d:SampleData ItemCount=3}"
-                             Style="{StaticResource StyledListBoxStyle}"
-                             ItemContainerStyle="{StaticResource StyledListBoxItemStyle}"
-                             SelectionChanged="MissingPartsListBox_SelectionChanged">
-                        <!--
-                        ItemsSource="{Binding MissingParts}"
-                        DisplayMemberPath="Name"
-                        -->
-                    </ListBox>
-                    <Button Content="Dodaj Zaznaczone" Style="{StaticResource PrimaryButtonStyle}" Margin="0,15,0,0" HorizontalAlignment="Right" Click="OrderSelectedMissingParts_Click" IsEnabled="False" x:Name="OrderMissingPartsButton" />
+                 ItemsSource="{Binding MissingParts}"
+                 DisplayMemberPath="Name"
+                 Style="{StaticResource StyledListBoxStyle}"
+                 ItemContainerStyle="{StaticResource StyledListBoxItemStyle}"
+                 SelectionChanged="MissingPartsListBox_SelectionChanged"/>
+                    <Button Content="Dodaj Zaznaczone" Style="{StaticResource PrimaryButtonStyle}" Margin="0,15,0,0" HorizontalAlignment="Right" Click="OrderSelectedMissingParts_Click" IsEnabled="False" x:Name="OrderMissingPartsButton"/>
                 </StackPanel>
             </Border>
+
         </Grid>
     </Grid>
 </Page>

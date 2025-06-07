@@ -37,6 +37,10 @@
                 <vworker:OrderFormView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vmodel:StorageManagerDashboardViewModel}">
+                <view:StorageManagerDashboardPage/>
+            </DataTemplate>
+
 
             <core:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>        
