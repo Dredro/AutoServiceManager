@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Wpf.Services;
-using Wpf.Views;
 
 namespace Wpf.ViewModel
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         private object _currentView;
-
         private readonly AuthService _authService;
+        private readonly IServiceProvider _serviceProvider;
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public object CurrentView
@@ -23,46 +21,48 @@ namespace Wpf.ViewModel
             set => SetProperty(ref _currentView, value);
         }
 
-        public MainWindowViewModel(AuthService authService)
+        public MainWindowViewModel(AuthService authService, IServiceProvider serviceProvider)
         {
-            _authService = authService;
-
-            var loginVm = new LoginViewModel(_authService);
-            loginVm.LoginSucceeded += OnLoginSucceeded;
-
-            CurrentView = new LoginPage { DataContext = loginVm };
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            ShowLoginView();
         }
 
-        public MainWindowViewModel()
+        private void ShowLoginView()
         {
-            var loginVm = new LoginViewModel();
+            var loginVm = _serviceProvider.GetService<LoginViewModel>();
+            if (loginVm == null)
+            {
+                throw new InvalidOperationException("Could not resolve LoginViewModel.");
+            }
+
+            loginVm.LoginSucceeded -= OnLoginSucceeded;
             loginVm.LoginSucceeded += OnLoginSucceeded;
 
-            CurrentView = new LoginPage { DataContext = loginVm };
+            CurrentView = loginVm;
         }
 
         private void OnLoginSucceeded()
         {
-            var mainVm = new MainViewModel();
+            var mainVm = _serviceProvider.GetService<MainViewModel>();
+            if (mainVm == null)
+            {
+                throw new InvalidOperationException("Could not resolve MainViewModel.");
+            }
+
+            mainVm.LogoutRequested -= OnLogout;
             mainVm.LogoutRequested += OnLogout;
 
-            CurrentView = new MainView { DataContext = mainVm };
+            CurrentView = mainVm;
         }
 
         private void OnLogout()
         {
-            var loginVm = new LoginViewModel();
-
-            if (_authService != null) 
-                loginVm = new LoginViewModel(_authService);
-
-            loginVm.LoginSucceeded += OnLoginSucceeded;
-
-            CurrentView = new LoginPage { DataContext = loginVm };
+            _authService.Logout();
+            ShowLoginView();
         }
 
-        //Nie wiem czy to jest potrzebne, ale zostawiam
-        protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null!)
+        protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(field, value))
                 return false;
@@ -72,7 +72,7 @@ namespace Wpf.ViewModel
             return true;
         }
 
-        protected void OnPropertyChanged(string propertyName)
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
