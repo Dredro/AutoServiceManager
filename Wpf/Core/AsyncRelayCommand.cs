@@ -1,45 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-
-namespace Wpf.Core;
-
-public class AsyncRelayCommand : ICommand
+﻿namespace Wpf.Core
 {
-    private readonly Func<Task> _execute;
-    private readonly Func<bool> _canExecute;
-    private bool _isExecuting;
-
-    public AsyncRelayCommand(Func<Task> execute, Func<bool> canExecute = null)
+    public class AsyncRelayCommand : IAsyncRelayCommand
     {
-        _execute = execute;
-        _canExecute = canExecute;
-    }
+        private readonly Func<Task> _execute;
+        private readonly Func<bool>? _canExecute; 
+        private bool _isExecuting;
 
-    public bool CanExecute(object? parameter)
-    {
-        return !_isExecuting && (_canExecute?.Invoke() ?? true);
-    }
+        public event EventHandler? CanExecuteChanged;
 
-    public async void Execute(object? parameter)
-    {
-        _isExecuting = true;
-        RaiseCanExecuteChanged();
-
-        try
+        public AsyncRelayCommand(Func<Task> execute, Func<bool>? canExecute = null)
         {
-            await _execute();
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecute = canExecute;
         }
-        finally
+
+        public bool CanExecute(object? parameter)
         {
-            _isExecuting = false;
-            RaiseCanExecuteChanged();
+            return !_isExecuting && (_canExecute?.Invoke() ?? true);
+        }
+
+        public async void Execute(object? parameter)
+        {
+            if (!CanExecute(parameter)) return;
+
+            _isExecuting = true;
+            NotifyCanExecuteChanged(); 
+
+            try
+            {
+                await _execute();
+            }
+            finally
+            {
+                _isExecuting = false;
+                NotifyCanExecuteChanged();
+            }
+        }
+
+        public void NotifyCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
-
-    public event EventHandler? CanExecuteChanged;
-    public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 }

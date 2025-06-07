@@ -26,7 +26,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<AccountResultDTO>> CreateAccount(CreateAccountCommand command)
+    public async Task<ActionResult<AccountResultDTO>> CreateAccount(CreateAccountDTO model)
     {
         if (!ModelState.IsValid)
         {
@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
         }
         try
         {
-            return await _mediator.Send(command);
+            return await _mediator.Send(new CreateAccountCommand(model));
         }
         catch (InvalidOperationException ex)
         {
@@ -54,7 +54,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<AccountResultDTO>> LoginAccount(LoginAccountCommand command)
+    public async Task<ActionResult<AccountResultDTO>> LoginAccount(LoginDTO model)
     {
         if (!ModelState.IsValid)
         {
@@ -63,7 +63,7 @@ public class AuthController : ControllerBase
 
         try
         {
-            return await _mediator.Send(command);
+            return await _mediator.Send(new LoginAccountCommand(model));
         }
         catch (InvalidOperationException ex)
         {

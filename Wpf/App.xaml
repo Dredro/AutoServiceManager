@@ -8,7 +8,7 @@
              xmlns:vworker="clr-namespace:Wpf.Views.Worker"
              xmlns:view="clr-namespace:Wpf.Views"
              xmlns:vmodel="clr-namespace:Wpf.ViewModel"
-             StartupUri="MainWindow.xaml">
+             >
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -28,7 +28,12 @@
             <DataTemplate DataType="{x:Type vmodel:LoginViewModel}">
                 <view:LoginPage/>
             </DataTemplate>
-            
+                  
+            <DataTemplate DataType="{x:Type vmodel:MainViewModel}">
+                <local:MainView /> 
+            </DataTemplate>
+
+
             <core:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>        
     </Application.Resources>

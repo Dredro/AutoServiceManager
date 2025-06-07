@@ -23,21 +23,21 @@
                     <materialDesign:Card Margin="8" Width="200"  Background="Gray">
                         <StackPanel Margin="8">
                             <TextBlock Text="Aktywne zlecenia" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Foreground="White"/>
-                            <TextBlock Text="{Binding ActiveOrders}" Style="{StaticResource MaterialDesignHeadline4TextBlock}" HorizontalAlignment="Center" Foreground="White"/>
+                            <TextBlock Text="{Binding DataModel.ActiveOrders}" Style="{StaticResource MaterialDesignHeadline4TextBlock}" HorizontalAlignment="Center" Foreground="White"/>
                         </StackPanel>
                     </materialDesign:Card>
 
                     <materialDesign:Card Margin="8" Width="200"  Background="Gray">
                         <StackPanel Margin="8">
                             <TextBlock Text="Świadczonych usług" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Foreground="White"/>
-                            <TextBlock Text="{Binding ServicesProvided}" Style="{StaticResource MaterialDesignHeadline4TextBlock}" HorizontalAlignment="Center" Foreground="White"/>
+                            <TextBlock Text="{Binding DataModel.ServicesProvided}" Style="{StaticResource MaterialDesignHeadline4TextBlock}" HorizontalAlignment="Center" Foreground="White"/>
                         </StackPanel>
                     </materialDesign:Card>
 
                     <materialDesign:Card Margin="8" Width="200"  Background="Gray">
                         <StackPanel Margin="8">
                             <TextBlock Text="Zlecenia dzisiaj" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Foreground="White"/>
-                            <TextBlock Text="{Binding OrdersToday}" Style="{StaticResource MaterialDesignHeadline4TextBlock}" HorizontalAlignment="Center" Foreground="White"/>
+                            <TextBlock Text="{Binding DataModel.OrdersToday}" Style="{StaticResource MaterialDesignHeadline4TextBlock}" HorizontalAlignment="Center" Foreground="White"/>
                         </StackPanel>
                     </materialDesign:Card>
                 </StackPanel>
@@ -47,7 +47,7 @@
                 <StackPanel>
                     <TextBlock Text="Twoje aktywne zlecenia" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="8"/>
 
-                    <ItemsControl ItemsSource="{Binding Orders}" Background="DarkGray">
+                    <ItemsControl ItemsSource="{Binding DataModel.Orders}" Background="DarkGray">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <materialDesign:Card Margin="8" Padding="8">
@@ -98,7 +98,7 @@
                         </Button>
 
                     </StackPanel>
-                    <DataGrid ItemsSource="{Binding Services}" AutoGenerateColumns="False" IsReadOnly="True">
+                    <DataGrid ItemsSource="{Binding DataModel.Services}" AutoGenerateColumns="False" IsReadOnly="True">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Nazwa" Binding="{Binding ServiceName}"/>
                             <DataGridTextColumn Header="Opis" Binding="{Binding Description}"/>
