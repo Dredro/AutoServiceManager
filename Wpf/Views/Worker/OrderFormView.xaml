@@ -23,7 +23,7 @@
             </Grid.RowDefinitions>
 
             <!-- Nagłówek Text="{Binding Title}" -->
-            <TextBlock Grid.Row="0" Text="Zamówienie nr 2137~"
+            <TextBlock Grid.Row="0" Text="{Binding OrderNameText}"
                        Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White"
                        Margin="0,0,0,16"/>
 
@@ -44,15 +44,15 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Nazwa:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding OrderS.Customer.Name}" 
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Order.Customer.Name}" 
                                    Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
 
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Email:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding OrderS.Customer.Email}" 
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Order.Customer.Email}" 
                                    Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="Telefon:" Margin="0,0,8,0"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding OrderS.Customer.Phone}" 
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Order.Customer.Phone}" 
                                    Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                     </Grid>
                 </StackPanel>
@@ -76,19 +76,19 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Model:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding OrderS.Vehicle.Model}" 
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Order.Vehicle.Model}" 
                                    Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
 
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Rocznik:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding OrderS.Vehicle.Year}" 
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Order.Vehicle.Year}" 
                                    Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="VIN:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding OrderS.Vin}" 
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Order.Vin}" 
                                    Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
 
                         <TextBlock Grid.Row="3" Grid.Column="0" Text="Nr rej.:" Margin="0,0,8,0"/>
-                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding OrderS.Vehicle.PlateNumber}" 
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Order.Vehicle.PlateNumber}" 
                                    Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                     </Grid>
                 </StackPanel>
@@ -108,13 +108,13 @@
                 <ComboBox Grid.Column="0" Margin="0,0,8,0"
                           materialDesign:HintAssist.Hint="Status zlecenia"
                           ItemsSource="{Binding OrderStatus}"
-                          SelectedItem="{Binding OrderS.Status}"/>
+                          SelectedItem="{Binding Order.Status}"/>
 
                 <ComboBox Grid.Column="1" Margin="8,0,0,0"
                           materialDesign:HintAssist.Hint="Przypisany mechanik"
                           DisplayMemberPath="Name"
                           ItemsSource="{Binding AvailableMechanics}"
-                          SelectedItem="{Binding OrderS.AssignedMechanic}"/>
+                          SelectedItem="{Binding Order.AssignedMechanic}"/>
             </Grid>
 
 
@@ -128,27 +128,27 @@
 
                 <DatePicker Grid.Column="0" Margin="0,0,8,0"
                             materialDesign:HintAssist.Hint="Data utworzenia"
-                            SelectedDate="{Binding OrderS.CreatedOn}" IsEnabled="False"/>
+                            SelectedDate="{Binding Order.CreatedOn}" IsEnabled="False"/>
 
                 <DatePicker Grid.Column="1" Margin="8,0,8,0"
                             materialDesign:HintAssist.Hint="Data rozpoczęcia"
-                            SelectedDate="{Binding OrderS.StartedOn}"/>
+                            SelectedDate="{Binding Order.StartedOn}"/>
 
                 <DatePicker Grid.Column="2" Margin="8,0,0,0"
                             materialDesign:HintAssist.Hint="Data zakończenia"
-                            SelectedDate="{Binding OrderS.CompletedOn}"/>
+                            SelectedDate="{Binding Order.CompletedOn}"/>
             </Grid>
 
             <!-- Opis prac -->
             <TextBox Grid.Row="5" Margin="16,0,16,16"
                      materialDesign:HintAssist.Hint="Opis prac"
-                     Text="{Binding OrderS.DescriptionOfWork}"
+                     Text="{Binding Order.DescriptionOfWork}"
                      AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
 
             <!-- Uwagi -->
             <TextBox Grid.Row="6" Margin="16,0,16,16"
                      materialDesign:HintAssist.Hint="Uwagi"
-                     Text="{Binding OrderS.Remarks}"
+                     Text="{Binding Order.Remarks}"
                      AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
 
             <!-- Lista usług -->
@@ -160,7 +160,7 @@
                                 Command="{Binding AddServiceCommand}"/>
                     </StackPanel>
 
-                    <DataGrid ItemsSource="{Binding OrderS.Services}" AutoGenerateColumns="False"
+                    <DataGrid ItemsSource="{Binding Order.Services}" AutoGenerateColumns="False"
                               CanUserAddRows="False" CanUserDeleteRows="False">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Usługa" Width="*">

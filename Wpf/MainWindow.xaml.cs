@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Windows;
 using System.Windows.Controls;
+using Wpf.Services;
 using Wpf.ViewModel;
 using Wpf.Views;
 
@@ -12,6 +13,7 @@ namespace Wpf
         public MainWindow()
         {
             InitializeComponent();
+            
             DataContext = new MainWindowViewModel(); // dodać deklaracje działającego serwisu api i całość będzie już weryfikować użytkownika przez API
 
 
