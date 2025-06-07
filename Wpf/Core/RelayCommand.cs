@@ -45,4 +45,6 @@ namespace Wpf.Core
 
         public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
+
+
 }

@@ -1,7 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Net.Mail; 
-using System.Text.RegularExpressions; 
+using System.Text.RegularExpressions;
+using Wpf.ViewModel;
 
 namespace Wpf.Views
 {
@@ -115,6 +116,19 @@ namespace Wpf.Views
             {
                 FormErrorMessageTextBlock.Text = "Nieprawidłowy email lub hasło.";
             }
+
+
+            var vm = DataContext as LoginViewModel;
+            vm?.LoginCommand.Execute(null);
+        }
+
+        private void TryLoginUsingEnter(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            UpdateLoginButtonState();
+            if (!LoginButton.IsEnabled) return;
+
+            if (e.Key == System.Windows.Input.Key.Enter)
+                LoginButton_Click(sender, e);
         }
     }
 }

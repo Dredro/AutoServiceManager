@@ -12,8 +12,10 @@ namespace Wpf
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
-            NavigateToDashboard(null, null); // Przekierowanie na dashboard domyślnie
+            DataContext = new MainWindowViewModel(); // dodać deklaracje działającego serwisu api i całość będzie już weryfikować użytkownika przez API
+
+
+            //NavigateToDashboard(null, null); // Przekierowanie na dashboard domyślnie
         }
 
         private void NavigateToDashboard(object sender, RoutedEventArgs e)

@@ -3,6 +3,7 @@ using System.Data;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Wpf.Services;
+using Wpf.ViewModel;
 
 namespace Wpf;
 
@@ -24,6 +25,8 @@ public partial class App : Application
     {
         services.AddSingleton<ApiClient>();
         services.AddSingleton<AuthService>();
+        services.AddSingleton<MainWindowViewModel>();
+        services.AddSingleton<LoginViewModel>();
     }
 
     protected override void OnStartup(StartupEventArgs e)

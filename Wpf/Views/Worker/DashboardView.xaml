@@ -15,7 +15,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Panel Serwisanta - podgląd" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" FontSize="25" Margin="10" Foreground="White" />
+            <TextBlock Text="Panel Serwisanta" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" FontSize="25" Margin="10" Foreground="White" />
 
             <!-- Statystyki -->
             <materialDesign:Card Grid.Row="1" Margin="0,0,0,16">
@@ -23,21 +23,21 @@
                     <materialDesign:Card Margin="8" Width="200"  Background="Gray">
                         <StackPanel Margin="8">
                             <TextBlock Text="Aktywne zlecenia" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Foreground="White"/>
-                            <TextBlock Text="12" Style="{StaticResource MaterialDesignHeadline4TextBlock}" HorizontalAlignment="Center" Foreground="White"/>
+                            <TextBlock Text="{Binding ActiveOrders}" Style="{StaticResource MaterialDesignHeadline4TextBlock}" HorizontalAlignment="Center" Foreground="White"/>
                         </StackPanel>
                     </materialDesign:Card>
 
                     <materialDesign:Card Margin="8" Width="200"  Background="Gray">
                         <StackPanel Margin="8">
                             <TextBlock Text="Świadczonych usług" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Foreground="White"/>
-                            <TextBlock Text="10" Style="{StaticResource MaterialDesignHeadline4TextBlock}" HorizontalAlignment="Center" Foreground="White"/>
+                            <TextBlock Text="{Binding ServicesProvided}" Style="{StaticResource MaterialDesignHeadline4TextBlock}" HorizontalAlignment="Center" Foreground="White"/>
                         </StackPanel>
                     </materialDesign:Card>
 
                     <materialDesign:Card Margin="8" Width="200"  Background="Gray">
                         <StackPanel Margin="8">
                             <TextBlock Text="Zlecenia dzisiaj" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Foreground="White"/>
-                            <TextBlock Text="2" Style="{StaticResource MaterialDesignHeadline4TextBlock}" HorizontalAlignment="Center" Foreground="White"/>
+                            <TextBlock Text="{Binding OrdersToday}" Style="{StaticResource MaterialDesignHeadline4TextBlock}" HorizontalAlignment="Center" Foreground="White"/>
                         </StackPanel>
                     </materialDesign:Card>
                 </StackPanel>
