@@ -13,4 +13,6 @@ public class OrderSparePartDTO
     public Guid ProductId { get; set; }
     public SparePartsDTO? SparePart { get; set; }
     public int Quantity { get; set; }
+
+    public decimal TotalCost => Quantity * SparePart.Price;
 }

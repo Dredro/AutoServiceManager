@@ -17,12 +17,11 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Nagłówek Text="{Binding Title}" -->
+            <!-- Nagłówek -->
             <TextBlock Grid.Row="0" Text="{Binding Model.OrderNameText}"
                        Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White"
                        Margin="0,0,0,16"/>
@@ -33,158 +32,104 @@
                     <TextBlock Text="Klient" Margin="0,0,0,16" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <TextBox Grid.Row="0" Margin="0,0,0,16"
                             materialDesign:HintAssist.Hint="Wyszukaj klienta"
-                            Text="{Binding Model.SearchCustomersString}"
-                            AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
+                            Text="{Binding SearchCustomersString, UpdateSourceTrigger=PropertyChanged}"
+                            AcceptsReturn="False" TextWrapping="Wrap" MinHeight="20"/>
+
                         <DataGrid ItemsSource="{Binding Model.SearchedClients}" AutoGenerateColumns="False" Grid.Row="1"
-                            CanUserAddRows="False" CanUserDeleteRows="False">
+                            CanUserAddRows="False" CanUserDeleteRows="False" MaxHeight="200"
+                            SelectedItem="{Binding SelectedClient}" SelectionMode="Single">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Imię" Binding="{Binding PersonalInfo.FirstName}" Width="*"/>
+                                <DataGridTextColumn Header="Nazwisko" Binding="{Binding PersonalInfo.LastName}" Width="*"/>
+                                <DataGridTextColumn Header="Email" Binding="{Binding PersonalInfo.Email}" Width="*"/>
+                                <DataGridTextColumn Header="Telefon" Binding="{Binding PersonalInfo.PhoneNumber}" Width="*"/>
+                            </DataGrid.Columns>
                         </DataGrid>
+
+                        <StackPanel Grid.Row="2" Margin="0,16,0,0" Visibility="{Binding SelectedClient, Converter={StaticResource NullToVisibilityConverter}}">
+                            <TextBlock Text="Wybrany klient:" Style="{StaticResource MaterialDesignCaptionTextBlock}"/>
+                            <TextBlock Text="{Binding SelectedClient.PersonalInfo.FirstName}" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                            <TextBlock Text="{Binding SelectedClient.PersonalInfo.LastName}" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                        </StackPanel>
                     </Grid>
-                    <!--<Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Nazwa:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Order.Customer.Name}" 
-                                   Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
-
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Email:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Order.Customer.Email}" 
-                                   Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
-
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Telefon:" Margin="0,0,8,0"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Order.Customer.Phone}" 
-                                   Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                    </Grid>
-                    -->
                 </StackPanel>
             </materialDesign:Card>
 
             <!-- Informacje o pojeździe -->
-            <materialDesign:Card Grid.Row="2" Margin="0,0,0,16" >
+            <materialDesign:Card Grid.Row="2" Margin="0,0,0,16">
                 <StackPanel Margin="16">
                     <TextBlock Text="Pojazd" Margin="0,0,0,16" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
 
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <TextBox Grid.Row="0" Margin="0,0,0,16"
-                            materialDesign:HintAssist.Hint="Wyszukaj klienta"
-                            Text="{Binding Model.SearchVechicleString}"
-                            AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
+                            materialDesign:HintAssist.Hint="Wyszukaj pojazd"
+                            Text="{Binding SearchVehicleString, UpdateSourceTrigger=PropertyChanged}"
+                            AcceptsReturn="False" TextWrapping="Wrap" MinHeight="20"
+                            IsEnabled="{Binding SelectedClient, Converter={StaticResource NullToBooleanConverter}}"/>
 
-                        <DataGrid ItemsSource="{Binding Model.SearchedVechicles}" AutoGenerateColumns="False" Grid.Row="1"
-                            CanUserAddRows="False" CanUserDeleteRows="False">
+                        <DataGrid ItemsSource="{Binding Model.SearchedVehicles}" AutoGenerateColumns="False" Grid.Row="1"
+                            CanUserAddRows="False" CanUserDeleteRows="False" MaxHeight="200"
+                            SelectedItem="{Binding SelectedVehicle}" SelectionMode="Single">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Marka" Binding="{Binding Make}" Width="*"/>
+                                <DataGridTextColumn Header="Model" Binding="{Binding Model}" Width="*"/>
+                                <DataGridTextColumn Header="Nr rejestracyjny" Binding="{Binding RegistrationNumber}" Width="*"/>
+                                <DataGridTextColumn Header="Rok" Binding="{Binding YearOfProduction}" Width="Auto"/>
+                            </DataGrid.Columns>
                         </DataGrid>
+
+                        <StackPanel Grid.Row="2" Margin="0,16,0,0" Visibility="{Binding SelectedVehicle, Converter={StaticResource NullToVisibilityConverter}}">
+                            <TextBlock Text="Wybrany pojazd:" Style="{StaticResource MaterialDesignCaptionTextBlock}"/>
+                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}">
+                                <Run Text="{Binding SelectedVehicle.Make}"/>
+                                <Run Text=" "/>
+                                <Run Text="{Binding SelectedVehicle.Model}"/>
+                                <Run Text=" ("/>
+                                <Run Text="{Binding SelectedVehicle.RegistrationNumber}"/>
+                                <Run Text=")"/>
+                            </TextBlock>
+                        </StackPanel>
                     </Grid>
-                    
-                    <!--
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Model:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Order.Vehicle.Model}" 
-                                   Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
-
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Rocznik:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Order.Vehicle.Year}" 
-                                   Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
-
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="VIN:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Order.Vin}" 
-                                   Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
-
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Nr rej.:" Margin="0,0,8,0"/>
-                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Order.Vehicle.PlateNumber}" 
-                                   Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                    </Grid>
-                    -->
                 </StackPanel>
             </materialDesign:Card>
 
-            <materialDesign:Card Grid.Row="3" Padding="10" Margin="0,0,0,16"/>
-            <materialDesign:Card Grid.Row="4" Margin="0,0,0,16"/>
-            <materialDesign:Card Grid.Row="5" Margin="0,0,0,16"/>
-            <materialDesign:Card Grid.Row="6" Margin="0,0,0,16"/>
-            <!-- Status i mechanik -->
-            <Grid Grid.Row="3" Margin="16,0,16,16">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <!-- Status i data finalizacji -->
+            <materialDesign:Card Grid.Row="3" Margin="0,0,0,16">
+                <StackPanel Margin="16">
+                    <TextBlock Text="Informacje o zleceniu" Margin="0,0,0,16" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
 
-                <ComboBox Grid.Column="0" Margin="0,0,8,0"
-                          materialDesign:HintAssist.Hint="Status zlecenia"
-                          ItemsSource="{Binding Model.OrderStatus}"
-                          SelectedItem="{Binding Model.Order.Status}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="1" Margin="8,0,0,0"
-                          materialDesign:HintAssist.Hint="Przypisany mechanik"
-                          DisplayMemberPath="Name"
-                          ItemsSource="{Binding Model.AvailableMechanics}"
-                          SelectedItem="{Binding Model.Order.AssignedMechanic}"/>
-            </Grid>
+                        <CheckBox Grid.Column="0" Content="Opłacone" 
+                                  IsChecked="{Binding Model.Order.IsPaid}" 
+                                  Margin="0,0,8,0"/>
 
-
-            <!-- Daty -->
-            <Grid Grid.Row="4" Margin="16,0,16,16">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <DatePicker Grid.Column="0" Margin="0,0,8,0"
-                            materialDesign:HintAssist.Hint="Data utworzenia"
-                            SelectedDate="{Binding Model.Order.CreatedOn}" IsEnabled="False"/>
-
-                <DatePicker Grid.Column="1" Margin="8,0,8,0"
-                            materialDesign:HintAssist.Hint="Data rozpoczęcia"
-                            SelectedDate="{Binding Model.Order.StartedOn}"/>
-
-                <DatePicker Grid.Column="2" Margin="8,0,0,0"
-                            materialDesign:HintAssist.Hint="Data zakończenia"
-                            SelectedDate="{Binding Model.Order.CompletedOn}"/>
-            </Grid>
-
-            <!-- Opis prac -->
-            <TextBox Grid.Row="5" Margin="16,0,16,16"
-                     materialDesign:HintAssist.Hint="Opis prac"
-                     Text="{Binding Model.Order.DescriptionOfWork}"
-                     AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
-
-            <!-- Uwagi -->
-            <TextBox Grid.Row="6" Margin="16,0,16,16"
-                     materialDesign:HintAssist.Hint="Uwagi"
-                     Text="{Binding Model.Order.Remarks}"
-                     AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
+                        <DatePicker Grid.Column="1" Margin="8,0,0,0"
+                                    materialDesign:HintAssist.Hint="Data finalizacji"
+                                    SelectedDate="{Binding Model.Order.FinalizationDate}"/>
+                    </Grid>
+                </StackPanel>
+            </materialDesign:Card>
 
             <!-- Lista usług -->
-            <materialDesign:Card Grid.Row="7" Margin="0,0,0,16">
+            <materialDesign:Card Grid.Row="4" Margin="0,0,0,16">
                 <StackPanel Margin="16">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                         <TextBlock Text="Usługi" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
@@ -192,15 +137,33 @@
                                 Command="{Binding AddServiceCommand}"/>
                     </StackPanel>
 
-                    <DataGrid ItemsSource="{Binding Model.Order.Services}" AutoGenerateColumns="False"
-                              CanUserAddRows="False" CanUserDeleteRows="False">
+                    <DataGrid ItemsSource="{Binding Model.Order.ServicesToDo}" AutoGenerateColumns="False"
+                              CanUserAddRows="False" CanUserDeleteRows="False" MaxHeight="300">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Usługa" Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding DataContext.AvailableServices, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                  DisplayMemberPath="ServiceName"
-                                                  SelectedItem="{Binding Model.Service}"/>
+                                        <ComboBox ItemsSource="{Binding DataContext.Model.AvailableServices, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  DisplayMemberPath="Name"
+                                                  SelectedItem="{Binding Service, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Cena" Binding="{Binding Price, StringFormat=C}" Width="Auto"/>
+                            <DataGridTemplateColumn Header="Status" Width="Auto">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox ItemsSource="{Binding DataContext.Model.ServiceStatusList, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  SelectedItem="{Binding ServiceStatus, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Pracownicy" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox ItemsSource="{Binding DataContext.Model.AvailableMechanics, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  DisplayMemberPath="PersonalInfo.FirstName"
+                                                  SelectedItem="{Binding DataContext.SelectedMechanic, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -220,7 +183,7 @@
             </materialDesign:Card>
 
             <!-- Lista części -->
-            <materialDesign:Card Grid.Row="8" Margin="0,0,0,16">
+            <materialDesign:Card Grid.Row="5" Margin="0,0,0,16">
                 <StackPanel Margin="16">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                         <TextBlock Text="Części zamienne" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
@@ -228,20 +191,28 @@
                                 Command="{Binding AddPartCommand}"/>
                     </StackPanel>
 
-                    <DataGrid ItemsSource="{Binding Model.Order.ReplacementParts}" AutoGenerateColumns="False"
-                              CanUserAddRows="False" CanUserDeleteRows="False">
+                    <DataGrid ItemsSource="{Binding Model.Order.SpareParts}" AutoGenerateColumns="False"
+                              CanUserAddRows="False" CanUserDeleteRows="False" MaxHeight="300">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Część" Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding DataContext.AvailableParts, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                  DisplayMemberPath="PartName"
-                                                  SelectedItem="{Binding Part}"/>
+                                        <ComboBox ItemsSource="{Binding DataContext.Model.AvailableParts, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  DisplayMemberPath="Name"
+                                                  SelectedItem="{Binding SparePart, UpdateSourceTrigger=PropertyChanged}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Ilość" Binding="{Binding Quantity}" Width="Auto"/>
-                            <DataGridTextColumn Header="Uwagi" Binding="{Binding Note}" Width="*"/>
+                            <DataGridTextColumn Header="Cena jednostkowa" Binding="{Binding SparePart.Price, StringFormat=C}" Width="Auto" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Suma" Width="Auto" IsReadOnly="True">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding StringFormat="{}{0:C}">
+                                        <Binding Path="SparePart.Price"/>
+                                        <Binding Path="Quantity"/>
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
                             <DataGridTemplateColumn Header="Akcje" Width="Auto">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -257,8 +228,34 @@
                 </StackPanel>
             </materialDesign:Card>
 
+            <!-- Dodatkowe informacje -->
+            <materialDesign:Card Grid.Row="6" Margin="0,0,0,16">
+                <StackPanel Margin="16">
+                    <TextBlock Text="Dodatkowe informacje" Margin="0,0,0,16" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Opis prac -->
+                        <TextBox Grid.Row="0" Margin="0,0,0,16"
+                                 materialDesign:HintAssist.Hint="Opis wykonanych prac"
+                                 Text="{Binding Model.DescriptionOfWork}"
+                                 AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
+
+                        <!-- Uwagi -->
+                        <TextBox Grid.Row="1"
+                                 materialDesign:HintAssist.Hint="Uwagi dodatkowe"
+                                 Text="{Binding Model.Remarks}"
+                                 AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
+                    </Grid>
+                </StackPanel>
+            </materialDesign:Card>
+
             <!-- Podsumowanie -->
-            <materialDesign:Card Grid.Row="9" Margin="0,0,0,16">
+            <materialDesign:Card Grid.Row="7" Margin="0,0,0,16">
                 <StackPanel Margin="16">
                     <TextBlock Text="Podsumowanie" Margin="0,0,0,16" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
 
@@ -274,22 +271,30 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Łączny koszt usług:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Model.ServicesTotalCost, StringFormat={}{0:C}}" 
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Model.ServicesTotalCost, StringFormat=C}" 
                                    Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
 
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Łączny koszt części:" Margin="0,0,8,8"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Model.PartsTotalCost, StringFormat={}{0:C}}" 
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Model.PartsTotalCost, StringFormat=C}" 
                                    Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
 
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Suma:" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Margin="0,0,8,0"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Model.Order.TotalCost, StringFormat={}{0:C}}" 
-                                   Style="{StaticResource MaterialDesignHeadline6TextBlock}"/>
+                        <Separator Grid.Row="2" Grid.ColumnSpan="2" Margin="0,8"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Suma całkowita:" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Margin="0,8,8,0"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="0,8,0,0">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0:C}">
+                                    <Binding Path="Model.ServicesTotalCost"/>
+                                    <Binding Path="Model.PartsTotalCost"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </Grid>
                 </StackPanel>
             </materialDesign:Card>
 
             <!-- Przyciski akcji -->
-            <StackPanel Grid.Row="10" Orientation="Horizontal" HorizontalAlignment="Right">
+            <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
                 <Button Content="Anuluj" Style="{StaticResource MaterialDesignOutlinedButton}"
                         Margin="0,0,8,0" Command="{Binding CancelCommand}"/>
                 <Button Content="Zapisz" Style="{StaticResource MaterialDesignRaisedButton}"

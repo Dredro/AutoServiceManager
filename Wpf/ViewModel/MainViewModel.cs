@@ -44,10 +44,20 @@ namespace Wpf.ViewModel
             set { role = value; }
         }
 
-
+        public MainViewModel()
+        {
+            LogoutCommand = new RelayCommand(() => LogoutRequested?.Invoke());
+            SwitchViewCommand = new RelayCommand<string>(OnSwitchView);
+            WorkerDashboardViewModel = new WorkerDashboardViewModel();
+            OrderFormViewModel = new OrderFormViewModel();
+            OrdersViewModel = new OrdersViewModel();
+            OnSwitchView("Dashboard");
+        }
 
         public ICommand SwitchViewCommand { get; }
         public WorkerDashboardViewModel WorkerDashboardViewModel { get; set; }
+        public OrderFormViewModel OrderFormViewModel { get; set; }
+        public OrdersViewModel OrdersViewModel { get; set; }
 
         public MainViewModel(IServiceProvider serviceProvider)
         {
@@ -55,6 +65,7 @@ namespace Wpf.ViewModel
             LogoutCommand = new RelayCommand(() => LogoutRequested?.Invoke());
             SwitchViewCommand = new RelayCommand<string>(OnSwitchView);
             WorkerDashboardViewModel = new WorkerDashboardViewModel();
+            OrderFormViewModel = new OrderFormViewModel();
 
             OnSwitchView("Dashboard");
         }
@@ -80,10 +91,10 @@ namespace Wpf.ViewModel
                     }
                     break;
                 case "Orders":
-                    CurrentContent = new OrdersView { DataContext = this };
+                    CurrentContent = OrdersViewModel;
                     break;
                 case "Parts":
-                    CurrentContent = new OrderFormView { DataContext = this };
+                    CurrentContent = OrderFormViewModel;
                     break;
                 case "Customers":
                     CurrentContent = new ClientsListView { DataContext = this };

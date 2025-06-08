@@ -35,11 +35,11 @@
         <DataGrid Grid.Row="1" ItemsSource="{Binding Orders}" AutoGenerateColumns="False" Margin="10"
                   SelectionMode="Single" IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding OrderId}" Width="Auto"/>
-                <DataGridTextColumn Header="Klient" Binding="{Binding Customer.Name}"/>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
+                <DataGridTextColumn Header="Klient" Binding="{Binding Client.PersonalInfo.Email}"/>
                 <DataGridTextColumn Header="Pojazd" Binding="{Binding Vehicle.Model}"/>
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}"/>
-                <DataGridTextColumn Header="Data utworzenia" Binding="{Binding CreatedOn, StringFormat={}{0:dd.MM.yyyy}}"/>
+                <!--<DataGridTextColumn Header="Ukończenia" Binding="{Binding CreatedOn, StringFormat={}{0:dd.MM.yyyy}}"/>-->
                 <DataGridTextColumn Header="Koszt" Binding="{Binding TotalCost, StringFormat={}{0:C}}"/>
                 <DataGridTemplateColumn Header="Akcje">
                     <DataGridTemplateColumn.CellTemplate>
@@ -50,7 +50,7 @@
                                         ToolTip="Wyświetl"
                                         Command="{Binding DataContext.ShowOrderCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                         CommandParameter="{Binding}"/>
-                                
+
                                 <Button Style="{StaticResource MaterialDesignFlatButton}" 
                                         Content="{materialDesign:PackIcon Kind=Edit}" 
                                         ToolTip="Edytuj"

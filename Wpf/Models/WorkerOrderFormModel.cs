@@ -10,50 +10,86 @@ using Wpf.Models.DTOs;
 
 namespace Wpf.Models;
 
-public class WorkerOrderFormModel : INotifyPropertyChanged
+public class OrderFormModel : INotifyPropertyChanged
 {
-	private string _orderNameText = String.Empty;
-    private string _searchCustomersString = String.Empty;
-    private string _searchVechicleString = String.Empty;
+    private string _orderNameText = "Nowe zamówienie";
+    private string _descriptionOfWork = string.Empty;
+    private string _remarks = string.Empty;
+    private decimal _servicesTotalCost;
+    private decimal _partsTotalCost;
 
     public string OrderNameText
     {
-		get { return _orderNameText; }
-        set => SetProperty(ref _orderNameText, value);
+        get => _orderNameText;
+        set
+        {
+            _orderNameText = value;
+            OnPropertyChanged();
+        }
     }
 
-    public string SearchCustomersString
+    public string DescriptionOfWork
     {
-        get { return _searchCustomersString; }
-        set => SetProperty(ref _searchCustomersString, value);
+        get => _descriptionOfWork;
+        set
+        {
+            _descriptionOfWork = value;
+            OnPropertyChanged();
+        }
     }
 
-    public ObservableCollection<ClientDTO>? SearchedClients { get; set; }
-
-
-    public string SearchVechicleString
+    public string Remarks
     {
-        get { return _searchVechicleString; }
-        set => SetProperty(ref _searchVechicleString, value);
+        get => _remarks;
+        set
+        {
+            _remarks = value;
+            OnPropertyChanged();
+        }
     }
 
-    public ObservableCollection<VehicleDTO>? SearchedVechicles { get; set; }
+    public decimal ServicesTotalCost
+    {
+        get => _servicesTotalCost;
+        set
+        {
+            _servicesTotalCost = value;
+            OnPropertyChanged();
+        }
+    }
 
+    public decimal PartsTotalCost
+    {
+        get => _partsTotalCost;
+        set
+        {
+            _partsTotalCost = value;
+            OnPropertyChanged();
+        }
+    }
 
+    public OrderDTO Order { get; set; } = new OrderDTO
+    {
+        Client = new ClientDTO { PersonalInfo = new PersonalInfo() }
+    };
 
+    public ObservableCollection<ClientDTO> SearchedClients { get; set; } = new();
+    public ObservableCollection<VehicleDTO> SearchedVehicles { get; set; } = new();
+    public ObservableCollection<ServiceDTO> AvailableServices { get; set; } = new();
+    public ObservableCollection<SparePartsDTO> AvailableParts { get; set; } = new();
+    public ObservableCollection<WorkerDTO> AvailableMechanics { get; set; } = new();
+    public ObservableCollection<ServiceStatus> ServiceStatusList { get; set; } = new();
+
+    public void UpdateTotalCosts()
+    {
+        ServicesTotalCost = Order.ServicesToDo.Sum(s => s.Price ?? 0);
+        PartsTotalCost = Order.SpareParts.Sum(p => (p.SparePart?.Price ?? 0) * p.Quantity);
+    }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-    protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        if (Equals(storage, value))
-            return false;
-
-        storage = value;
-        OnPropertyChanged(propertyName);
-        return true;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
