@@ -372,12 +372,10 @@ public class OrderFormViewModel : INotifyPropertyChanged
             return;
         }
 
-        // Aktualizuj dane zlecenia
         Model.Order.Client = SelectedClient;
         Model.Order.Vehicle = SelectedVehicle;
         Model.UpdateTotalCosts();
 
-        // Zamknij okno z wynikiem DialogResult = true
         CloseWindow(true);
     }
 
