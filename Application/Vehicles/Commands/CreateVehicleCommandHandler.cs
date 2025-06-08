@@ -2,6 +2,7 @@ using Application.Exceptions;
 using Domain.Entities;
 using Domain.Enums;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Vehicles.Commands;
 
@@ -29,8 +30,12 @@ public class CreateVehicleCommandHandler : IRequestHandler<CreateVehicleCommand,
 
  public async Task<string> Handle(CreateVehicleCommand request, CancellationToken cancellationToken)
  {
-  var client =
-   await _dbContext.Clients.FindAsync(new object?[] { request.ClientId }, cancellationToken: cancellationToken);
+  if (!Guid.TryParse(request.ClientId, out var clientId))
+  {
+   throw new BadRequestException($"Invalid ClientId format: {request.ClientId}");
+  }
+  var client = await _dbContext.Clients.FirstOrDefaultAsync(c => c.Id == clientId,
+   cancellationToken: cancellationToken);
   if (client == null)
    throw new NotFoundException($"Client {request.ClientId} not found");
   var vehicle = new Vehicle

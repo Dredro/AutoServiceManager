@@ -37,4 +37,18 @@ public class SeedData
         };
         await _mediator.Send(new CreateAccountCommand(adminDto));
     }
+
+    public async Task SeedWorker()
+    {
+        var worker = await _authService.FindUserByEmailAsync("worker@service.com");
+        if (worker != null) return;
+        var workerDto = new CreateAccountDTO
+        {
+            Email = "worker@service.com",
+            ConfirmPassword = "zaq1@WSXcv",
+            Password = "zaq1@WSXcv",
+            Role = Role.Mechanic
+        };
+        await _mediator.Send(new CreateAccountCommand(workerDto));
+    }
 }
