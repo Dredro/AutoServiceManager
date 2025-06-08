@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Wpf.Core;
@@ -38,7 +39,7 @@ namespace Wpf.ViewModel
         }
         private Role role = Role.Mechanic;
 
-        public Role Role
+        public Role RoleLocal
         {
             get { return role; }
             set { role = value; }
@@ -70,21 +71,29 @@ namespace Wpf.ViewModel
             OnSwitchView("Dashboard");
         }
 
+        public Visibility IsAdminVisible => RoleLocal == Role.Admin ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility IsManagerVisible => RoleLocal == Role.Manager ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility IsMechanicVisible => RoleLocal == Role.Mechanic ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility IsStorageManagerVisible => RoleLocal == Role.StorageManager ? Visibility.Visible : Visibility.Collapsed;
+
         public void OnSwitchView(string viewName)
         {
             switch (viewName)
             {
                 case "Dashboard":
-                    switch (Role)
+                    switch (RoleLocal)
                     {
                         case Role.Mechanic:
                             CurrentContent = WorkerDashboardViewModel;
                             break;
                         case Role.StorageManager:
+                            CurrentContent = WorkerDashboardViewModel;
                             break;
                         case Role.Manager:
+                            CurrentContent = WorkerDashboardViewModel;
                             break;
                         case Role.Admin:
+                            CurrentContent = WorkerDashboardViewModel;
                             break;
                         default:
                             break;

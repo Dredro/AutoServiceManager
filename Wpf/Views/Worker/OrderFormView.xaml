@@ -22,8 +22,8 @@
             </Grid.RowDefinitions>
 
             <!-- Nagłówek -->
-            <TextBlock Grid.Row="0" Text="{Binding Model.OrderNameText}"
-                       Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White"
+            <TextBlock Grid.Row="0" Text="{Binding Title}"
+                       Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White" Background="DarkBlue"
                        Margin="0,0,0,16"/>
 
             <!-- Informacje o kliencie -->

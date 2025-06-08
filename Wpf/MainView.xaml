@@ -27,19 +27,30 @@
                     <materialDesign:PackIcon Kind="CarWrench" Width="32" Height="32" Margin="0,0,16,0"/>
                     <TextBlock Text="Serwis Samochodowy" FontSize="24" VerticalAlignment="Center"/>
 
-                    <StackPanel Orientation="Horizontal" Margin="40,0,0,0">
-                        <Button Content="Dashboard" Style="{StaticResource MaterialDesignFlatButton}" 
-                    Command="{Binding SwitchViewCommand}" CommandParameter="Dashboard"/>
-                        <Button Content="Zlecenia" Style="{StaticResource MaterialDesignFlatButton}" 
-                    Command="{Binding SwitchViewCommand}" CommandParameter="Orders"/>
-                        <Button Content="Zlecenie" Style="{StaticResource MaterialDesignFlatButton}" 
-                    Command="{Binding SwitchViewCommand}" CommandParameter="Parts"/>
-                        <Button Content="Klienci" Style="{StaticResource MaterialDesignFlatButton}" 
-                    Command="{Binding SwitchViewCommand}" CommandParameter="Customers"/>
-                        <Button Content="Samochody" Style="{StaticResource MaterialDesignFlatButton}" 
-                    Command="{Binding SwitchViewCommand}" CommandParameter="Cars"/>
+                    <StackPanel Orientation="Horizontal" Margin="40,0,0,0" Visibility="{Binding IsAdminVisible}">
+                        <Button Content="Dashboard Admina" Style="{StaticResource MaterialDesignFlatButton}" 
+                            Command="{Binding SwitchViewCommand}" CommandParameter="Dashboard"/>
                     </StackPanel>
-
+                    <StackPanel Orientation="Horizontal" Margin="40,0,0,0" Visibility="{Binding IsManagerVisible}" >
+                        <Button Content="Dashboard Właściciela" Style="{StaticResource MaterialDesignFlatButton}" 
+                            Command="{Binding SwitchViewCommand}" CommandParameter="Dashboard"/>
+                        <Button Content="Zlecenia" Style="{StaticResource MaterialDesignFlatButton}" 
+                            Command="{Binding SwitchViewCommand}" CommandParameter="Orders"/>
+                        <Button Content="Klienci" Style="{StaticResource MaterialDesignFlatButton}" 
+                            Command="{Binding SwitchViewCommand}" CommandParameter="Customers"/>
+                        <Button Content="Samochody" Style="{StaticResource MaterialDesignFlatButton}" 
+                            Command="{Binding SwitchViewCommand}" CommandParameter="Cars"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="40,0,0,0" Visibility="{Binding IsMechanicVisible}" >
+                        <Button Content="Dashboard Mechanika" Style="{StaticResource MaterialDesignFlatButton}" 
+                            Command="{Binding SwitchViewCommand}" CommandParameter="Dashboard"/>
+                        <Button Content="Zlecenia" Style="{StaticResource MaterialDesignFlatButton}" 
+                            Command="{Binding SwitchViewCommand}" CommandParameter="Orders"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="40,0,0,0" Visibility="{Binding IsStorageManagerVisible}" >
+                        <Button Content="Dashboard Magazyniera" Style="{StaticResource MaterialDesignFlatButton}" 
+                            Command="{Binding SwitchViewCommand}" CommandParameter="Dashboard"/>
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
                     <Button Content="Wyloguj" Style="{StaticResource MaterialDesignFlatButton}" 
