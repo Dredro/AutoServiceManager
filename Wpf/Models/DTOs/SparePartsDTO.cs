@@ -24,12 +24,13 @@ public enum PartCategory
 
 public class SparePartsDTO
 {
-    public required string CatalogNumber { get; set; }
-    public required string Name { get; set; }
-    public required string Make { get; set; }
+    public Guid Id { get; set; }
+    public string? CatalogNumber { get; set; }
+    public string? Name { get; set; }
+    public string? Make { get; set; }
     public char Quality { get; set; }
     public int QuantityInStock { get; set; }
     public decimal Price { get; set; }
-    public required PartCategory Category { get; set; }
+    public PartCategory Category { get; set; }
     public ICollection<OrderSparePartDTO> PartsAssignedToOrder { get; set; } = [];
 }

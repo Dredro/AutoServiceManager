@@ -24,7 +24,6 @@ namespace Wpf
         public MainView()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
         }
     }
 }

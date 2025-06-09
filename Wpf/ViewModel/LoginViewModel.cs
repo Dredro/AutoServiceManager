@@ -67,8 +67,10 @@ namespace Wpf.ViewModel
             private set => SetProperty(ref _passwordValidationError, value);
         }
 
-        private readonly IAsyncRelayCommand _loginCommand; 
-        public ICommand LoginCommand => _loginCommand;
+        private readonly IAsyncRelayCommand _loginCommand;
+        //public ICommand LoginCommand => _loginCommand;
+        public ICommand LoginCommand { get; set; }
+
 
         public LoginViewModel(AuthService authService)
         {
@@ -77,6 +79,18 @@ namespace Wpf.ViewModel
             
             ValidateEmail();
             ValidatePassword();
+        }
+
+        public LoginViewModel()
+        {
+            ValidateEmail();
+            ValidatePassword();
+            LoginCommand = new RelayCommand(Login);
+        }
+
+        private void Login()
+        {
+            LoginSucceeded?.Invoke();
         }
 
         private void ClearOverallErrorMessage()

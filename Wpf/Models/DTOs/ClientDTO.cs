@@ -20,4 +20,8 @@ public class ClientDTO
     public PersonalInfo? PersonalInfo { get; set; }
     public ICollection<VehicleDTO> Vehicles { get; set; } = [];
     public ICollection<OrderDTO> Orders { get; set; } = [];
+    public ClientDTO()
+    {
+        
+    }
 }

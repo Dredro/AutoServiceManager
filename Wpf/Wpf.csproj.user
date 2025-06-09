@@ -20,6 +20,12 @@
     <Compile Update="Views\Worker\DashboardView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Worker\OrderDetailsDialogView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Worker\OrderEditDialogView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Worker\OrderFormView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
