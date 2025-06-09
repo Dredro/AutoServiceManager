@@ -19,22 +19,51 @@ public class OrdersViewModel : BaseViewModel
 {
     private ObservableCollection<OrderDTO> _orders = new();
     private OrderDTO _selectedOrder;
-
+    private readonly OrderService _orderService;
     // Tymczasowe dane dla ComboBoxów w dialogach
     public List<ServiceDTO> AvailableServices { get; set; } = new();
     public List<SparePartsDTO> AvailableParts { get; set; } = new();
 
-    public OrdersViewModel()
+    public OrdersViewModel(OrderService orderService)
     {
+        _orderService = orderService;
         // Inicjalizacja komend
         AddNewOrderCommand = new RelayCommand(AddNewOrder);
         ShowOrderCommand = new RelayCommand<OrderDTO>(ShowOrder);
         EditOrderCommand = new RelayCommand<OrderDTO>(EditOrder, CanEditOrder);
         DeleteOrderCommand = new RelayCommand<OrderDTO>(DeleteOrder);
-
+        _ = LoadOrdersAsync();
         // Ładowanie przykładowych danych
-        LoadSampleData();
+        // LoadSampleData();
         InitializeSampleServicesAndParts();
+    }
+    public async Task LoadOrdersAsync()
+    {
+        try
+        {
+            var orders = await _orderService.GetOrdersAsync();
+
+            Orders.Clear();
+
+            if (orders != null)
+            {
+                foreach (var order in orders)
+                {
+                    Orders.Add(order);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Ostrzeżenie: OrderService.GetOrdersAsync zwróciło null.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Błąd podczas ładowania zleceń: {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
+            
+            MessageBox.Show($"Wystąpił błąd podczas ładowania zleceń: {ex.Message}", "Błąd ładowania", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     public ObservableCollection<OrderDTO> Orders
@@ -219,26 +248,42 @@ public class OrdersViewModel : BaseViewModel
             });
     }
 
-    private void AddNewOrder()
+    private async void AddNewOrder()
     {
-        var dialogVm = new OrderFormViewModel();
-        var dialog = new OrderFormView
+        try
         {
-            DataContext = dialogVm
-        };
+            var dialogVm = new OrderFormViewModel();
+            var dialog = new OrderFormView
+            {
+                DataContext = dialogVm
+            };
 
-        var window = new Window
-        {
-            Title = "Dodaj nowe zlecenie",
-            Content = dialog,
-            SizeToContent = SizeToContent.WidthAndHeight,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner
-        };
+            var window = new Window
+            {
+                Title = "Dodaj nowe zlecenie",
+                Content = dialog,
+                SizeToContent = SizeToContent.WidthAndHeight,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
 
-        if (window.ShowDialog() == true)
+            if (window.ShowDialog() == true)
+            {
+                var newOrder = dialogVm.Model.Order;
+                var order = await _orderService.CreateOrderAsync(newOrder);
+                if (order.ErrorMessage != null)
+                {
+                    MessageBox.Show($"Wystąpił błąd podczas tworzenia zlecenia: {order.ErrorMessage}", "Błąd tworzenia zlecenia", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                else if(order.Result != null)
+                {
+                    Orders.Add(order.Result);
+                }
+            }
+        }
+        catch (Exception e)
         {
-            var newOrder = dialogVm.Model.Order;
-            Orders.Add(newOrder);
+            throw; // TODO handle exception
         }
     }
 

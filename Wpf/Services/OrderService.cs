@@ -17,9 +17,9 @@ public class OrderService
     /// </summary>
     /// <param name="command">The command containing data for the new order.</param>
     /// <returns>The created OrderDto or an error message.</returns>
-    public async Task<(OrderDTO? Result, string? ErrorMessage)> CreateOrderAsync(CreateOrderCommand command)
+    public async Task<(OrderDTO? Result, string? ErrorMessage)> CreateOrderAsync(OrderDTO command)
     {
-        return await _apiClient.PostAsync<CreateOrderCommand, OrderDTO>(BaseEndpoint, command);
+        return await _apiClient.PostAsync<OrderDTO, OrderDTO>(BaseEndpoint, command);
     }
 
     /// <summary>

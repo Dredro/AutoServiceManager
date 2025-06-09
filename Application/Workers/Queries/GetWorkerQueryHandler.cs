@@ -26,6 +26,7 @@ public class GetWorkerQueryHandler : IRequestHandler<GetWorkerQuery, GetWorkerDt
                 .Where(s => s.Workers.Contains(worker)).ToListAsync(cancellationToken: cancellationToken);
         var dto = new GetWorkerDto
         (
+            Id: worker.Id.ToString(),
             worker.PersonalInfo.FirstName,
             worker.PersonalInfo.LastName,
             worker.PersonalInfo.Email,

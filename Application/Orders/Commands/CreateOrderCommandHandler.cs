@@ -11,7 +11,7 @@ public record CreateOrderCommand(
     bool IsPaid,
     string ClientId,
     string? VehicleId,
-    List<string> ServicesToDoIds,
+    List<ServiceInProgressDto> ServicesToDo,
     List<OrderSparePartDto> SpareParts
 ) : IRequest<string>;
 
@@ -42,11 +42,11 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
         }
 
         var requestedServiceGuids = new HashSet<Guid>(); 
-        if (request.ServicesToDoIds != null && request.ServicesToDoIds.Any())
+        if (request.ServicesToDo != null && request.ServicesToDo.Any())
         {
-            foreach (var idStr in request.ServicesToDoIds)
+            foreach (var idStr in request.ServicesToDo)
             {
-                if (!Guid.TryParse(idStr, out var serviceGuid))
+                if (!Guid.TryParse(idStr.ServiceId, out var serviceGuid))
                 {
                     throw new BadRequestException($"Invalid ServiceId format: {idStr}");
                 }
@@ -132,15 +132,28 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
         };
 
         var servicesInProgress = new List<ServiceInProgress>();
-        foreach (var serviceGuid in requestedServiceGuids)
+        foreach (var serviceDto in request.ServicesToDo)
         {
-            servicesInProgress.Add(new ServiceInProgress
+           servicesInProgress.Add(new ServiceInProgress
             {
-                ServiceStatus = ServiceStatus.PendingForParts,
-                Service = existingServices[serviceGuid],
-                Order = order 
+                Service = _context.Services.FirstOrDefault(s => s.Id == serviceDto.Id) ?? throw new InvalidOperationException(),
+                Order = order,
+                ServiceStatus = serviceDto.ServiceStatus,
+                StartDate = serviceDto.StartDate,
+                EndDate = serviceDto.EndDate,
+                Price = serviceDto.Price,
+                Workers = serviceDto.Workers.Select(w =>
+                {
+                    if (!Guid.TryParse(w.Id, out var workerGuid))
+                    {
+                        throw new BadRequestException($"Invalid WorkerId format: {w.Id}");
+                    }
+                    return _context.Workers.FirstOrDefault(x => x.Id == workerGuid) ?? throw new InvalidOperationException();
+                }).ToList(),
             });
+           
         }
+      
         order.ServicesToDo = servicesInProgress;
 
 

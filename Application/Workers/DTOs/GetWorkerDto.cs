@@ -2,6 +2,7 @@ namespace Application.Workers.DTOs;
 
 public record GetWorkerDto
 (
+    string Id,
     string FirstName,
     string LastName,
     string Email,

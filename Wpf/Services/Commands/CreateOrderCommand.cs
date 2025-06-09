@@ -4,10 +4,9 @@ namespace Wpf.Services;
 
 public class CreateOrderCommand
 {
-    public int ClientId { get; set; }
-    public int VehicleId { get; set; }
-    public DateTime OrderDate { get; set; }
-    public string? Description { get; set; }
-    public List<OrderSparePartDTO>? SpareParts { get; set; } = new List<OrderSparePartDTO>();
-    public List<int>? ServiceIds { get; set; } = new List<int>();
+    public Guid ClientId { get; set; }
+    public Guid VehicleId { get; set; }
+    public List<string> ServicesToDoIds { get; set; } = new List<string>();
+    public List<OrderSparePartDTO> SpareParts { get; set; } = new List<OrderSparePartDTO>();
+    public bool IsPaid { get; set; } = false;
 }
