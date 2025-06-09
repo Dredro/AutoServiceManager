@@ -29,7 +29,26 @@
             <!-- Informacje o kliencie -->
             <materialDesign:Card Grid.Row="1" Margin="0,0,0,16">
                 <StackPanel Margin="16">
-                    <TextBlock Text="Klient" Margin="0,0,0,16" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Klient" Grid.Column="0" Margin="0,0,0,16" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+
+
+                        <Button Content="Dodaj"
+                                Name="AddNewClientButton" Grid.Column="1" Margin="0,0,0,16" Click="AddNewClientButton_Click">
+                            <Button.ContentTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Plus" Width="16" Height="16" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Dodaj"/>
+                                </StackPanel>
+                            </DataTemplate>
+                            </Button.ContentTemplate>
+                            </Button>
+                    </Grid>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -65,7 +84,25 @@
             <!-- Informacje o pojeździe -->
             <materialDesign:Card Grid.Row="2" Margin="0,0,0,16">
                 <StackPanel Margin="16">
-                    <TextBlock Text="Pojazd" Margin="0,0,0,16" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Pojazd" Margin="0,0,0,16" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+                        <Button Content="Dodaj"
+                                Name="AddNewVehicleButton" Grid.Column="1" Margin="0,0,0,16" Click="AddNewVehicleButton_Click">
+                            <Button.ContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="Plus" Width="16" Height="16" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Dodaj"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                    </Grid>
+                    
 
                     <Grid>
                         <Grid.RowDefinitions>

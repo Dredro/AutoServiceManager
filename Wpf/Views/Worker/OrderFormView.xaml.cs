@@ -24,5 +24,17 @@ namespace Wpf.Views.Worker
         {
              InitializeComponent();
         }
+
+        private void AddNewClientButton_Click(object sender, RoutedEventArgs e)
+        {
+            Window window = new CreateClientForm();
+            window.ShowDialog();
+        }
+
+        private void AddNewVehicleButton_Click(object sender, RoutedEventArgs e)
+        {
+            Window window = new CreateCarForm();
+            window.ShowDialog();
+        }
     }
 }

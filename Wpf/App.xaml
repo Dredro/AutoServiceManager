@@ -6,9 +6,13 @@
              xmlns:core="clr-namespace:Wpf.Core"
              xmlns:vmworker="clr-namespace:Wpf.ViewModel.Worker"
              xmlns:vworker="clr-namespace:Wpf.Views.Worker"
+             xmlns:vmanager="clr-namespace:Wpf.Views.Manager"
+             xmlns:vstoragemanager="clr-namespace:Wpf.Views.StorageManager"
              xmlns:view="clr-namespace:Wpf.Views"
              xmlns:vmodel="clr-namespace:Wpf.ViewModel"
-             xmlns:models="clr-namespace:Wpf.Models"
+             xmlns:models="clr-namespace:Wpf.Models" 
+             xmlns:vmmanager="clr-namespace:Wpf.ViewModel.Manager"
+             xmlns:vmstoragemanager="clr-namespace:Wpf.ViewModel.StorageManager"
              >
     <Application.Resources>
         <ResourceDictionary>
@@ -25,6 +29,13 @@
 
             <DataTemplate DataType="{x:Type vmworker:WorkerDashboardViewModel}">
                 <vworker:DashboardView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vmmanager:ManagerDashboardViewModel}">
+                <vmanager:DashboardView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vmstoragemanager:StorageManagerDashboardViewModel}">
+                <vstoragemanager:DashboardView/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type vmodel:LoginViewModel}">
                 <view:LoginPage/>

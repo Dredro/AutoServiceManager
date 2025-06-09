@@ -8,6 +8,12 @@
     <Compile Update="Views\ClientsListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Manager\DashboardView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\StorageManager\DashboardView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\VehiclesListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

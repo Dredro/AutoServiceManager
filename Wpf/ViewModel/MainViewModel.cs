@@ -13,6 +13,8 @@ using System.Windows.Input;
 using Wpf.Core;
 using Wpf.Models;
 using Wpf.Services;
+using Wpf.ViewModel.Manager;
+using Wpf.ViewModel.StorageManager;
 using Wpf.ViewModel.Worker;
 using Wpf.Views;
 using Wpf.Views.Worker;
@@ -45,6 +47,8 @@ namespace Wpf.ViewModel
 
         public ICommand SwitchViewCommand { get; }
         public WorkerDashboardViewModel WorkerDashboardViewModel { get; set; }
+        public StorageManagerDashboardViewModel StorageManagerDashboardViewModel { get; set; } = new();
+        public ManagerDashboardViewModel ManagerDashboardViewModel { get; set; } = new();
         public OrderFormViewModel OrderFormViewModel { get; set; }
         public OrdersViewModel OrdersViewModel { get; set; }
 
@@ -80,13 +84,13 @@ namespace Wpf.ViewModel
                             CurrentContent = WorkerDashboardViewModel;
                             break;
                         case Role.StorageManager:
-                            CurrentContent = WorkerDashboardViewModel;
+                            CurrentContent = StorageManagerDashboardViewModel;
                             break;
                         case Role.Manager:
-                            CurrentContent = WorkerDashboardViewModel;
+                            CurrentContent = ManagerDashboardViewModel;
                             break;
                         case Role.Admin:
-                            CurrentContent = WorkerDashboardViewModel;
+                            CurrentContent = ManagerDashboardViewModel;
                             break;
                         default:
                             break;

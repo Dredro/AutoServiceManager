@@ -13,14 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Wpf.Views
+namespace Wpf.Views.StorageManager
 {
-    public partial class StorageManagerDashboardPage : Page
+    /// <summary>
+    /// Logika interakcji dla klasy DashboardView.xaml
+    /// </summary>
+    public partial class DashboardView : UserControl
     {
-        public StorageManagerDashboardPage()
+        public DashboardView()
         {
             InitializeComponent();
-         
         }
 
         private void AddPartButton_Click(object sender, RoutedEventArgs e)
@@ -32,7 +34,7 @@ namespace Wpf.Views
         {
             if (AvailablePartsListBox.SelectedItem != null)
             {
-                
+
             }
         }
 
@@ -70,7 +72,7 @@ namespace Wpf.Views
             if (tb != null && string.IsNullOrWhiteSpace(tb.Text))
             {
                 tb.Foreground = Brushes.Gray;
-                if (tb.Name.Contains("Available")) 
+                if (tb.Name.Contains("Available"))
                 {
                     tb.Text = "Wyszukaj część...";
                 }
