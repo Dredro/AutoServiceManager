@@ -4,6 +4,7 @@ using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Wpf.Services;
 using Wpf.ViewModel;
+using Wpf.ViewModel.Worker;
 
 namespace Wpf;
 
@@ -34,7 +35,11 @@ public partial class App : Application
         
         services.AddSingleton<MainWindowViewModel>();
         services.AddTransient<LoginViewModel>(); 
-        services.AddTransient<MainViewModel>(); 
+        services.AddTransient<MainViewModel>();
+        services.AddTransient<OrdersViewModel>();
+        services.AddTransient<OrderFormViewModel>();
+        services.AddTransient<OrdersViewModel>();
+        services.AddTransient<WorkerDashboardViewModel>();
     }
 
     protected override void OnStartup(StartupEventArgs e)
