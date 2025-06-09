@@ -8,6 +8,7 @@
              xmlns:vworker="clr-namespace:Wpf.Views.Worker"
              xmlns:view="clr-namespace:Wpf.Views"
              xmlns:vmodel="clr-namespace:Wpf.ViewModel"
+             xmlns:models="clr-namespace:Wpf.Models"
              >
     <Application.Resources>
         <ResourceDictionary>
@@ -33,7 +34,27 @@
                 <local:MainView /> 
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vmworker:OrderFormViewModel}">
+                <vworker:OrderFormView/>
+            </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vmworker:OrdersViewModel}">
+                <vworker:OrdersView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vmworker:OrderDetailsDialogViewModel}">
+                <vworker:OrderDetailsDialogView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vmworker:OrderEditDialogViewModel}">
+                <vworker:OrderEditDialogView/>
+            </DataTemplate>
+
+            <core:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+            <core:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
+            <core:SumConverter x:Key="SumConverter"/>
+            <core:MultiplyConverter x:Key="MultiplyConverter"/>
+            <core:MultiplyMultiConverter x:Key="MultiplyMultiConverter"/>
             <core:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>        
     </Application.Resources>

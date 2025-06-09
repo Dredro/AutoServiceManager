@@ -16,13 +16,13 @@ using System.Windows.Shapes;
 namespace Wpf.Views.Worker
 {
     /// <summary>
-    /// Interaction logic for OrderFormView.xaml
+    /// Interaction logic for OrderDetailsDialogView.xaml
     /// </summary>
-    public partial class OrderFormView : UserControl
+    public partial class OrderDetailsDialogView : Window
     {
-        public OrderFormView()
+        public OrderDetailsDialogView()
         {
-             InitializeComponent();
+            InitializeComponent();
         }
     }
 }

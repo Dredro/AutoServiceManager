@@ -8,6 +8,7 @@ namespace Wpf.Models.DTOs;
 
 public class WorkerDTO
 {
+    public Guid Id { get; set; }
     public required PersonalInfo PersonalInfo { get; set; }
     public decimal? Salary { get; set; }
     public ICollection<NotificationDTO> Notifications { get; set; } = [];

@@ -16,11 +16,12 @@ public enum ServiceStatus
 
 public class ServiceInProgressDTO
 {
+    public Guid Id { get; set; }
     public decimal? Price { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
-    public required ServiceStatus ServiceStatus { get; set; }
-    public required ServiceDTO Service { get; set; }
-    public required OrderDTO Order { get; set; }
+    public ServiceStatus ServiceStatus { get; set; }
+    public ServiceDTO? Service { get; set; }
+    public OrderDTO? Order { get; set; }
     public ICollection<WorkerDTO> Workers { get; set; } = [];
 }

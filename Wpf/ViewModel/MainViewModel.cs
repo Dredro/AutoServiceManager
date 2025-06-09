@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Wpf.Core;
@@ -21,6 +22,7 @@ namespace Wpf.ViewModel
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         public event Action? LogoutRequested;
+        IServiceProvider _serviceProvider;
 
         public ICommand LogoutCommand { get; }
 
@@ -37,51 +39,71 @@ namespace Wpf.ViewModel
         }
         private Role role = Role.Mechanic;
 
-        public Role Role
+        public Role RoleLocal
         {
             get { return role; }
             set { role = value; }
         }
-
-
-
-        public ICommand SwitchViewCommand { get; }
-        public WorkerDashboardViewModel WorkerDashboardViewModel { get; set; }
 
         public MainViewModel()
         {
             LogoutCommand = new RelayCommand(() => LogoutRequested?.Invoke());
             SwitchViewCommand = new RelayCommand<string>(OnSwitchView);
             WorkerDashboardViewModel = new WorkerDashboardViewModel();
+            OrderFormViewModel = new OrderFormViewModel();
+            OrdersViewModel = new OrdersViewModel();
+            OnSwitchView("Dashboard");
+        }
+
+        public ICommand SwitchViewCommand { get; }
+        public WorkerDashboardViewModel WorkerDashboardViewModel { get; set; }
+        public OrderFormViewModel OrderFormViewModel { get; set; }
+        public OrdersViewModel OrdersViewModel { get; set; }
+
+        public MainViewModel(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+            LogoutCommand = new RelayCommand(() => LogoutRequested?.Invoke());
+            SwitchViewCommand = new RelayCommand<string>(OnSwitchView);
+            WorkerDashboardViewModel = new WorkerDashboardViewModel();
+            OrderFormViewModel = new OrderFormViewModel();
 
             OnSwitchView("Dashboard");
         }
+
+        public Visibility IsAdminVisible => RoleLocal == Role.Admin ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility IsManagerVisible => RoleLocal == Role.Manager ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility IsMechanicVisible => RoleLocal == Role.Mechanic ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility IsStorageManagerVisible => RoleLocal == Role.StorageManager ? Visibility.Visible : Visibility.Collapsed;
 
         public void OnSwitchView(string viewName)
         {
             switch (viewName)
             {
                 case "Dashboard":
-                    switch (Role)
+                    switch (RoleLocal)
                     {
                         case Role.Mechanic:
                             CurrentContent = WorkerDashboardViewModel;
                             break;
                         case Role.StorageManager:
+                            CurrentContent = WorkerDashboardViewModel;
                             break;
                         case Role.Manager:
+                            CurrentContent = WorkerDashboardViewModel;
                             break;
                         case Role.Admin:
+                            CurrentContent = WorkerDashboardViewModel;
                             break;
                         default:
                             break;
                     }
                     break;
                 case "Orders":
-                    CurrentContent = new OrdersView { DataContext = this };
+                    CurrentContent = OrdersViewModel;
                     break;
                 case "Parts":
-                    CurrentContent = new OrderFormView { DataContext = this };
+                    CurrentContent = OrderFormViewModel;
                     break;
                 case "Customers":
                     CurrentContent = new ClientsListView { DataContext = this };
