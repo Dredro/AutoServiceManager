@@ -63,7 +63,9 @@ using (var scope = app.Services.CreateScope())
         var seedData = services.GetRequiredService<SeedData>();
         await seedData.SeedRole();
         await seedData.SeedAdmin();
-        await seedData.SeedWorker();
+        await seedData.SeedManager();
+        await seedData.SeedMechanic();
+        await seedData.SeedStoreManager();
     } catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
