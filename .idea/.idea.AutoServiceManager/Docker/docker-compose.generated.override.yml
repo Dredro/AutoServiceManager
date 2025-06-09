@@ -2,8 +2,8 @@
 services:
   api:
     build:
-      context: "D:\\SIX SEMESTR\\WPF\\AutoServiceManager\\API"
-      dockerfile: "Dockerfile"
+      context: "D:\\SIX SEMESTR\\WPF\\AutoServiceManager"
+      dockerfile: "API/Dockerfile"
       target: "base"
     command: []
     entrypoint:

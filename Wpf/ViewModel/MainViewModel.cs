@@ -64,10 +64,10 @@ namespace Wpf.ViewModel
             OnSwitchView("Dashboard");
         }
 
-        public Visibility IsAdminVisible => RoleLocal == Role.Admin ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility IsManagerVisible => RoleLocal == Role.Manager ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility IsMechanicVisible => RoleLocal == Role.Mechanic ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility IsStorageManagerVisible => RoleLocal == Role.StorageManager ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility IsAdminVisible => CurrentRole == Role.Admin ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility IsManagerVisible =>CurrentRole == Role.Manager ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility IsMechanicVisible => CurrentRole == Role.Mechanic ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility IsStorageManagerVisible => CurrentRole == Role.StorageManager ? Visibility.Visible : Visibility.Collapsed;
 
         public void OnSwitchView(string viewName)
         {

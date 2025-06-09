@@ -68,8 +68,8 @@ namespace Wpf.ViewModel
         }
 
         private readonly IAsyncRelayCommand _loginCommand;
-        //public ICommand LoginCommand => _loginCommand;
-        public ICommand LoginCommand { get; set; }
+        public ICommand LoginCommand => _loginCommand;
+        //public ICommand LoginCommand { get; set; }
 
 
         public LoginViewModel(AuthService authService)
@@ -85,7 +85,7 @@ namespace Wpf.ViewModel
         {
             ValidateEmail();
             ValidatePassword();
-            LoginCommand = new RelayCommand(Login);
+         //   LoginCommand = new RelayCommand(Login);
         }
 
         private void Login()
