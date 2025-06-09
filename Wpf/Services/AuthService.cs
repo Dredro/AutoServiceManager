@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Wpf.Models;
 using Wpf.Models.DTOs;
 
 namespace Wpf.Services;
@@ -7,8 +8,9 @@ public class AuthService
 {
     private readonly ApiClient _apiClient;
     public static string? CurrentToken { get; private set; } 
+    public static Role? CurrentRole { get; private set; }
     public bool IsLoggedIn => !string.IsNullOrEmpty(CurrentToken);
-
+    
     public event Action? AuthenticationStateChanged;
 
     public AuthService(ApiClient apiClient)
@@ -33,6 +35,17 @@ public class AuthService
         if (response != null && !string.IsNullOrEmpty(response.Token))
         {
             SetToken(response.Token);
+            var role = GetRoleFromEncodedJwt(response.Token);
+            if (role != null)
+            {
+                CurrentRole = role switch
+                {
+                    "Mechanic" => Role.Mechanic,
+                    "Manager" => Role.Manager,
+                    "StorageManager" => Role.StorageManager,
+                    _ => CurrentRole
+                };
+            }
             return (true, null, response);
         }
         return (false, error ?? "Login failed. Check credentials or server response.", null);

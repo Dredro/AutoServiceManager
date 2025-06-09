@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Wpf.Core;
 using Wpf.Models;
+using Wpf.Services;
 using Wpf.ViewModel.Worker;
 using Wpf.Views;
 using Wpf.Views.Worker;
@@ -35,14 +36,8 @@ namespace Wpf.ViewModel
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentContent)));
             }
         }
-        private Role role = Role.Mechanic;
 
-        public Role Role
-        {
-            get { return role; }
-            set { role = value; }
-        }
-
+        public Role? CurrentRole { get; set; }
 
 
         public ICommand SwitchViewCommand { get; }
@@ -53,7 +48,11 @@ namespace Wpf.ViewModel
             LogoutCommand = new RelayCommand(() => LogoutRequested?.Invoke());
             SwitchViewCommand = new RelayCommand<string>(OnSwitchView);
             WorkerDashboardViewModel = new WorkerDashboardViewModel();
-
+            CurrentRole = AuthService.CurrentRole;
+            if (CurrentRole == null)
+            {
+                LogoutRequested?.Invoke();
+            }
             OnSwitchView("Dashboard");
         }
 
@@ -62,7 +61,7 @@ namespace Wpf.ViewModel
             switch (viewName)
             {
                 case "Dashboard":
-                    switch (Role)
+                    switch (CurrentRole)
                     {
                         case Role.Mechanic:
                             CurrentContent = WorkerDashboardViewModel;
