@@ -25,6 +25,13 @@ public partial class App : Application
     {
         services.AddSingleton<ApiClient>();
         services.AddSingleton<AuthService>();
+        services.AddSingleton<ClientService>();
+        services.AddSingleton<OrderService>();
+        services.AddSingleton<ServiceService>();
+        services.AddSingleton<SparePartService>();
+        services.AddSingleton<VehicleService>();
+        services.AddSingleton<WorkerService>();
+        
         services.AddSingleton<MainWindowViewModel>();
         services.AddTransient<LoginViewModel>(); 
         services.AddTransient<MainViewModel>(); 

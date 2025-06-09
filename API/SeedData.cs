@@ -37,4 +37,45 @@ public class SeedData
         };
         await _mediator.Send(new CreateAccountCommand(adminDto));
     }
+
+    public async Task SeedMechanic() 
+    {
+        var user = await _authService.FindUserByEmailAsync("mechanic@security.com");
+        if (user != null) return;
+        var mechanicDto = new CreateAccountDTO
+        {
+            Email = "mechanic@security.com",
+            ConfirmPassword = "zaq1@WSXcv",
+            Password = "zaq1@WSXcv",
+            Role = Role.Mechanic,
+        };
+        await _mediator.Send(new CreateAccountCommand(mechanicDto));
+    }
+
+    public async Task SeedStoreManager()
+    {
+        var user = await _authService.FindUserByEmailAsync("storemanager@security.com");
+        if (user != null) return;
+        var storeManagerDto = new CreateAccountDTO
+        {
+            Email = "storemanager@security.com",
+            ConfirmPassword = "zaq1@WSXcv",
+            Password = "zaq1@WSXcv",
+            Role = Role.StorageManager,
+        };
+        await _mediator.Send(new CreateAccountCommand(storeManagerDto));
+    }
+    public async Task SeedManager()
+    {
+        var user = await _authService.FindUserByEmailAsync("manager@security.com");
+        if (user != null) return;
+        var managerDto = new CreateAccountDTO
+        {
+            Email = "manager@security.com",
+            ConfirmPassword = "zaq1@WSXcv",
+            Password = "zaq1@WSXcv",
+            Role = Role.Manager
+        };
+        await _mediator.Send(new CreateAccountCommand(managerDto));
+    }
 }
