@@ -10,5 +10,4 @@ public class Order : Entity
     public Vehicle? Vehicle { get; set; }
     public ICollection<ServiceInProgress> ServicesToDo { get; set; } = [];
     public ICollection<OrderSparePart> SpareParts { get; set; } = [];
-    
 }
