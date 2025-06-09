@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:viewmodel="clr-namespace:Wpf.ViewModel"
         mc:Ignorable="d"
-        Background="Gray"
+        Background="#f7f5f1"
         Title="Serwis Samochodowy" Height="800" Width="1200" MinHeight="800" MinWidth="1200" 
         WindowStartupLocation="CenterScreen">
     <ContentControl Content="{Binding CurrentView}" />
