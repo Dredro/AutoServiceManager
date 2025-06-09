@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Wpf.Models.DTOs;
 
 namespace Wpf.Services;
@@ -50,5 +51,73 @@ public class AuthService
     public void Logout()
     {
         SetToken(null);
+    }
+    
+    public static string? GetRoleFromTokenPayload(string jsonTokenPayload)
+    {
+        if (string.IsNullOrWhiteSpace(jsonTokenPayload))
+        {
+            return null; 
+        }
+
+        const string roleClaimKey = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+
+        try
+        {
+            using (JsonDocument doc = JsonDocument.Parse(jsonTokenPayload))
+            {
+                JsonElement root = doc.RootElement;
+
+                if (root.TryGetProperty(roleClaimKey, out JsonElement roleElement))
+                {
+                   
+                    return roleElement.GetString();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+        catch (JsonException ex)
+        {
+            Console.WriteLine($"Parsing error: {ex.Message}");
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            return null;
+        }
+    }
+
+    public static string? GetRoleFromEncodedJwt(string encodedJwt)
+    {
+        if (string.IsNullOrWhiteSpace(encodedJwt))
+        {
+            return null;
+        }
+
+        try
+        {
+            var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+            
+            if (!handler.CanReadToken(encodedJwt))
+            {
+                Console.WriteLine("String is not a valid JWT token.");
+                return null;
+            }
+
+            var jwtToken = handler.ReadJwtToken(encodedJwt);
+            
+            var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role);
+
+            return roleClaim?.Value;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error while decoding jwt: {ex.Message}");
+            return null;
+        }
     }
 }
