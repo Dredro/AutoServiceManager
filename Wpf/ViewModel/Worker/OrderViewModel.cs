@@ -277,7 +277,9 @@ public class OrdersViewModel : BaseViewModel
                 }
                 else if(order.Result != null)
                 {
-                    Orders.Add(order.Result);
+                    var resultOrder = await _orderService.GetOrderByIdAsync(order.Result);
+                    if(resultOrder != null)
+                        Orders.Add(resultOrder);
                 }
             }
         }

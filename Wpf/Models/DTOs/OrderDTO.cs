@@ -15,7 +15,8 @@ public class OrderDTO
     public VehicleDTO? Vehicle { get; set; }
     public ICollection<ServiceInProgressDTO> ServicesToDo { get; set; } = new List<ServiceInProgressDTO>();
     public ICollection<OrderSparePartDTO> SpareParts { get; set; } = new List<OrderSparePartDTO>();
-
+    public string ClientId { get; set; }
+    public string? VehicleId { get; set; }
     public OrderDTO()
     {
         
