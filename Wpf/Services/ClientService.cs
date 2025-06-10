@@ -12,9 +12,9 @@ public class ClientService
         _apiClient = apiClient;
     }
 
-    public async Task<(ClientDTO? Result, string? ErrorMessage)> CreateClientAsync(CreateClientCommand command)
+    public async Task<(string? Result, string? ErrorMessage)> CreateClientAsync(CreateClientCommand command)
     {
-        return await _apiClient.PostAsync<CreateClientCommand, ClientDTO>(BaseEndpoint, command);
+        return await _apiClient.PostAsync<CreateClientCommand, string>(BaseEndpoint, command);
     }
 
     public async Task<List<ClientDTO>?> GetClientsAsync()
@@ -22,7 +22,7 @@ public class ClientService
         return await _apiClient.GetAsync<List<ClientDTO>>(BaseEndpoint);
     }
 
-    public async Task<ClientDTO?> GetClientByIdAsync(int id)
+    public async Task<ClientDTO?> GetClientByIdAsync(string id)
     {
         return await _apiClient.GetAsync<ClientDTO>($"{BaseEndpoint}/{id}");
     }

@@ -13,7 +13,7 @@ public class ApiClient : IDisposable
 
     public string? CurrentJwtToken { get; private set; }
 
-    public ApiClient()
+    public ApiClient(HttpClient httpClient)
     {
         _httpClient = new HttpClient();
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

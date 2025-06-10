@@ -1,23 +1,17 @@
-﻿using MaterialDesignThemes.Wpf;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using Wpf.Core;
-using Wpf.Models;
-using Wpf.Services;
+using Microsoft.Extensions.DependencyInjection; 
+
+using Wpf.Core; 
+using Wpf.Models; 
+using Wpf.Services; 
 using Wpf.ViewModel.Manager;
 using Wpf.ViewModel.StorageManager;
 using Wpf.ViewModel.Worker;
-using Wpf.Views;
-using Wpf.Views.Worker;
+using Wpf.ViewModels; 
 
 namespace Wpf.ViewModel
 {
@@ -25,9 +19,18 @@ namespace Wpf.ViewModel
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         public event Action? LogoutRequested;
-        IServiceProvider _serviceProvider;
+
+        private readonly IServiceProvider _serviceProvider;
+        private readonly AuthService _authService;
+
+        
+        private ClientsListViewModel? _clientsListViewModel;
+        private CreateClientFormViewModel? _createClientFormViewModel;
+        private VehiclesListViewModel? _vehiclesListViewModel; 
+        private CreateCarFormViewModel? _createCarFormViewModel; 
 
         public ICommand LogoutCommand { get; }
+        public ICommand SwitchViewCommand { get; }
 
         private object _currentContent = String.Empty;
 
@@ -36,80 +39,172 @@ namespace Wpf.ViewModel
             get => _currentContent;
             set
             {
-                _currentContent = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentContent)));
+                if (_currentContent != value)
+                {
+                    
+                    if (_currentContent is ClientsListViewModel oldClientsVm)
+                    {
+                        oldClientsVm.RequestCreateClientView -= OnRequestCreateClientView;
+                        oldClientsVm.RequestShowClientView -= OnRequestShowClientView;
+                        oldClientsVm.RequestEditClientView -= OnRequestEditClientView;
+                    }
+                    if (_currentContent is CreateClientFormViewModel oldCreateClientVm)
+                    {
+                        oldCreateClientVm.ClientCreated -= OnClientCreated;
+                    }
+                    
+                    if (_currentContent is VehiclesListViewModel oldVehiclesVm)
+                    {
+                        oldVehiclesVm.RequestCreateVehicleView -= OnRequestCreateVehicleView;
+                    }
+                    
+                    if (_currentContent is CreateCarFormViewModel oldCreateCarVm)
+                    {
+                        oldCreateCarVm.CarCreated -= OnCarCreated;
+                    }
+
+                    _currentContent = value;
+                    OnPropertyChanged(nameof(CurrentContent));
+                }
             }
         }
-        private Role role = Role.Mechanic;
 
-        public Role? CurrentRole { get; set; }
-
-
-        public ICommand SwitchViewCommand { get; }
-        public WorkerDashboardViewModel WorkerDashboardViewModel { get; set; }
-        public StorageManagerDashboardViewModel StorageManagerDashboardViewModel { get; set; } = new();
-        public ManagerDashboardViewModel ManagerDashboardViewModel { get; set; } = new();
-        public OrderFormViewModel OrderFormViewModel { get; set; }
-        public OrdersViewModel OrdersViewModel { get; set; }
-
-        public MainViewModel(IServiceProvider serviceProvider)
+        private Role? _currentRole;
+        public Role? CurrentRole
         {
-            _serviceProvider = serviceProvider;
+            get => _currentRole;
+            private set
+            {
+                if (_currentRole != value)
+                {
+                    _currentRole = value;
+                    OnPropertyChanged(nameof(CurrentRole));
+                }
+            }
+        }
+
+        public MainViewModel(IServiceProvider serviceProvider, AuthService authService)
+        {
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+
             LogoutCommand = new RelayCommand(() => LogoutRequested?.Invoke());
             SwitchViewCommand = new RelayCommand<string>(OnSwitchView);
-            WorkerDashboardViewModel = new WorkerDashboardViewModel();
+
             CurrentRole = AuthService.CurrentRole;
             if (CurrentRole == null)
             {
                 LogoutRequested?.Invoke();
             }
-            OrderFormViewModel = new OrderFormViewModel();
 
             OnSwitchView("Dashboard");
         }
-
-        public Visibility IsAdminVisible => CurrentRole == Role.Admin ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility IsManagerVisible =>CurrentRole == Role.Manager ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility IsMechanicVisible => CurrentRole == Role.Mechanic ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility IsStorageManagerVisible => CurrentRole == Role.StorageManager ? Visibility.Visible : Visibility.Collapsed;
 
         public void OnSwitchView(string viewName)
         {
             switch (viewName)
             {
                 case "Dashboard":
-                    switch (CurrentRole)
+                    if (CurrentRole == Role.Mechanic)
                     {
-                        case Role.Mechanic:
-                            CurrentContent = WorkerDashboardViewModel;
-                            break;
-                        case Role.StorageManager:
-                            CurrentContent = StorageManagerDashboardViewModel;
-                            break;
-                        case Role.Manager:
-                            CurrentContent = ManagerDashboardViewModel;
-                            break;
-                        case Role.Admin:
-                            CurrentContent = ManagerDashboardViewModel;
-                            break;
-                        default:
-                            break;
+                        CurrentContent = _serviceProvider.GetRequiredService<WorkerDashboardViewModel>();
+                    }
+                    else if (CurrentRole == Role.StorageManager)
+                    {
+                        CurrentContent = _serviceProvider.GetRequiredService<StorageManagerDashboardViewModel>();
+                    }
+                    else if (CurrentRole == Role.Manager)
+                    {
+                        CurrentContent = _serviceProvider.GetRequiredService<ManagerDashboardViewModel>();
+                    }
+                    else
+                    {
+                        CurrentContent = "Brak dostępu do pulpitu dla Twojej roli.";
                     }
                     break;
                 case "Orders":
-                    CurrentContent = OrdersViewModel;
+                    CurrentContent = _serviceProvider.GetRequiredService<OrdersViewModel>();
                     break;
                 case "Parts":
-                    CurrentContent = OrderFormViewModel;
+                    CurrentContent = _serviceProvider.GetRequiredService<OrderFormViewModel>();
                     break;
                 case "Customers":
-                    CurrentContent = new ClientsListView { DataContext = this };
+                    _clientsListViewModel = _serviceProvider.GetRequiredService<ClientsListViewModel>();
+                    _clientsListViewModel.RequestCreateClientView -= OnRequestCreateClientView;
+                    _clientsListViewModel.RequestCreateClientView += OnRequestCreateClientView;
+                    _clientsListViewModel.RequestShowClientView -= OnRequestShowClientView;
+                    _clientsListViewModel.RequestShowClientView += OnRequestShowClientView;
+                    _clientsListViewModel.RequestEditClientView -= OnRequestEditClientView;
+                    _clientsListViewModel.RequestEditClientView += OnRequestEditClientView;
+                    CurrentContent = _clientsListViewModel;
                     break;
                 case "Cars":
-                    CurrentContent = new VehiclesListView { DataContext = this };
+                    _vehiclesListViewModel = _serviceProvider.GetRequiredService<VehiclesListViewModel>(); 
+                    
+                    _vehiclesListViewModel.RequestCreateVehicleView -= OnRequestCreateVehicleView; 
+                    _vehiclesListViewModel.RequestCreateVehicleView += OnRequestCreateVehicleView;
+                    CurrentContent = _vehiclesListViewModel;
+                    break;
+                case "CreateCar": 
+                    _createCarFormViewModel = _serviceProvider.GetRequiredService<CreateCarFormViewModel>();
+                    _createCarFormViewModel.CarCreated -= OnCarCreated; 
+                    _createCarFormViewModel.CarCreated += OnCarCreated; 
+                    CurrentContent = _createCarFormViewModel;
+                    break;
+                case "CreateClient":
+                    _createClientFormViewModel = _serviceProvider.GetRequiredService<CreateClientFormViewModel>();
+                    _createClientFormViewModel.ClientCreated -= OnClientCreated;
+                    _createClientFormViewModel.ClientCreated += OnClientCreated;
+                    CurrentContent = _createClientFormViewModel;
+                    break;
+                case "ShowClient":
+                    MessageBox.Show("Nawigacja do szczegółów klienta niezaimplementowana.", "Info");
+                    break;
+                case "EditClient":
+                    MessageBox.Show("Nawigacja do edycji klienta niezaimplementowana.", "Info");
+                    break;
+                default:
+                    CurrentContent = "Nieznany widok.";
                     break;
             }
         }
 
+        
+        private void OnRequestCreateClientView()
+        {
+            OnSwitchView("CreateClient");
+        }
+
+        private void OnRequestCreateVehicleView() 
+        {
+            OnSwitchView("CreateCar"); 
+        }
+
+        private async void OnCarCreated() 
+        {
+            MessageBox.Show("Nowy samochód został pomyślnie dodany! Odświeżam listę pojazdów.", "Sukces");
+            OnSwitchView("Cars"); 
+        }
+
+        private void OnRequestShowClientView(Guid clientId)
+        {
+            MessageBox.Show($"Wyświetl szczegóły klienta o ID: {clientId}", "Info");
+        }
+
+        private void OnRequestEditClientView(Guid clientId)
+        {
+            MessageBox.Show($"Edytuj klienta o ID: {clientId}", "Info");
+        }
+
+        private async void OnClientCreated()
+        {
+            MessageBox.Show("Nowy klient został pomyślnie dodany! Odświeżam listę klientów.", "Sukces");
+            OnSwitchView("Customers"); 
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

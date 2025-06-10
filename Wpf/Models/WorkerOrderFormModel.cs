@@ -70,7 +70,7 @@ public class OrderFormModel : INotifyPropertyChanged
 
     public OrderDTO Order { get; set; } = new OrderDTO
     {
-        Client = new ClientDTO { PersonalInfo = new PersonalInfo() }
+       // Client = new ClientDTO { PersonalInfo = new PersonalInfo() }
     };
 
     public ObservableCollection<ClientDTO> SearchedClients { get; set; } = new();

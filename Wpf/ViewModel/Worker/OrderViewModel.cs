@@ -91,7 +91,7 @@ public class OrdersViewModel : BaseViewModel
     public ICommand EditOrderCommand { get; }
     public ICommand DeleteOrderCommand { get; }
 
-    private void LoadSampleData()
+    /*private void LoadSampleData()
     {
         var client = new ClientDTO
         {
@@ -201,7 +201,7 @@ public class OrdersViewModel : BaseViewModel
         };
 
         Orders = new ObservableCollection<OrderDTO>(sampleOrders);
-    }
+    }*/
 
     private void InitializeSampleServicesAndParts()
     {

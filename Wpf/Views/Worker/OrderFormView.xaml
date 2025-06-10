@@ -4,8 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:vm="clr-namespace:Wpf.ViewModel.Worker" 
+             xmlns:converters="clr-namespace:Wpf.Core"
+             xmlns:converters1="clr-namespace:Wpf.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="600">
+
+    <!-- Dodaj d:DataContext dla podglądu w edytorze -->
+    <d:DesignData.DataContext>
+        <vm:OrderFormViewModel/>
+    </d:DesignData.DataContext>
+
+    <UserControl.Resources>
+        <!-- Upewnij się, że konwertery są dostępne -->
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
+        <!-- Dodatkowe konwertery, jeśli są używane w OrderFormView, np. dla IsSaving -->
+        <converters1:InverseBooleanConverter x:Key="InverseBooleanConverter"/> 
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
     <ScrollViewer>
         <Grid Margin="16">
             <Grid.RowDefinitions>
@@ -36,18 +54,19 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Klient" Grid.Column="0" Margin="0,0,0,16" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
 
-
+                        <!-- Zmieniono Click na Command="{Binding AddNewClientCommand}" -->
                         <Button Content="Dodaj"
-                                Name="AddNewClientButton" Grid.Column="1" Margin="0,0,0,16" Click="AddNewClientButton_Click">
+                                Name="AddNewClientButton" Grid.Column="1" Margin="0,0,0,16"
+                                Command="{Binding AddNewClientCommand}">
                             <Button.ContentTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Plus" Width="16" Height="16" Margin="0,0,8,0"/>
-                                    <TextBlock Text="Dodaj"/>
-                                </StackPanel>
-                            </DataTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="Plus" Width="16" Height="16" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Dodaj"/>
+                                    </StackPanel>
+                                </DataTemplate>
                             </Button.ContentTemplate>
-                            </Button>
+                        </Button>
                     </Grid>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -90,8 +109,10 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Pojazd" Margin="0,0,0,16" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+                        <!-- Zmieniono Click na Command="{Binding AddNewVehicleCommand}" -->
                         <Button Content="Dodaj"
-                                Name="AddNewVehicleButton" Grid.Column="1" Margin="0,0,0,16" Click="AddNewVehicleButton_Click">
+                                Name="AddNewVehicleButton" Grid.Column="1" Margin="0,0,0,16"
+                                Command="{Binding AddNewVehicleCommand}">
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -103,7 +124,6 @@
                         </Button>
                     </Grid>
                     
-
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -198,9 +218,13 @@
                             <DataGridTemplateColumn Header="Pracownicy" Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
+                                        <!-- Potencjalnie problematyczne: SelectedItem w ComboBox w DataGrid CellTemplate -->
+                                        <!-- SelectedItem="{Binding DataContext.SelectedMechanic, RelativeSource={RelativeSource AncestorType=UserControl}}" -->
+                                        <!-- To wiązanie wybiera jednego mechanika DLA CAŁEGO WIDOKU, a nie dla konkretnej usługi. -->
+                                        <!-- Jeśli chcesz wybrać mechanika dla konkretnej usługi, ServiceItem powinien mieć właściwość np. AssignedMechanic -->
                                         <ComboBox ItemsSource="{Binding DataContext.Model.AvailableMechanics, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                   DisplayMemberPath="PersonalInfo.FirstName"
-                                                  SelectedItem="{Binding DataContext.SelectedMechanic, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                                  SelectedItem="{Binding AssignedMechanic, UpdateSourceTrigger=PropertyChanged}"/> <!-- Zmieniono na Binding do właściwości elementu ServicesToDo -->
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -279,13 +303,13 @@
                         <!-- Opis prac -->
                         <TextBox Grid.Row="0" Margin="0,0,0,16"
                                  materialDesign:HintAssist.Hint="Opis wykonanych prac"
-                                 Text="{Binding Model.DescriptionOfWork}"
+                                 Text="{Binding Model.DescriptionOfWork, UpdateSourceTrigger=PropertyChanged}"
                                  AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
 
                         <!-- Uwagi -->
                         <TextBox Grid.Row="1"
                                  materialDesign:HintAssist.Hint="Uwagi dodatkowe"
-                                 Text="{Binding Model.Remarks}"
+                                 Text="{Binding Model.Remarks, UpdateSourceTrigger=PropertyChanged}"
                                  AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
                     </Grid>
                 </StackPanel>

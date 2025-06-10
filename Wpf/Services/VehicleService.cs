@@ -12,9 +12,9 @@ public class VehicleService
         _apiClient = apiClient;
     }
 
-    public async Task<(VehicleDTO? Result, string? ErrorMessage)> CreateVehicleAsync(CreateVehicleCommand command)
+    public async Task<(string? Result, string? ErrorMessage)> CreateVehicleAsync(CreateVehicleCommand command)
     {
-        return await _apiClient.PostAsync<CreateVehicleCommand, VehicleDTO>(BaseEndpoint, command);
+        return await _apiClient.PostAsync<CreateVehicleCommand, string>(BaseEndpoint, command);
     }
 
     public async Task<List<VehicleDTO>?> GetVehiclesAsync()

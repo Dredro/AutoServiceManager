@@ -30,13 +30,10 @@ namespace Wpf.ViewModel
 
         private void ShowLoginView()
         {
-            var loginVm = _serviceProvider.GetService<LoginViewModel>();
-            if (loginVm == null)
-            {
-                throw new InvalidOperationException("Could not resolve LoginViewModel.");
-            }
-
-            loginVm.LoginSucceeded -= OnLoginSucceeded;
+            
+            var loginVm = _serviceProvider.GetRequiredService<LoginViewModel>();
+            
+            loginVm.LoginSucceeded -= OnLoginSucceeded; 
             loginVm.LoginSucceeded += OnLoginSucceeded;
 
             CurrentView = loginVm;
@@ -44,13 +41,10 @@ namespace Wpf.ViewModel
 
         private void OnLoginSucceeded()
         {
-            var mainVm = _serviceProvider.GetService<MainViewModel>();
-            if (mainVm == null)
-            {
-                throw new InvalidOperationException("Could not resolve MainViewModel.");
-            }
-
-            mainVm.LogoutRequested -= OnLogout;
+            
+            var mainVm = _serviceProvider.GetRequiredService<MainViewModel>();
+            
+            mainVm.LogoutRequested -= OnLogout; 
             mainVm.LogoutRequested += OnLogout;
 
             CurrentView = mainVm;

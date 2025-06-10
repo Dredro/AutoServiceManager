@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:Wpf"
-             xmlns:core="clr-namespace:Wpf.Core"
+             xmlns:core="clr-namespace:Wpf.Core" 
              xmlns:vmworker="clr-namespace:Wpf.ViewModel.Worker"
              xmlns:vworker="clr-namespace:Wpf.Views.Worker"
              xmlns:vmanager="clr-namespace:Wpf.Views.Manager"
@@ -13,7 +13,9 @@
              xmlns:models="clr-namespace:Wpf.Models" 
              xmlns:vmmanager="clr-namespace:Wpf.ViewModel.Manager"
              xmlns:vmstoragemanager="clr-namespace:Wpf.ViewModel.StorageManager"
-             >
+             xmlns:vm="clr-namespace:Wpf.ViewModel"
+             xmlns:converters="clr-namespace:Wpf.Converters"
+             xmlns:viewModels="clr-namespace:Wpf.ViewModels">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -27,6 +29,7 @@
 
             </ResourceDictionary.MergedDictionaries>
 
+            <!-- Dashboards -->
             <DataTemplate DataType="{x:Type vmworker:WorkerDashboardViewModel}">
                 <vworker:DashboardView/>
             </DataTemplate>
@@ -37,6 +40,8 @@
             <DataTemplate DataType="{x:Type vmstoragemanager:StorageManagerDashboardViewModel}">
                 <vstoragemanager:DashboardView/>
             </DataTemplate>
+            
+            <!-- Main navigation ViewModels -->
             <DataTemplate DataType="{x:Type vmodel:LoginViewModel}">
                 <view:LoginPage/>
             </DataTemplate>
@@ -45,6 +50,7 @@
                 <local:MainView /> 
             </DataTemplate>
 
+            <!-- Worker/Order related ViewModels -->
             <DataTemplate DataType="{x:Type vmworker:OrderFormViewModel}">
                 <vworker:OrderFormView/>
             </DataTemplate>
@@ -61,12 +67,31 @@
                 <vworker:OrderEditDialogView/>
             </DataTemplate>
 
+            <!-- NEW/UPDATED DataTemplates for Vehicles and Clients -->
+            <DataTemplate DataType="{x:Type viewModels:VehiclesListViewModel}"> <!-- Użyj nowego aliasu "vm" -->
+                <view:VehiclesListView/> <!-- Zakładam, że VehiclesListView jest w Wpf.Views -->
+            </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type viewModels:CreateCarFormViewModel}"> <!-- Użyj nowego aliasu "vm" -->
+                <view:CreateCarForm/> <!-- Zakładam, że CreateCarForm jest w Wpf.Views i jest Window/UserControl -->
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModels:ClientsListViewModel}"> <!-- Użyj nowego aliasu "vm" -->
+                <view:ClientsListView/> <!-- Zakładam, że ClientsListView jest w Wpf.Views -->
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModels:CreateClientFormViewModel}"> <!-- Użyj nowego aliasu "vm" -->
+                <view:CreateClientForm/> <!-- Zastąp tym Twoją nazwę widoku dla tworzenia klienta -->
+            </DataTemplate>
+
+            <!-- Converters -->
             <core:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
             <core:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
             <core:SumConverter x:Key="SumConverter"/>
             <core:MultiplyConverter x:Key="MultiplyConverter"/>
             <core:MultiplyMultiConverter x:Key="MultiplyMultiConverter"/>
             <core:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/> <!-- Dodano, jeśli brakuje -->
         </ResourceDictionary>        
     </Application.Resources>
 </Application>

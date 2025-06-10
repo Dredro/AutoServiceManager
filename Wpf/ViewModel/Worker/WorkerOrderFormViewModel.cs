@@ -43,7 +43,7 @@ public class OrderFormViewModel : INotifyPropertyChanged
         {
             _searchCustomersString = value;
             OnPropertyChanged();
-            SearchClients();
+           // SearchClients();
         }
     }
 
@@ -54,7 +54,7 @@ public class OrderFormViewModel : INotifyPropertyChanged
         {
             _searchVehicleString = value;
             OnPropertyChanged();
-            SearchVehicles();
+          //  SearchVehicles();
         }
     }
 
@@ -68,7 +68,7 @@ public class OrderFormViewModel : INotifyPropertyChanged
             if (value != null)
             {
                 Model.Order.Client = value;
-                LoadClientVehicles();
+            //    LoadClientVehicles();
             }
             else
             {
@@ -226,7 +226,7 @@ public class OrderFormViewModel : INotifyPropertyChanged
             };
     }
 
-    private void SearchClients()
+    /*private void SearchClients()
     {
         if (string.IsNullOrWhiteSpace(SearchCustomersString))
         {
@@ -248,9 +248,9 @@ public class OrderFormViewModel : INotifyPropertyChanged
         {
             Model.SearchedClients.Add(client);
         }
-    }
+    }*/
 
-    private void SearchVehicles()
+    /*private void SearchVehicles()
     {
         if (SelectedClient == null || string.IsNullOrWhiteSpace(SearchVehicleString))
         {
@@ -283,9 +283,9 @@ public class OrderFormViewModel : INotifyPropertyChanged
         {
             Model.SearchedVehicles.Add(vehicle);
         }
-    }
+    }*/
 
-    private List<ClientDTO> GetAllClients()
+    /*private List<ClientDTO> GetAllClients()
     {
         // Example data - replace with actual service call
         return new List<ClientDTO>
@@ -310,7 +310,7 @@ public class OrderFormViewModel : INotifyPropertyChanged
                     }
                 }
             };
-    }
+    }*/
 
     private void AddService()
     {
