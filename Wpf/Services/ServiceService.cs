@@ -12,9 +12,9 @@ public class ServiceService
         _apiClient = apiClient;
     }
 
-    public async Task<(ServiceDTO? Result, string? ErrorMessage)> CreateServiceAsync(CreateServiceCommand command)
+    public async Task<(string? Result, string? ErrorMessage)> CreateServiceAsync(CreateServiceCommand command)
     {
-        return await _apiClient.PostAsync<CreateServiceCommand, ServiceDTO>(BaseEndpoint, command);
+        return await _apiClient.PostAsync<CreateServiceCommand, string>(BaseEndpoint, command);
     }
 
     public async Task<List<ServiceDTO>?> GetServicesAsync()

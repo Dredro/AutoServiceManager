@@ -38,7 +38,6 @@
                 </Button.ContentTemplate>
             </Button>
             
-            <!-- Pole wyszukiwania -->
             <TextBox materialDesign:HintAssist.Hint="Wyszukaj..."
                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
@@ -46,7 +45,6 @@
                      Margin="16,0,0,0"
                      VerticalAlignment="Center"/>
 
-            <!-- ProgressBar dla ładowania listy klientów -->
             <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
                                         IsIndeterminate="True"
                                         Width="24" Height="24"
@@ -60,7 +58,6 @@
 
         </StackPanel>
 
-        <!-- Lista klientów -->
         <DataGrid Grid.Row="1" ItemsSource="{Binding FilteredClients}" AutoGenerateColumns="False" Margin="10"
                   SelectionMode="Single" IsReadOnly="True"
                   IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"> <!-- Wyłącz DataGrid podczas ładowania -->

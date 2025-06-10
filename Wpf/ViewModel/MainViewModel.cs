@@ -15,7 +15,7 @@ using Wpf.ViewModels;
 
 namespace Wpf.ViewModel
 {
-    class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         public event Action? LogoutRequested;
@@ -23,11 +23,12 @@ namespace Wpf.ViewModel
         private readonly IServiceProvider _serviceProvider;
         private readonly AuthService _authService;
 
-        
         private ClientsListViewModel? _clientsListViewModel;
         private CreateClientFormViewModel? _createClientFormViewModel;
         private VehiclesListViewModel? _vehiclesListViewModel; 
         private CreateCarFormViewModel? _createCarFormViewModel; 
+        private ServicesListViewModel? _servicesListViewModel; 
+        private CreateServiceFormViewModel? _createServiceFormViewModel; 
 
         public ICommand LogoutCommand { get; }
         public ICommand SwitchViewCommand { get; }
@@ -41,7 +42,6 @@ namespace Wpf.ViewModel
             {
                 if (_currentContent != value)
                 {
-                    
                     if (_currentContent is ClientsListViewModel oldClientsVm)
                     {
                         oldClientsVm.RequestCreateClientView -= OnRequestCreateClientView;
@@ -62,6 +62,11 @@ namespace Wpf.ViewModel
                     {
                         oldCreateCarVm.CarCreated -= OnCarCreated;
                     }
+                    
+                    if (_currentContent is CreateServiceFormViewModel oldCreateServiceVm)
+                    {
+                        oldCreateServiceVm.ServiceCreated -= OnServiceCreated;
+                    }
 
                     _currentContent = value;
                     OnPropertyChanged(nameof(CurrentContent));
@@ -79,8 +84,71 @@ namespace Wpf.ViewModel
                 {
                     _currentRole = value;
                     OnPropertyChanged(nameof(CurrentRole));
+                    UpdateRoleBasedVisibility(); 
                 }
             }
+        }
+
+        private bool _isAdminVisible; 
+        public bool IsAdminVisible
+        {
+            get => _isAdminVisible;
+            private set
+            {
+                if (_isAdminVisible != value)
+                {
+                    _isAdminVisible = value;
+                    OnPropertyChanged(nameof(IsAdminVisible));
+                }
+            }
+        }
+
+        private bool _isManagerVisible;
+        public bool IsManagerVisible
+        {
+            get => _isManagerVisible;
+            private set
+            {
+                if (_isManagerVisible != value)
+                {
+                    _isManagerVisible = value;
+                    OnPropertyChanged(nameof(IsManagerVisible));
+                }
+            }
+        }
+
+        private bool _isMechanicVisible;
+        public bool IsMechanicVisible
+        {
+            get => _isMechanicVisible;
+            private set
+            {
+                if (_isMechanicVisible != value)
+                {
+                    _isMechanicVisible = value;
+                    OnPropertyChanged(nameof(IsMechanicVisible));
+                }
+            }
+        }
+
+        private bool _isStorageManagerVisible;
+        public bool IsStorageManagerVisible
+        {
+            get => _isStorageManagerVisible;
+            private set
+            {
+                if (_isStorageManagerVisible != value)
+                {
+                    _isStorageManagerVisible = value;
+                    OnPropertyChanged(nameof(IsStorageManagerVisible));
+                }
+            }
+        }
+        
+        public MainViewModel() : this(null!, null!) 
+        {
+            CurrentRole = Role.Manager; 
+            OnSwitchView("Dashboard"); 
         }
 
         public MainViewModel(IServiceProvider serviceProvider, AuthService authService)
@@ -91,15 +159,27 @@ namespace Wpf.ViewModel
             LogoutCommand = new RelayCommand(() => LogoutRequested?.Invoke());
             SwitchViewCommand = new RelayCommand<string>(OnSwitchView);
 
-            CurrentRole = AuthService.CurrentRole;
+            CurrentRole = AuthService.CurrentRole; 
             if (CurrentRole == null)
             {
-                LogoutRequested?.Invoke();
+                LogoutRequested?.Invoke(); 
             }
+            
+            UpdateRoleBasedVisibility(); 
 
-            OnSwitchView("Dashboard");
+            if(CurrentRole != null)
+                OnSwitchView("Dashboard"); 
         }
 
+        private void UpdateRoleBasedVisibility()
+        {
+            IsAdminVisible = (CurrentRole == Role.Admin); 
+            IsManagerVisible = (CurrentRole == Role.Manager);
+            IsMechanicVisible = (CurrentRole == Role.Mechanic);
+            IsStorageManagerVisible = (CurrentRole == Role.StorageManager);
+        }
+
+        // --- View Switching Logic ---
         public void OnSwitchView(string viewName)
         {
             switch (viewName)
@@ -117,6 +197,10 @@ namespace Wpf.ViewModel
                     {
                         CurrentContent = _serviceProvider.GetRequiredService<ManagerDashboardViewModel>();
                     }
+                    else if (CurrentRole == Role.Admin) 
+                    {
+                        CurrentContent = "Admin Dashboard Content Goes Here"; 
+                    }
                     else
                     {
                         CurrentContent = "Brak dostępu do pulpitu dla Twojej roli.";
@@ -125,22 +209,23 @@ namespace Wpf.ViewModel
                 case "Orders":
                     CurrentContent = _serviceProvider.GetRequiredService<OrdersViewModel>();
                     break;
-                case "Parts":
+                case "Parts": 
                     CurrentContent = _serviceProvider.GetRequiredService<OrderFormViewModel>();
                     break;
                 case "Customers":
                     _clientsListViewModel = _serviceProvider.GetRequiredService<ClientsListViewModel>();
+                  
                     _clientsListViewModel.RequestCreateClientView -= OnRequestCreateClientView;
-                    _clientsListViewModel.RequestCreateClientView += OnRequestCreateClientView;
                     _clientsListViewModel.RequestShowClientView -= OnRequestShowClientView;
-                    _clientsListViewModel.RequestShowClientView += OnRequestShowClientView;
                     _clientsListViewModel.RequestEditClientView -= OnRequestEditClientView;
+
+                    _clientsListViewModel.RequestCreateClientView += OnRequestCreateClientView;
+                    _clientsListViewModel.RequestShowClientView += OnRequestShowClientView;
                     _clientsListViewModel.RequestEditClientView += OnRequestEditClientView;
                     CurrentContent = _clientsListViewModel;
                     break;
                 case "Cars":
                     _vehiclesListViewModel = _serviceProvider.GetRequiredService<VehiclesListViewModel>(); 
-                    
                     _vehiclesListViewModel.RequestCreateVehicleView -= OnRequestCreateVehicleView; 
                     _vehiclesListViewModel.RequestCreateVehicleView += OnRequestCreateVehicleView;
                     CurrentContent = _vehiclesListViewModel;
@@ -157,6 +242,21 @@ namespace Wpf.ViewModel
                     _createClientFormViewModel.ClientCreated += OnClientCreated;
                     CurrentContent = _createClientFormViewModel;
                     break;
+                case "Services": 
+                    _servicesListViewModel = _serviceProvider.GetRequiredService<ServicesListViewModel>();
+                    
+                    _servicesListViewModel.RequestCreateServiceView -= OnRequestCreateServiceViewFromList; 
+                    _servicesListViewModel.RequestCreateServiceView += OnRequestCreateServiceViewFromList;
+                    
+                    
+                    CurrentContent = _servicesListViewModel;
+                    break;
+                case "CreateService": 
+                    _createServiceFormViewModel = _serviceProvider.GetRequiredService<CreateServiceFormViewModel>();
+                    _createServiceFormViewModel.ServiceCreated -= OnServiceCreated; 
+                    _createServiceFormViewModel.ServiceCreated += OnServiceCreated; 
+                    CurrentContent = _createServiceFormViewModel;
+                    break;
                 case "ShowClient":
                     MessageBox.Show("Nawigacja do szczegółów klienta niezaimplementowana.", "Info");
                     break;
@@ -169,6 +269,10 @@ namespace Wpf.ViewModel
             }
         }
 
+        private void OnRequestCreateServiceViewFromList()
+        {
+            OnSwitchView("CreateService");
+        }
         
         private void OnRequestCreateClientView()
         {
@@ -183,7 +287,18 @@ namespace Wpf.ViewModel
         private async void OnCarCreated() 
         {
             MessageBox.Show("Nowy samochód został pomyślnie dodany! Odświeżam listę pojazdów.", "Sukces");
+            await (_vehiclesListViewModel?.LoadVehiclesAsync() ?? Task.CompletedTask); // Reload list if it's the current content
             OnSwitchView("Cars"); 
+        }
+
+        private async void OnServiceCreated()
+        {
+            MessageBox.Show("Nowa usługa została pomyślnie dodana! Odświeżam listę usług.", "Sukces");
+            OnSwitchView("Services"); 
+            if (_servicesListViewModel != null)
+            {
+                await _servicesListViewModel.LoadServicesAsync(); 
+            }
         }
 
         private void OnRequestShowClientView(Guid clientId)
@@ -199,6 +314,7 @@ namespace Wpf.ViewModel
         private async void OnClientCreated()
         {
             MessageBox.Show("Nowy klient został pomyślnie dodany! Odświeżam listę klientów.", "Sukces");
+            await (_clientsListViewModel?.LoadClientsAsync() ?? Task.CompletedTask); 
             OnSwitchView("Customers"); 
         }
 

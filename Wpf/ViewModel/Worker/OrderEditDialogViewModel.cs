@@ -78,7 +78,6 @@ public class OrderEditDialogViewModel : BaseViewModel
 
     private void Save()
     {
-        // Tutaj można dodać walidację
         OnRequestClose(true);
     }
 

@@ -15,7 +15,8 @@
              xmlns:vmstoragemanager="clr-namespace:Wpf.ViewModel.StorageManager"
              xmlns:vm="clr-namespace:Wpf.ViewModel"
              xmlns:converters="clr-namespace:Wpf.Converters"
-             xmlns:viewModels="clr-namespace:Wpf.ViewModels">
+             xmlns:viewModels="clr-namespace:Wpf.ViewModels"
+             xmlns:admin="clr-namespace:Wpf.Views.Admin">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -67,23 +68,29 @@
                 <vworker:OrderEditDialogView/>
             </DataTemplate>
 
-            <!-- NEW/UPDATED DataTemplates for Vehicles and Clients -->
-            <DataTemplate DataType="{x:Type viewModels:VehiclesListViewModel}"> <!-- Użyj nowego aliasu "vm" -->
-                <view:VehiclesListView/> <!-- Zakładam, że VehiclesListView jest w Wpf.Views -->
+            <DataTemplate DataType="{x:Type viewModels:VehiclesListViewModel}"> 
+                <view:VehiclesListView/>
             </DataTemplate>
             
-            <DataTemplate DataType="{x:Type viewModels:CreateCarFormViewModel}"> <!-- Użyj nowego aliasu "vm" -->
-                <view:CreateCarForm/> <!-- Zakładam, że CreateCarForm jest w Wpf.Views i jest Window/UserControl -->
+            <DataTemplate DataType="{x:Type viewModels:CreateCarFormViewModel}"> 
+                <view:CreateCarForm/> 
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModels:ClientsListViewModel}"> <!-- Użyj nowego aliasu "vm" -->
-                <view:ClientsListView/> <!-- Zakładam, że ClientsListView jest w Wpf.Views -->
+            <DataTemplate DataType="{x:Type viewModels:ClientsListViewModel}"> 
+                <view:ClientsListView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModels:CreateClientFormViewModel}"> <!-- Użyj nowego aliasu "vm" -->
-                <view:CreateClientForm/> <!-- Zastąp tym Twoją nazwę widoku dla tworzenia klienta -->
+            <DataTemplate DataType="{x:Type viewModels:CreateClientFormViewModel}"> 
+                <view:CreateClientForm/> 
             </DataTemplate>
-
+            <!-- DataTemplate dla ServicesListViewModel -->
+            <DataTemplate DataType="{x:Type viewModels:ServicesListViewModel}">
+                <admin:ServiceManagementView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:CreateServiceFormViewModel}">
+                <view:CreateServiceForm/>
+            </DataTemplate>
+            
             <!-- Converters -->
             <core:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
             <core:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
@@ -91,7 +98,7 @@
             <core:MultiplyConverter x:Key="MultiplyConverter"/>
             <core:MultiplyMultiConverter x:Key="MultiplyMultiConverter"/>
             <core:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/> <!-- Dodano, jeśli brakuje -->
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/> 
         </ResourceDictionary>        
     </Application.Resources>
 </Application>

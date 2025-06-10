@@ -9,16 +9,15 @@
         xmlns:converters="clr-namespace:Wpf.Core"
         xmlns:converters1="clr-namespace:Wpf.Converters"
         mc:Ignorable="d"
-        d:DesignHeight="450" d:DesignWidth="400"> <!-- Użyj d:DesignHeight/Width dla podglądu -->
+        d:DesignHeight="450" d:DesignWidth="400"> 
 
-    <!-- Design-time DataContext dla podglądu w edytorze -->
     <d:DesignData.DataContext>
         <vm:CreateClientFormViewModel/>
     </d:DesignData.DataContext>
 
     <UserControl.Resources>
-        <converters1:InverseBooleanConverter x:Key="InverseBooleanConverter"/> <!-- Potrzebny, jeśli używasz IsSaving -->
-        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/> <!-- Potrzebny dla ProgressBar -->
+        <converters1:InverseBooleanConverter x:Key="InverseBooleanConverter"/> 
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
         <Style x:Key="StackPanelMarginStyle" TargetType="StackPanel">
             <Setter Property="Margin" Value="0,5,0,10"/>
@@ -30,7 +29,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/> <!-- Dodany wiersz dla paska postępu/zapisywania -->
+                <RowDefinition Height="Auto"/> 
             </Grid.RowDefinitions>
             <Label Content="Dodaj klienta" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
 
@@ -69,7 +68,6 @@
                         Command="{Binding SaveCommand}"/>
             </StackPanel>
 
-            <!-- Loading indicator for saving -->
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center"
                         Grid.Row="3" Grid.ColumnSpan="2"
                         Visibility="{Binding IsSaving, Converter={StaticResource BooleanToVisibilityConverter}}">

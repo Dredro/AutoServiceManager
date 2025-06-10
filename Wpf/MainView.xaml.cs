@@ -16,9 +16,6 @@ using Wpf.ViewModel;
 
 namespace Wpf
 {
-    /// <summary>
-    /// Logika interakcji dla klasy MainView.xaml
-    /// </summary>
     public partial class MainView : UserControl
     {
         public MainView()

@@ -158,7 +158,6 @@ public class OrderFormViewModel : INotifyPropertyChanged
     {
         Model.Order = existingOrder;
 
-        // Wczytaj klienta i pojazd
         if (existingOrder.Client != null)
         {
             SelectedClient = existingOrder.Client;
@@ -175,8 +174,6 @@ public class OrderFormViewModel : INotifyPropertyChanged
     #region Methods
     private void LoadInitialData()
     {
-        // Load available services, parts, mechanics, etc.
-        // This would typically come from a service/repository
         LoadAvailableServices();
         LoadAvailableParts();
         LoadAvailableMechanics();

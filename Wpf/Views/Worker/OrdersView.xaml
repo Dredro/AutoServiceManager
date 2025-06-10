@@ -13,7 +13,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Nagłówek i przyciski akcji -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
             <TextBlock Text="Zlecenia serwisowe" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White"/>
 
@@ -31,7 +30,6 @@
             </Button>
         </StackPanel>
 
-        <!-- Lista zleceń -->
         <DataGrid Grid.Row="1" ItemsSource="{Binding Orders}" AutoGenerateColumns="False" Margin="10"
                   SelectionMode="Single" IsReadOnly="True">
             <DataGrid.Columns>
