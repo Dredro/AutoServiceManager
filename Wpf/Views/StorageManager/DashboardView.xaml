@@ -4,10 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Wpf.Views.StorageManager"
+             xmlns:vm="clr-namespace:Wpf.ViewModels.StorageManager" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+             xmlns:converters="clr-namespace:Wpf.Core"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+
     <UserControl.Resources>
-        <!-- Style z poprzednich przykładów dla spójności -->
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
         <Style TargetType="TextBlock" x:Key="PageTitleStyle">
             <Setter Property="FontSize" Value="24"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -21,14 +28,11 @@
             <Setter Property="Margin" Value="0,0,0,10"/>
         </Style>
 
-
-
         <Style TargetType="Border" x:Key="SectionBorderStyle">
             <Setter Property="Background" Value="White"/>
             <Setter Property="CornerRadius" Value="5"/>
             <Setter Property="Padding" Value="20"/>
             <Setter Property="Margin" Value="0,0,0,15"/>
-
         </Style>
 
         <Style TargetType="ListBox" x:Key="StyledListBoxStyle">
@@ -83,6 +87,14 @@
             </Setter>
         </Style>
 
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#007ACC"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
     </UserControl.Resources>
 
     <Grid Margin="20">
@@ -90,13 +102,15 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Text="Panel Zarządzania Magazynem" Style="{StaticResource PageTitleStyle}"/>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,20">
-            <Button Content="Dodaj Nową Część" Style="{StaticResource PrimaryButtonStyle}" Click="AddPartButton_Click" />
-
+            <Button Content="Dodaj Nową Część"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    Command="{Binding AddPartCommand}"/>
         </StackPanel>
 
         <Grid Grid.Row="2">
@@ -110,21 +124,33 @@
             <Border Grid.Column="0" Style="{StaticResource SectionBorderStyle}">
                 <StackPanel>
                     <TextBlock Text="Lista Dostępnych Części" Style="{StaticResource SectionTitleStyle}"/>
-                    <TextBox Margin="0,0,0,10" Padding="5" Text="Wyszukaj część..." Foreground="Gray" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus"/>
-                    <ListBox x:Name="AvailablePartsListBox"
-                          d:ItemsSource="{d:SampleData ItemCount=8}"
-                          Style="{StaticResource StyledListBoxStyle}"
-                          ItemContainerStyle="{StaticResource StyledListBoxItemStyle}"
-                          SelectionChanged="AvailablePartsListBox_SelectionChanged">
-                        <!--
-                     ItemsSource="{Binding AvailableParts}"
-                     DisplayMemberPath="Name"
-                     <ListBox.ItemTemplate>
-                         <DataTemplate>
-                             <TextBlock Text="{Binding Name}" />
-                         </DataTemplate>
-                     </ListBox.ItemTemplate>
-                     -->
+                    <TextBox Margin="0,0,0,10" Padding="5"
+                             Text="{Binding AvailablePartsSearchText, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding AvailablePartsView.RefreshCommand}"/>
+                        </TextBox.InputBindings>
+                        <i:Interaction.Triggers> <!-- NEW -->
+                            <i:EventTrigger EventName="GotFocus"> <!-- NEW -->
+                                <i:InvokeCommandAction Command="{Binding SearchTextBoxGotFocusCommand}" CommandParameter="AvailableParts"/> <!-- NEW -->
+                            </i:EventTrigger> <!-- NEW -->
+                            <i:EventTrigger EventName="LostFocus"> <!-- NEW -->
+                                <i:InvokeCommandAction Command="{Binding SearchTextBoxLostFocusCommand}" CommandParameter="AvailableParts"/> <!-- NEW -->
+                            </i:EventTrigger> <!-- NEW -->
+                        </i:Interaction.Triggers> <!-- NEW -->
+                    </TextBox>
+                    <ListBox ItemsSource="{Binding AvailablePartsView}"
+                             SelectedItem="{Binding SelectedAvailablePart, Mode=TwoWay}"
+                             Style="{StaticResource StyledListBoxStyle}"
+                             ItemContainerStyle="{StaticResource StyledListBoxItemStyle}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding CatalogNumber, StringFormat=' ({0})'}" Margin="5,0,0,0" Foreground="Gray"/>
+                                    <TextBlock Text="{Binding QuantityInStock, StringFormat=' - Ilość: {0}'}" Margin="5,0,0,0" Foreground="DimGray"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
                 </StackPanel>
             </Border>
@@ -133,20 +159,50 @@
             <Border Grid.Column="2" Style="{StaticResource SectionBorderStyle}">
                 <StackPanel>
                     <TextBlock Text="Lista Brakujących Części" Style="{StaticResource SectionTitleStyle}"/>
-                    <TextBox Margin="0,0,0,10" Padding="5" Text="Wyszukaj brakującą część..." Foreground="Gray" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus"/>
-                    <ListBox x:Name="MissingPartsListBox"
-                          d:ItemsSource="{d:SampleData ItemCount=3}"
-                          Style="{StaticResource StyledListBoxStyle}"
-                          ItemContainerStyle="{StaticResource StyledListBoxItemStyle}"
-                          SelectionChanged="MissingPartsListBox_SelectionChanged">
-                        <!--
-                     ItemsSource="{Binding MissingParts}"
-                     DisplayMemberPath="Name"
-                     -->
+                    <TextBox Margin="0,0,0,10" Padding="5"
+                             Text="{Binding MissingPartsSearchText, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding MissingPartsView.RefreshCommand}"/>
+                        </TextBox.InputBindings>
+                        <i:Interaction.Triggers> <!-- NEW -->
+                            <i:EventTrigger EventName="GotFocus"> <!-- NEW -->
+                                <i:InvokeCommandAction Command="{Binding SearchTextBoxGotFocusCommand}" CommandParameter="MissingParts"/> <!-- NEW -->
+                            </i:EventTrigger> <!-- NEW -->
+                            <i:EventTrigger EventName="LostFocus"> <!-- NEW -->
+                                <i:InvokeCommandAction Command="{Binding SearchTextBoxLostFocusCommand}" CommandParameter="MissingParts"/> <!-- NEW -->
+                            </i:EventTrigger> <!-- NEW -->
+                        </i:Interaction.Triggers> <!-- NEW -->
+                    </TextBox>
+                    <ListBox ItemsSource="{Binding MissingPartsView}"
+                             SelectedItem="{Binding SelectedMissingPart, Mode=TwoWay}"
+                             Style="{StaticResource StyledListBoxStyle}"
+                             ItemContainerStyle="{StaticResource StyledListBoxItemStyle}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding CatalogNumber, StringFormat=' ({0})'}" Margin="5,0,0,0" Foreground="Gray"/>
+                                    <TextBlock Text="{Binding QuantityInStock, StringFormat=' - Ilość: {0}'}" Margin="5,0,0,0" Foreground="Red"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
-                    <Button Content="Dodaj Zaznaczone" Style="{StaticResource PrimaryButtonStyle}" Margin="0,15,0,0" HorizontalAlignment="Right" Click="OrderSelectedMissingParts_Click" IsEnabled="False" x:Name="OrderMissingPartsButton" />
+                    <Button Content="Dodaj Zaznaczone"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Margin="0,15,0,0"
+                            HorizontalAlignment="Right"
+                            Command="{Binding OrderSelectedMissingPartsCommand}"/>
                 </StackPanel>
             </Border>
+        </Grid>
+
+        <Grid Grid.RowSpan="3" Grid.ColumnSpan="3" Background="#AAFFFFFF" Panel.ZIndex="1"
+              Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" IsIndeterminate="True"
+                             HorizontalAlignment="Center" Width="50" Height="50" Margin="0,0,0,10"/>
+                <TextBlock Text="Ładowanie danych..." FontSize="16" FontWeight="SemiBold"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

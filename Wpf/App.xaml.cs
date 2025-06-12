@@ -1,13 +1,11 @@
-﻿using System.Configuration; // Prawdopodobnie niepotrzebne, jeśli nie korzystasz z App.config
-using System.Data; // Prawdopodobnie niepotrzebne
-using System.Windows;
+﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Wpf.Services;
 using Wpf.ViewModel;
-using Wpf.ViewModel.Manager;      // Dodane dla ManagerDashboardViewModel
-using Wpf.ViewModel.StorageManager; // Dodane dla StorageManagerDashboardViewModel
-using Wpf.ViewModel.Worker;       // Dodane dla WorkerDashboardViewModel
-using Wpf.ViewModels;             // Dodane dla VehiclesListViewModel, CreateCarFormViewModel, ClientsListViewModel
+using Wpf.ViewModel.Manager;      
+using Wpf.ViewModel.Worker;      
+using Wpf.ViewModels;
+using Wpf.ViewModels.StorageManager; 
 
 namespace Wpf;
 
@@ -53,6 +51,7 @@ public partial class App : Application
         services.AddTransient<CreateClientFormViewModel>();
         services.AddTransient<ServicesListViewModel>();
         services.AddTransient<CreateServiceFormViewModel>();
+        services.AddTransient<CreatePartFormViewModel>();
     }
 
     protected override void OnStartup(StartupEventArgs e)

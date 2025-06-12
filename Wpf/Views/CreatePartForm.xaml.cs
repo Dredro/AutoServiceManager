@@ -14,10 +14,7 @@ using System.Windows.Shapes;
 
 namespace Wpf.Views
 {
-    /// <summary>
-    /// Logika interakcji dla klasy CreatePartForm.xaml
-    /// </summary>
-    public partial class CreatePartForm : Window
+    public partial class CreatePartForm : UserControl
     {
         public CreatePartForm()
         {

@@ -12,11 +12,11 @@
              xmlns:vmodel="clr-namespace:Wpf.ViewModel"
              xmlns:models="clr-namespace:Wpf.Models" 
              xmlns:vmmanager="clr-namespace:Wpf.ViewModel.Manager"
-             xmlns:vmstoragemanager="clr-namespace:Wpf.ViewModel.StorageManager"
              xmlns:vm="clr-namespace:Wpf.ViewModel"
              xmlns:converters="clr-namespace:Wpf.Converters"
              xmlns:viewModels="clr-namespace:Wpf.ViewModels"
-             xmlns:admin="clr-namespace:Wpf.Views.Admin">
+             xmlns:admin="clr-namespace:Wpf.Views.Admin"
+             xmlns:storageManager="clr-namespace:Wpf.ViewModels.StorageManager">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -38,7 +38,7 @@
             <DataTemplate DataType="{x:Type vmmanager:ManagerDashboardViewModel}">
                 <vmanager:DashboardView/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vmstoragemanager:StorageManagerDashboardViewModel}">
+            <DataTemplate DataType="{x:Type storageManager:StorageManagerDashboardViewModel}">
                 <vstoragemanager:DashboardView/>
             </DataTemplate>
             
@@ -90,7 +90,10 @@
             <DataTemplate DataType="{x:Type viewModels:CreateServiceFormViewModel}">
                 <view:CreateServiceForm/>
             </DataTemplate>
-            
+            <DataTemplate DataType="{x:Type viewModels:CreatePartFormViewModel}">
+                <view:CreatePartForm/>
+            </DataTemplate>
+          
             <!-- Converters -->
             <core:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
             <core:NullToBooleanConverter x:Key="NullToBooleanConverter"/>

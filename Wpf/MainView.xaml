@@ -11,9 +11,6 @@
              xmlns:vm="clr-namespace:Wpf.ViewModel" 
              mc:Ignorable="d" 
             >
-    <d:DataContext>
-        <vm:MainViewModel d:IsDesignTimeCreatable="True"/>
-    </d:DataContext>
 
     <UserControl.Resources>
         <core:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>

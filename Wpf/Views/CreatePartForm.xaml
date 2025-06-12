@@ -1,65 +1,103 @@
-﻿<Window x:Class="Wpf.Views.CreatePartForm"
+﻿<UserControl x:Class="Wpf.Views.CreatePartForm"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:Wpf.Views"
+        xmlns:vm="clr-namespace:Wpf.ViewModels"
+        xmlns:models="clr-namespace:Wpf.Models"
+        xmlns:converters="clr-namespace:Wpf.Core"
+        xmlns:converters1="clr-namespace:Wpf.Converters"
         mc:Ignorable="d"
-        Title="Create Part Form" Height="600" Width="400">
-    <Window.Resources>
+        d:DesignHeight="600" d:DesignWidth="400">
+    
+
+    <UserControl.Resources>
+        <converters1:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
         <Style x:Key="StackPanelMarginStyle" TargetType="StackPanel">
             <Setter Property="Margin" Value="0,5,0,10"/>
         </Style>
-    </Window.Resources>
-    <Grid Margin="20">
+    </UserControl.Resources>
+    
+    <ScrollViewer>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Content="Dodaj część" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Label Content="Dodaj część" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
+            <StackPanel Grid.Row="1">
 
-        <StackPanel Grid.Row="1">
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                    <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             materialDesign:HintAssist.Hint="Numer katalogowy"
+                             Text="{Binding CatalogNumber, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding IsSaving, Converter={StaticResource InverseBooleanConverter}}"/>
+                </StackPanel>
+                <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                    <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             materialDesign:HintAssist.Hint="Nazwa"
+                             Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding IsSaving, Converter={StaticResource InverseBooleanConverter}}"/>
+                </StackPanel>
+                <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
+                    <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             materialDesign:HintAssist.Hint="Marka"
+                             Text="{Binding Make, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding IsSaving, Converter={StaticResource InverseBooleanConverter}}"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                    <ComboBox materialDesign:HintAssist.Hint="Jakość"
+                              Style="{StaticResource MaterialDesignComboBox}"
+                              ItemsSource="{Binding Qualities}"
+                              SelectedItem="{Binding SelectedQuality, UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding IsSaving, Converter={StaticResource InverseBooleanConverter}}">
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                    <Label Content="Ilość w magazynie" />
+                    <materialDesign:NumericUpDown Value="{Binding QuantityInStock, UpdateSourceTrigger=PropertyChanged}"
+                                                  Minimum="0"
+                                                  IsEnabled="{Binding IsSaving, Converter={StaticResource InverseBooleanConverter}}"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                    <Label Content="Cena" />
+                    <materialDesign:DecimalUpDown Value="{Binding Price, UpdateSourceTrigger=PropertyChanged}"
+                                                  Minimum="0.0"
+                                                  IsEnabled="{Binding IsSaving, Converter={StaticResource InverseBooleanConverter}}"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource StackPanelMarginStyle}">
+                    <ComboBox materialDesign:HintAssist.Hint="Kategoria"
+                              Style="{StaticResource MaterialDesignComboBox}"
+                              ItemsSource="{Binding Categories}"
+                              SelectedItem="{Binding SelectedCategory, UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding IsSaving, Converter={StaticResource InverseBooleanConverter}}">
+                    </ComboBox>
+                </StackPanel>
+            </StackPanel>
 
-            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-
-                <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Numer katalogowy"/>
-            </StackPanel>
-            <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
-                <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Nazwa"/>
-            </StackPanel>
-            <StackPanel  Style="{StaticResource StackPanelMarginStyle}">
-                <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"  materialDesign:HintAssist.Hint="Marka" />
-            </StackPanel>
-            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                <ComboBox materialDesign:HintAssist.Hint="Jakość" Style="{StaticResource MaterialDesignComboBox}">
-                    <ComboBoxItem Content="P"/>
-                    <ComboBoxItem Content="S"/>
-                </ComboBox>
-            </StackPanel>
-            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Ilość w magazynie" />
-                <materialDesign:NumericUpDown/>
-            </StackPanel>
-            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                <Label Content="Cena" />
-                <materialDesign:DecimalUpDown/>
-            </StackPanel>
-            <StackPanel Style="{StaticResource StackPanelMarginStyle}">
-                
-                <ComboBox materialDesign:HintAssist.Hint="Kategoria" Style="{StaticResource MaterialDesignComboBox}">
-                    <ComboBoxItem Content="Exhaust"/>
-                    <ComboBoxItem Content="Engine"/>
-                </ComboBox>
+            <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
+                <Button Content="Anuluj" Margin="0,0,10,0" Style="{StaticResource MaterialDesignFlatSecondaryButton}"
+                        Command="{Binding CancelCommand}"
+                        IsEnabled="{Binding IsSaving, Converter={StaticResource InverseBooleanConverter}}"/>
+                <Button Content="Zapisz" Margin="0,0,10,0" Style="{StaticResource MaterialDesignRaisedButton}"
+                        Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding IsSaving, Converter={StaticResource InverseBooleanConverter}}"/>
             </StackPanel>
 
-
-        </StackPanel>
-        <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
-            <Button Content="Anuluj" Margin="0,0,10,0" Style="{StaticResource MaterialDesignFlatSecondaryButton}"/>
-            <Button Content="Zapisz" Margin="0,0,10,0" Style="{StaticResource MaterialDesignRaisedButton}"/>
-        </StackPanel>
-    </Grid>
-</Window>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Grid.Row="3" Grid.ColumnSpan="2"
+                        Visibility="{Binding IsSaving, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" IsIndeterminate="True"
+                             HorizontalAlignment="Center" Width="40" Height="40" Margin="0,20,0,0"/>
+                <TextBlock Text="Zapisywanie..." HorizontalAlignment="Center" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

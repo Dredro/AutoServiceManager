@@ -1,17 +1,14 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection; 
-
 using Wpf.Core; 
 using Wpf.Models; 
 using Wpf.Services; 
 using Wpf.ViewModel.Manager;
-using Wpf.ViewModel.StorageManager;
 using Wpf.ViewModel.Worker;
-using Wpf.ViewModels; 
+using Wpf.ViewModels;
+using Wpf.ViewModels.StorageManager;
 
 namespace Wpf.ViewModel
 {
@@ -23,13 +20,14 @@ namespace Wpf.ViewModel
         private readonly IServiceProvider _serviceProvider;
         private readonly AuthService _authService;
 
+        private StorageManagerDashboardViewModel _storageManagerDashboardViewModel;
         private ClientsListViewModel? _clientsListViewModel;
         private CreateClientFormViewModel? _createClientFormViewModel;
         private VehiclesListViewModel? _vehiclesListViewModel; 
         private CreateCarFormViewModel? _createCarFormViewModel; 
         private ServicesListViewModel? _servicesListViewModel; 
         private CreateServiceFormViewModel? _createServiceFormViewModel; 
-
+        private CreatePartFormViewModel? _createPartFormViewModel;
         public ICommand LogoutCommand { get; }
         public ICommand SwitchViewCommand { get; }
 
@@ -68,12 +66,21 @@ namespace Wpf.ViewModel
                         oldCreateServiceVm.ServiceCreated -= OnServiceCreated;
                     }
 
+                    if (_currentContent is StorageManagerDashboardViewModel oldStorageManagerDashboardViewModel)
+                    {
+                        oldStorageManagerDashboardViewModel.AddPartRequested -= OnRequestCreatePartView;
+                    }
+
+                    if (_currentContent is CreatePartFormViewModel oldCreatePartFormVm)
+                    {
+                        _createPartFormViewModel.PartCreated -= OnPartCreated;
+                    }
                     _currentContent = value;
                     OnPropertyChanged(nameof(CurrentContent));
                 }
             }
         }
-
+        
         private Role? _currentRole;
         public Role? CurrentRole
         {
@@ -191,7 +198,10 @@ namespace Wpf.ViewModel
                     }
                     else if (CurrentRole == Role.StorageManager)
                     {
-                        CurrentContent = _serviceProvider.GetRequiredService<StorageManagerDashboardViewModel>();
+                        _storageManagerDashboardViewModel = _serviceProvider.GetRequiredService<StorageManagerDashboardViewModel>();
+                        _storageManagerDashboardViewModel.AddPartRequested -= OnRequestCreatePartView;
+                        _storageManagerDashboardViewModel.AddPartRequested += OnRequestCreatePartView;
+                        CurrentContent = _storageManagerDashboardViewModel;
                     }
                     else if (CurrentRole == Role.Manager)
                     {
@@ -263,12 +273,26 @@ namespace Wpf.ViewModel
                 case "EditClient":
                     MessageBox.Show("Nawigacja do edycji klienta niezaimplementowana.", "Info");
                     break;
+                case "CreatePart":
+                    _createPartFormViewModel = _serviceProvider.GetRequiredService<CreatePartFormViewModel>();
+                    _createPartFormViewModel.PartCreated -= OnPartCreated;
+                    _createPartFormViewModel.PartCreated += OnPartCreated;
+                    CurrentContent = _createPartFormViewModel;
+                    break;
                 default:
                     CurrentContent = "Nieznany widok.";
                     break;
             }
         }
-
+        private void OnPartCreated()
+        {
+            CurrentContent = _storageManagerDashboardViewModel;
+            _storageManagerDashboardViewModel.Refresh();
+        }
+        private void OnRequestCreatePartView()
+        {
+            OnSwitchView("CreatePart");
+        }
         private void OnRequestCreateServiceViewFromList()
         {
             OnSwitchView("CreateService");
@@ -317,7 +341,7 @@ namespace Wpf.ViewModel
             await (_clientsListViewModel?.LoadClientsAsync() ?? Task.CompletedTask); 
             OnSwitchView("Customers"); 
         }
-
+        
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

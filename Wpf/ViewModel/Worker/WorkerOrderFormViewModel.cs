@@ -196,9 +196,11 @@ public class OrderFormViewModel : INotifyPropertyChanged
         // Example implementation - replace with actual service call
         Model.AvailableParts = new ObservableCollection<SparePartsDTO>
             {
+                /*
                 new SparePartsDTO { CatalogNumber = "OIL001", Name = "Olej silnikowy 5W-30", Make = "Castrol", Quality = 'A', Price = 45.99m, Category = PartCategory.Consumables, QuantityInStock = 50 },
                 new SparePartsDTO { CatalogNumber = "BRK001", Name = "Klocki hamulcowe przód", Make = "Bosch", Quality = 'A', Price = 89.99m, Category = PartCategory.BrakingSystem, QuantityInStock = 25 },
                 new SparePartsDTO { CatalogNumber = "FLT001", Name = "Filtr oleju", Make = "Mann", Quality = 'A', Price = 25.99m, Category = PartCategory.Consumables, QuantityInStock = 100 }
+            */
             };
     }
 

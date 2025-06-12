@@ -12,9 +12,9 @@ public class SparePartService
         _apiClient = apiClient;
     }
 
-    public async Task<(SparePartsDTO? Result, string? ErrorMessage)> CreateSparePartAsync(CreateSparePartCommand command)
+    public async Task<(string? Result, string? ErrorMessage)> CreateSparePartAsync(CreateSparePartCommand command)
     {
-        return await _apiClient.PostAsync<CreateSparePartCommand, SparePartsDTO>(BaseEndpoint, command);
+        return await _apiClient.PostAsync<CreateSparePartCommand, string>(BaseEndpoint, command);
     }
 
     public async Task<List<SparePartsDTO>?> GetSparePartsAsync()
