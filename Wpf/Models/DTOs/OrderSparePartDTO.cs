@@ -50,7 +50,6 @@ namespace Wpf.Models.DTOs
                 if (SetField(ref _sparePart, value))
                 {
                     Id = value?.Id.ToString() ?? string.Empty;
-                    // Ustawiamy Price na wartość z katalogu, jeśli wybrano część
                     if (value != null)
                         Price = value.Price;
                     OnPropertyChanged(nameof(Id));
