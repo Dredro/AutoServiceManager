@@ -259,12 +259,15 @@ namespace Wpf.ViewModel.Worker
 
         private void PartItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(OrderSparePartDTO.Quantity) || e.PropertyName == nameof(OrderSparePartDTO.SparePart))
+            if (e.PropertyName == nameof(OrderSparePartDTO.Quantity) || 
+                e.PropertyName == nameof(OrderSparePartDTO.SparePart) ||
+                e.PropertyName == nameof(OrderSparePartDTO.TotalItemCost))
             {
                 OnPropertyChanged(nameof(PartsTotalCost));
                 OnPropertyChanged(nameof(TotalCost));
             }
         }
+
 
         // --- Data Loading and Filtering Methods (bez zmian) ---
         private async Task LoadData()
@@ -514,7 +517,15 @@ namespace Wpf.ViewModel.Worker
                     return;
                 }
                 */
+                foreach (var service in Order.ServicesToDo)
+                {
+                    if (service.Price == null && service.Service != null)
+                    {
+                        service.Price = service.Service.MaximalPrice;
+                    }
+                }
 
+              
                 Order.ClientId = SelectedClient.Id.ToString();
                 Order.VehicleId = SelectedVehicle.Id.ToString();
                 var (resultOrder, errorMessage) = await _orderService.CreateOrderAsync(Order);

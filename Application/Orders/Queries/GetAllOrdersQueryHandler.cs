@@ -86,7 +86,8 @@ namespace Application.Orders.Queries
                 SpareParts = order.SpareParts?.Select(orderSparePartLink => new OrderSparePartDto
                 {
                     Id = orderSparePartLink.SparePart?.Id.ToString() ?? string.Empty,
-                    Quantity = orderSparePartLink.Quantity
+                    Quantity = orderSparePartLink.Quantity,
+                    Price = _context.SpareParts.FirstOrDefault(s=>orderSparePartLink.SparePart != null && s.Id == orderSparePartLink.SparePart.Id)?.Price ?? 0,
                 }).ToList() ?? new List<OrderSparePartDto>()
             }).ToList();
 

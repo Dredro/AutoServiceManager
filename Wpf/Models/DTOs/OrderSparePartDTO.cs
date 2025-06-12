@@ -2,61 +2,76 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Wpf.Models.DTOs;
-
-public class OrderSparePartDTO : INotifyPropertyChanged
+namespace Wpf.Models.DTOs
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    // Dodano: Metoda OnPropertyChanged
-    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    public class OrderSparePartDTO : INotifyPropertyChanged
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-    // Helper method for INotifyPropertyChanged (już była, ale dla kontekstu)
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName); // Ta linia wywołuje PropertyChanged, ale dla nazwy właściwości, która się zmieniła
-        return true;
-    }
-
-    private string _id = Guid.NewGuid().ToString();
-    public string Id
-    {
-        get => _id;
-        set => SetField(ref _id, value);
-    }
-
-    private int _quantity;
-    public int Quantity
-    {
-        get => _quantity;
-        set
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            if (SetField(ref _quantity, value))
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        private string _id = Guid.NewGuid().ToString();
+        public string Id
+        {
+            get => _id;
+            set => SetField(ref _id, value);
+        }
+
+        private int _quantity = 1;
+        public int Quantity
+        {
+            get => _quantity;
+            set
             {
-                OnPropertyChanged(nameof(TotalItemCost)); // Teraz to wywołanie jest poprawne
+                if (SetField(ref _quantity, value))
+                {
+                    OnPropertyChanged(nameof(TotalItemCost));
+                }
             }
         }
-    }
 
-    private SparePartsDTO? _sparePart;
-    public SparePartsDTO? SparePart
-    {
-        get => _sparePart;
-        set
+        private SparePartsDTO? _sparePart;
+        public SparePartsDTO? SparePart
         {
-            if (SetField(ref _sparePart, value))
+            get => _sparePart;
+            set
             {
-                Id = value?.Id.ToString() ?? string.Empty; // Pamiętaj o aktualizacji Id
-                OnPropertyChanged(nameof(Id)); // Warto powiadomić o zmianie Id, jeśli jest bindowane lub istotne
-                OnPropertyChanged(nameof(TotalItemCost)); // Teraz to wywołanie jest poprawne
+                if (SetField(ref _sparePart, value))
+                {
+                    Id = value?.Id.ToString() ?? string.Empty;
+                    // Ustawiamy Price na wartość z katalogu, jeśli wybrano część
+                    if (value != null)
+                        Price = value.Price;
+                    OnPropertyChanged(nameof(Id));
+                    OnPropertyChanged(nameof(TotalItemCost));
+                }
             }
         }
-    }
 
-    public decimal TotalItemCost => (SparePart?.Price ?? 0m) * Quantity;
+        private decimal _price;
+        public decimal Price
+        {
+            get => _price;
+            set
+            {
+                if (SetField(ref _price, value))
+                {
+                    OnPropertyChanged(nameof(TotalItemCost));
+                }
+            }
+        }
+
+        public decimal TotalItemCost => Price * Quantity;
+    }
 }

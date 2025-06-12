@@ -12,6 +12,7 @@
              d:DataContext="{d:DesignInstance vm:OrderFormViewModel, IsDesignTimeCreatable=True}">
 
     <UserControl.Resources>
+        <converters:SumConverter x:Key="SumConverter"/>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
         <converters1:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
@@ -308,16 +309,20 @@
                                    Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
 
                         <Separator Grid.Row="2" Grid.ColumnSpan="2" Margin="0,8"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1"
+                                   Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                   Margin="0,8,0,0"
+                                   Text="{Binding TotalCost, StringFormat={}{0:C}}" />
 
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Suma całkowita:" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Margin="0,8,8,0"/>
                         <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="0,8,0,0">
                             <TextBlock.Text>
-                                <MultiBinding StringFormat="{}{0:C}">
+                                <MultiBinding Converter="{StaticResource SumConverter}">
                                     <Binding Path="ServicesTotalCost"/>
                                     <Binding Path="PartsTotalCost"/>
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>
+
                     </Grid>
                 </StackPanel>
             </materialDesign:Card>

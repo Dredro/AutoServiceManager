@@ -20,7 +20,7 @@ namespace Wpf.ViewModel.Worker
 
         private ObservableCollection<OrderDTO> _orders = new ObservableCollection<OrderDTO>();
         private bool _isLoading;
-
+       
         public ObservableCollection<OrderDTO> Orders
         {
             get => _orders;
