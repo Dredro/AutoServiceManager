@@ -28,6 +28,8 @@ namespace Wpf.ViewModel
         private ServicesListViewModel? _servicesListViewModel; 
         private CreateServiceFormViewModel? _createServiceFormViewModel; 
         private CreatePartFormViewModel? _createPartFormViewModel;
+        private OrdersViewModel? _ordersViewModel;
+        private OrderFormViewModel? _orderFormViewModel;
         public ICommand LogoutCommand { get; }
         public ICommand SwitchViewCommand { get; }
 
@@ -75,6 +77,7 @@ namespace Wpf.ViewModel
                     {
                         _createPartFormViewModel.PartCreated -= OnPartCreated;
                     }
+                    
                     _currentContent = value;
                     OnPropertyChanged(nameof(CurrentContent));
                 }
@@ -217,10 +220,13 @@ namespace Wpf.ViewModel
                     }
                     break;
                 case "Orders":
-                    CurrentContent = _serviceProvider.GetRequiredService<OrdersViewModel>();
+                    _ordersViewModel = _serviceProvider.GetRequiredService<OrdersViewModel>();
+                    _ordersViewModel.RequestOrderFormView -= OnRequestCreateOrderViewFromList;
+                    _ordersViewModel.RequestOrderFormView += OnRequestCreateOrderViewFromList;
+                    CurrentContent = _ordersViewModel;
                     break;
                 case "Parts": 
-                    CurrentContent = _serviceProvider.GetRequiredService<OrderFormViewModel>();
+                
                     break;
                 case "Customers":
                     _clientsListViewModel = _serviceProvider.GetRequiredService<ClientsListViewModel>();
@@ -284,6 +290,17 @@ namespace Wpf.ViewModel
                     break;
             }
         }
+
+        private void OnRequestCreateOrderViewFromList(Guid? guid)
+        {
+           _orderFormViewModel = _serviceProvider.GetRequiredService<OrderFormViewModel>();
+            /*_orderFormViewModel.OrderCreated -= OnOrderCreated;
+            _orderFormViewModel.OrderCreated += OnOrderCreated;
+            _orderFormViewModel.RequestCreateOrderView -= OnRequestCreateOrderViewFromList;
+            _orderFormViewModel.RequestCreateOrderView += OnRequestCreateOrderViewFromList;*/
+            CurrentContent = _orderFormViewModel;
+        }
+
         private void OnPartCreated()
         {
             CurrentContent = _storageManagerDashboardViewModel;

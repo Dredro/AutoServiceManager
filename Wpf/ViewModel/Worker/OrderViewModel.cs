@@ -1,356 +1,168 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Wpf.Core;
 using Wpf.Models.DTOs;
 using Wpf.Services;
-using Wpf.Views.Worker;
+using System; // Dodano dla Guid i ArgumentNullException
+using System.Threading.Tasks; // Dodano dla Task
 
-namespace Wpf.ViewModel.Worker;
-
-public class OrdersViewModel : BaseViewModel
+namespace Wpf.ViewModel.Worker
 {
-    private ObservableCollection<OrderDTO> _orders = new();
-    private OrderDTO _selectedOrder;
-    private readonly OrderService _orderService;
-    // Tymczasowe dane dla ComboBoxów w dialogach
-    public List<ServiceDTO> AvailableServices { get; set; } = new();
-    public List<SparePartsDTO> AvailableParts { get; set; } = new();
+    public class OrdersViewModel : INotifyPropertyChanged
+    {
+        private readonly OrderService _orderService;
 
-    public OrdersViewModel(OrderService orderService)
-    {
-        _orderService = orderService;
-        // Inicjalizacja komend
-        AddNewOrderCommand = new RelayCommand(AddNewOrder);
-        ShowOrderCommand = new RelayCommand<OrderDTO>(ShowOrder);
-        EditOrderCommand = new RelayCommand<OrderDTO>(EditOrder, CanEditOrder);
-        DeleteOrderCommand = new RelayCommand<OrderDTO>(DeleteOrder);
-        _ = LoadOrdersAsync();
-        // Ładowanie przykładowych danych
-        // LoadSampleData();
-        InitializeSampleServicesAndParts();
-    }
-    public async Task LoadOrdersAsync()
-    {
-        try
+        public event Action<Guid?>? RequestOrderFormView;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private ObservableCollection<OrderDTO> _orders = new ObservableCollection<OrderDTO>();
+        private bool _isLoading;
+
+        public ObservableCollection<OrderDTO> Orders
         {
-            var orders = await _orderService.GetOrdersAsync();
-
-            Orders.Clear();
-
-            if (orders != null)
+            get => _orders;
+            set
             {
-                foreach (var order in orders)
+                if (_orders != value)
                 {
-                    Orders.Add(order);
+                    _orders = value;
+                    OnPropertyChanged();
                 }
             }
-            else
-            {
-                Console.WriteLine("Ostrzeżenie: OrderService.GetOrdersAsync zwróciło null.");
-            }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Błąd podczas ładowania zleceń: {ex.Message}");
-            Console.WriteLine(ex.StackTrace);
-            
-            MessageBox.Show($"Wystąpił błąd podczas ładowania zleceń: {ex.Message}", "Błąd ładowania", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-    }
 
-    public ObservableCollection<OrderDTO> Orders
-    {
-        get => _orders;
-        set
+        public bool IsLoading
         {
-            _orders = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public OrderDTO SelectedOrder
-    {
-        get => _selectedOrder;
-        set
-        {
-            _selectedOrder = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public ICommand AddNewOrderCommand { get; }
-    public ICommand ShowOrderCommand { get; }
-    public ICommand EditOrderCommand { get; }
-    public ICommand DeleteOrderCommand { get; }
-
-    /*private void LoadSampleData()
-    {
-        var client = new ClientDTO
-        {
-            Id = Guid.NewGuid(),
-            PersonalInfo = new PersonalInfo
+            get => _isLoading;
+            set
             {
-                FirstName = "Jan",
-                LastName = "Kowalski",
-                Email = "jan.kowalski@example.com",
-                PhoneNumber = "123456789"
-            }
-        };
-
-        var vehicle = new VehicleDTO
-        {
-            Id = Guid.NewGuid(),
-            Make = "Toyota",
-            Model = "Corolla",
-            Vin = "JT2BF22K1W0123456",
-            RegistrationNumber = "WA12345",
-            YearOfProduction = 2018,
-            Client = client
-        };
-
-        var AvailableServices = new List<ServiceDTO>
-        {
-            new ServiceDTO
-            {
-                Id = Guid.NewGuid(),
-                Name = "Oil change",
-                Description = "Standard engine oil change",
-                MinimalPrice = 100,
-                MaximalPrice = 200
-            },
-            new ServiceDTO
-            {
-                Id = Guid.NewGuid(),
-                Name = "Brake pad replacement",
-                Description = "Front brake pad replacement",
-                MinimalPrice = 200,
-                MaximalPrice = 350
-            }
-        };
-
-        var AvailableParts = new List<SparePartsDTO>
-        {
-            new SparePartsDTO
-            {
-                Id = Guid.NewGuid(),
-                CatalogNumber = "OIL-5W30-1L",
-                Name = "Engine oil 5W30",
-                Make = "Castrol",
-                Quality = 'A',
-                QuantityInStock = 10,
-                Price = 50,
-                Category = PartCategory.Consumables
-            }
-        };
-
-        var sampleOrders = new List<OrderDTO>
-        {
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Client = client,
-                Vehicle = vehicle,
-                IsPaid = false,
-                ServicesToDo = new List<ServiceInProgressDTO>
+                if (_isLoading != value)
                 {
-                    new()
+                    _isLoading = value;
+                    OnPropertyChanged();
+                    // Zaktualizuj stan komend zależnych od IsLoading
+                    // Sprawdzenie czy komenda jest typu RelayCommand, zanim rzutujemy
+                    if (AddNewOrderCommand is RelayCommand addNewCommand)
                     {
-                        Id = Guid.NewGuid(),
-                        Service = AvailableServices[0],
-                        Price = 120,
-                        ServiceStatus = ServiceStatus.PendingForStart
+                        addNewCommand.RaiseCanExecuteChanged();
                     }
-                },
-                SpareParts = new List<OrderSparePartDTO>
-                {
-                    new()
+                    if (DeleteOrderCommand is RelayCommand<OrderDTO> deleteCommand)
                     {
-                        SparePart = AvailableParts[0],
-                        Quantity = 1
-                    }
-                }
-            },
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Client = client,
-                Vehicle = vehicle,
-                IsPaid = true,
-                FinalizationDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-5)),
-                ServicesToDo = new List<ServiceInProgressDTO>
-                {
-                    new()
-                    {
-                        Id = Guid.NewGuid(),
-                        Service = AvailableServices[1],
-                        Price = 250,
-                        ServiceStatus = ServiceStatus.Completed,
-                        StartDate = DateTime.Now.AddDays(-10),
-                        EndDate = DateTime.Now.AddDays(-7)
+                        deleteCommand.RaiseCanExecuteChanged();
                     }
                 }
             }
-        };
+        }
 
-        Orders = new ObservableCollection<OrderDTO>(sampleOrders);
-    }*/
+        public ICommand AddNewOrderCommand { get; }
+        public ICommand ShowOrderCommand { get; }
+        public ICommand EditOrderCommand { get; }
+        public ICommand DeleteOrderCommand { get; }
 
-    private void InitializeSampleServicesAndParts()
-    {
-        AvailableServices.AddRange(new[]
+        public OrdersViewModel(OrderService orderService)
         {
-                new ServiceDTO
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Wymiana oleju",
-                    MinimalPrice = 100,
-                    MaximalPrice = 150
-                },
-                new ServiceDTO
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Przegląd okresowy",
-                    MinimalPrice = 200,
-                    MaximalPrice = 300
-                }
-            });
+            _orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
 
-        AvailableParts.AddRange(new[]
+            AddNewOrderCommand = new RelayCommand(OnAddNewOrder, () => !IsLoading);
+            ShowOrderCommand = new RelayCommand<OrderDTO>(OnShowOrder);
+            EditOrderCommand = new RelayCommand<OrderDTO>(OnEditOrder);
+            DeleteOrderCommand = new RelayCommand<OrderDTO>(async (order) => await OnDeleteOrder(order), (order) => !IsLoading);
+
+            // Uruchomienie ładowania bez oczekiwania
+            _ = LoadOrdersAsync();
+        }
+
+        public async Task LoadOrdersAsync()
         {
-                new SparePartsDTO
+            IsLoading = true;
+            try
+            {
+                var loadedOrders = await _orderService.GetOrdersAsync();
+                Orders.Clear();
+                if (loadedOrders != null)
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "Olej silnikowy",
-                    CatalogNumber = "OIL-5W30",
-                    Make = "Castrol",
-                    Price = 80,
-                    QuantityInStock = 10,
-                    Category = PartCategory.Consumables
-                },
-                new SparePartsDTO
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Filtr powietrza",
-                    CatalogNumber = "AIRF-123",
-                    Make = "Mann",
-                    Price = 45,
-                    QuantityInStock = 15,
-                    Category = PartCategory.Consumables
+                    foreach (var order in loadedOrders)
+                    {
+                        Orders.Add(order);
+                    }
                 }
-            });
-    }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Wystąpił błąd podczas ładowania zleceń: {ex.Message}", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
 
-    private async void AddNewOrder()
-    {
-        try
+        private void OnAddNewOrder()
         {
-            var dialogVm = new OrderFormViewModel();
-            var dialog = new OrderFormView
-            {
-                DataContext = dialogVm
-            };
+            RequestOrderFormView?.Invoke(null);
+        }
 
-            var window = new Window
+        private void OnShowOrder(OrderDTO? order)
+        {
+            if (order != null)
             {
-                Title = "Dodaj nowe zlecenie",
-                Content = dialog,
-                SizeToContent = SizeToContent.WidthAndHeight,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner
-            };
+                MessageBox.Show($"Wyświetl szczegóły zlecenia ID: {order.Id}\n" +
+                                $"Klient: {order.Client.FirstName} {order.Client?.LastName}\n" +
+                                $"Pojazd: {order.Vehicle?.Make} {order.Vehicle?.Model} ({order.Vehicle?.RegistrationNumber})\n" +
+                                $"Status: {order.Status}\n" +
+                                // Używamy teraz nowej właściwości TotalCost z OrderDTO
+                                $"Koszt: {order.TotalCost:C}", // Formatowanie jako waluta
+                                "Szczegóły Zlecenia", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
 
-            if (window.ShowDialog() == true)
+        private void OnEditOrder(OrderDTO? order)
+        {
+            if (order != null)
             {
-                var newOrder = dialogVm.Model.Order;
-                var order = await _orderService.CreateOrderAsync(newOrder);
-                if (order.ErrorMessage != null)
+                RequestOrderFormView?.Invoke(order.Id);
+            }
+        }
+
+        private async Task OnDeleteOrder(OrderDTO? order)
+        {
+            if (order == null) return;
+
+            MessageBoxResult result = MessageBox.Show(
+                $"Czy na pewno chcesz usunąć zlecenie ID: {order.Id} (Klient: {order.Client?.FirstName} {order.Client?.LastName}, Pojazd: {order.Vehicle?.RegistrationNumber})?",
+                "Potwierdź usunięcie",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                IsLoading = true;
+                try
                 {
-                    MessageBox.Show($"Wystąpił błąd podczas tworzenia zlecenia: {order.ErrorMessage}", "Błąd tworzenia zlecenia", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    // Tutaj powinna być rzeczywista logika usuwania w serwisie:
+                    // await _orderService.DeleteOrderAsync(order.Id);
+
+                    // Symulacja usunięcia:
+                    MessageBox.Show($"Funkcjonalność usuwania zlecenia {order.Id} niezaimplementowana w serwisie. Symulacja usunięcia.", "Informacja", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Orders.Remove(order);
                 }
-                else if(order.Result != null)
+                catch (Exception ex)
                 {
-                    var resultOrder = await _orderService.GetOrderByIdAsync(order.Result);
-                    if(resultOrder != null)
-                        Orders.Add(resultOrder);
+                    MessageBox.Show($"Wystąpił błąd podczas usuwania zlecenia: {ex.Message}", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    IsLoading = false;
                 }
             }
         }
-        catch (Exception e)
+
+        protected void OnPropertyChanged(string propertyName = null!)
         {
-            throw; // TODO handle exception
-        }
-    }
-
-    private void ShowOrder(OrderDTO order)
-    {
-        if (order == null) return;
-
-        var dialogVm = new OrderDetailsDialogViewModel(order);
-        var dialog = new OrderDetailsDialogView
-        {
-            DataContext = dialogVm
-        };
-        dialog.ShowDialog();
-    }
-
-    private void EditOrder(OrderDTO order)
-    {
-        if (order == null) return;
-
-        var dialogVm = new OrderFormViewModel(order);
-        var dialog = new OrderFormView
-        {
-            DataContext = dialogVm
-        };
-
-        var window = new Window
-        {
-            Title = "Edytuj zlecenie",
-            Content = dialog,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner
-        };
-
-        if (window.ShowDialog() == true)
-        {
-            var index = Orders.IndexOf(order);
-            if (index >= 0)
-            {
-                // Aktualizujemy właściwości istniejącego zlecenia
-                var updatedOrder = dialogVm.Model.Order;
-                order.Client = updatedOrder.Client;
-                order.Vehicle = updatedOrder.Vehicle;
-                order.IsPaid = updatedOrder.IsPaid;
-                order.FinalizationDate = updatedOrder.FinalizationDate;
-                order.ServicesToDo = updatedOrder.ServicesToDo;
-                order.SpareParts = updatedOrder.SpareParts;
-
-                OnPropertyChanged(nameof(Orders));
-            }
-        }
-    }
-
-    private bool CanEditOrder(OrderDTO order)
-    {
-        return order != null && order.Status != "Zakończone";
-    }
-    
-    private void DeleteOrder(OrderDTO order)
-    {
-        if (order == null) return;
-
-        var result = MessageBox.Show($"Czy na pewno chcesz usunąć zlecenie #{order.Id}?", "Potwierdzenie usunięcia", MessageBoxButton.YesNo);
-
-        if (result == MessageBoxResult.Yes)
-        {
-            Orders.Remove(order);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

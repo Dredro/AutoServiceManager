@@ -64,9 +64,9 @@
                 <vworker:OrderDetailsDialogView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vmworker:OrderEditDialogViewModel}">
+            <!--<DataTemplate DataType="{x:Type vmworker:OrderEditDialogViewModel}">
                 <vworker:OrderEditDialogView/>
-            </DataTemplate>
+            </DataTemplate>-->
 
             <DataTemplate DataType="{x:Type viewModels:VehiclesListViewModel}"> 
                 <view:VehiclesListView/>
