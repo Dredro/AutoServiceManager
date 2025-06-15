@@ -31,6 +31,7 @@ namespace Wpf.ViewModel
         private OrdersViewModel? _ordersViewModel;
         private OrderFormViewModel? _orderFormViewModel;
         private EditClientFormViewModel? _editClientFormViewModel;
+        private EditServiceFormViewModel? _editServiceFormViewModel;
         public ICommand LogoutCommand { get; }
         public ICommand SwitchViewCommand { get; }
 
@@ -266,7 +267,8 @@ namespace Wpf.ViewModel
                     
                     _servicesListViewModel.RequestCreateServiceView -= OnRequestCreateServiceViewFromList; 
                     _servicesListViewModel.RequestCreateServiceView += OnRequestCreateServiceViewFromList;
-                    
+                    _servicesListViewModel.RequestEditServiceView -= OnRequestEditServiceViewFromList;
+                    _servicesListViewModel.RequestEditServiceView += OnRequestEditServiceViewFromList;
                     
                     CurrentContent = _servicesListViewModel;
                     break;
@@ -290,7 +292,32 @@ namespace Wpf.ViewModel
                     break;
             }
         }
+        private void OnRequestEditServiceViewFromList(Guid serviceId)
+        {
+            _editServiceFormViewModel = _serviceProvider.GetRequiredService<EditServiceFormViewModel>();
 
+            _editServiceFormViewModel.ServiceUpdated -= OnServiceUpdated;
+            _editServiceFormViewModel.RequestGoBack -= OnEditServiceFormGoBack;
+
+            _editServiceFormViewModel.ServiceUpdated += OnServiceUpdated;
+            _editServiceFormViewModel.RequestGoBack += OnEditServiceFormGoBack;
+
+            CurrentContent = _editServiceFormViewModel; 
+            _ = _editServiceFormViewModel.LoadServiceAsync(serviceId); 
+        }
+        
+        private async void OnServiceUpdated()
+        {
+            OnSwitchView("Services"); 
+            if (_servicesListViewModel != null)
+            {
+                await _servicesListViewModel.LoadServicesAsync(); 
+            }
+        }
+        private void OnEditServiceFormGoBack()
+        {
+            OnSwitchView("Services"); 
+        }
         private void OnRequestCreateOrderViewFromList(Guid? guid)
         {
            _orderFormViewModel = _serviceProvider.GetRequiredService<OrderFormViewModel>();

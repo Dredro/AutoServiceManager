@@ -96,6 +96,9 @@
             <DataTemplate DataType="{x:Type viewModels:EditClientFormViewModel}">
                 <view:EditClientForm/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:EditServiceFormViewModel}">
+                <view:EditServiceForm/>
+            </DataTemplate>
             <!-- Converters -->
             <core:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
             <core:NullToBooleanConverter x:Key="NullToBooleanConverter"/>

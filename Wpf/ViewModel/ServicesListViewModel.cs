@@ -53,7 +53,6 @@ namespace Wpf.ViewModels
                 {
                     _selectedService = value;
                     OnPropertyChanged(nameof(SelectedService));
-                    // Re-evaluate commands that depend on selection (e.g., Edit, Delete)
                     ((RelayCommand<ServiceDTO>)EditServiceCommand)?.RaiseCanExecuteChanged();
                     ((RelayCommand<ServiceDTO>)DeleteServiceCommand)?.RaiseCanExecuteChanged();
                 }
@@ -74,29 +73,24 @@ namespace Wpf.ViewModels
             }
         }
 
-        // --- Commands ---
         public ICommand LoadServicesCommand { get; private set; }
         public ICommand CreateServiceCommand { get; private set; }
         public ICommand EditServiceCommand { get; private set; }
         public ICommand DeleteServiceCommand { get; private set; }
         
 
-        // Main constructor with dependency injection
         public ServicesListViewModel(ServiceService serviceService)
         {
             _serviceService = serviceService ?? throw new ArgumentNullException(nameof(serviceService));
 
             LoadServicesCommand = new RelayCommand(async () => await LoadServicesAsync(), () => !IsLoading);
             CreateServiceCommand = new RelayCommand(OnCreateService, () => !IsLoading);
-            // Use RelayCommand<T> for commands taking a parameter (like the DataGrid buttons)
             EditServiceCommand = new RelayCommand<ServiceDTO>(OnEditService, CanEditOrDeleteService);
             DeleteServiceCommand = new RelayCommand<ServiceDTO>(async (service) => await OnDeleteService(service), CanEditOrDeleteService);
 
-            // Load services on initialization
             _ = LoadServicesAsync(); 
         }
 
-        // --- Command Logic ---
 
         public async Task LoadServicesAsync()
         {
@@ -128,18 +122,15 @@ namespace Wpf.ViewModels
             RequestCreateServiceView?.Invoke(); 
         }
 
-        // Changed to accept ServiceDTO parameter from DataGrid CommandParameter
         private void OnEditService(ServiceDTO? serviceToEdit) 
         {
             if (serviceToEdit == null) return;
-            MessageBox.Show($"Edytuj usługę: {serviceToEdit.Name} (ID: {serviceToEdit.Id})", "Edytuj Usługę");
             RequestEditServiceView?.Invoke(serviceToEdit.Id); 
         }
 
-        // Changed to accept ServiceDTO parameter from DataGrid CommandParameter
         private async Task OnDeleteService(ServiceDTO? serviceToDelete) 
         {
-            /*if (serviceToDelete == null) return;
+            if (serviceToDelete == null) return;
 
             var result = MessageBox.Show($"Czy na pewno chcesz usunąć usługę '{serviceToDelete.Name}'?", "Potwierdź usunięcie", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
@@ -147,14 +138,14 @@ namespace Wpf.ViewModels
                 IsLoading = true; 
                 try
                 {
-                    var (success, errorMessage) = await _serviceService.DeleteServiceAsync(serviceToDelete.Id);
+                    var (success, errorMessage) = await _serviceService.DeleteServiceAsync(serviceToDelete.Id.ToString());
                     if (success)
                     {
                         MessageBox.Show("Usługa została pomyślnie usunięta.", "Sukces", MessageBoxButton.OK, MessageBoxImage.Information);
-                        Application.Current.Dispatcher.Invoke(() => // Ensure UI update on UI thread
+                        Application.Current.Dispatcher.Invoke(() => 
                         {
-                             Services.Remove(serviceToDelete); // Remove from ObservableCollection
-                             if (SelectedService == serviceToDelete) // If the deleted item was selected, clear selection
+                             Services.Remove(serviceToDelete); 
+                             if (SelectedService == serviceToDelete) 
                              {
                                  SelectedService = null;
                              }
@@ -173,10 +164,8 @@ namespace Wpf.ViewModels
                 {
                     IsLoading = false;
                 }
-            }*/
+            }
         }
-
-        // CanExecute method for generic commands (accepts T parameter)
         private bool CanEditOrDeleteService(ServiceDTO? service)
         {
             return !IsLoading && service != null;
