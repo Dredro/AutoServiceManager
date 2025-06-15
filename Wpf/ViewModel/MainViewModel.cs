@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Media3D;
 using Microsoft.Extensions.DependencyInjection; 
 using Wpf.Core; 
-using Wpf.Models; 
+using Wpf.Models;
+using Wpf.Models.DTOs;
 using Wpf.Services; 
 using Wpf.ViewModel.Manager;
 using Wpf.ViewModel.Worker;
@@ -256,7 +258,8 @@ namespace Wpf.ViewModel
                     _vehiclesListViewModel.RequestCreateVehicleView -= OnRequestCreateVehicleView; 
                     _vehiclesListViewModel.RequestCreateVehicleView += OnRequestCreateVehicleView;
                     _vehiclesListViewModel.RequestEditVehicleView -= OnRequestEditVehicleView; 
-                    _vehiclesListViewModel.RequestEditVehicleView += OnRequestEditVehicleView; 
+                    _vehiclesListViewModel.RequestEditVehicleView += OnRequestEditVehicleView;
+                    
                     CurrentContent = _vehiclesListViewModel;
                     break;
                 case "CreateCar": 
@@ -303,6 +306,13 @@ namespace Wpf.ViewModel
                     break;
             }
         }
+
+        private void OnEditVehicleInOrderFormGoBack()
+        {
+            OnSwitchView("Orders");
+        }
+
+
         private void OnRequestEditVehicleView(Guid vehicleId)
         {
             _editVehicleFormViewModel = _serviceProvider.GetRequiredService<EditVehicleFormViewModel>();
@@ -392,7 +402,14 @@ namespace Wpf.ViewModel
         {
             OnSwitchView("CreateCar"); 
         }
-
+        private void OnRequestCreateVehicleView(ClientDTO client) 
+        {
+            OnSwitchView("CreateCar");
+            if (CurrentContent is CreateCarFormViewModel vm)
+            {
+                vm.SelectedClient = client;
+            }
+        }
         private async void OnCarCreated() 
         {
             MessageBox.Show("Nowy samochód został pomyślnie dodany! Odświeżam listę pojazdów.", "Sukces");

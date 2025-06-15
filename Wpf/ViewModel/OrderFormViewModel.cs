@@ -1,18 +1,12 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
-using System.Threading.Tasks;
-using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-
 using Wpf.Core;
 using Wpf.Models.DTOs;
 using Wpf.Services;
-
 
 namespace Wpf.ViewModel.Worker
 {
@@ -20,7 +14,6 @@ namespace Wpf.ViewModel.Worker
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        // --- Services (Dependencies Injected via Constructor) ---
         private readonly OrderService _orderService;
         private readonly ClientService _clientService;
         private readonly VehicleService _vehicleService;
@@ -28,11 +21,9 @@ namespace Wpf.ViewModel.Worker
         private readonly WorkerService _workerService;
         private readonly SparePartService _sparePartService;
 
-        // --- Private backing lists for filtering ---
         private List<ClientDTO> _allClients = new List<ClientDTO>();
         private List<VehicleDTO> _allVehicles = new List<VehicleDTO>();
 
-        // --- Properties (Formerly from OrderFormModel, now direct) ---
         private OrderDTO _order;
         public OrderDTO Order
         {
@@ -144,7 +135,6 @@ namespace Wpf.ViewModel.Worker
             {
                 if (SetField(ref _isSaving, value))
                 {
-                    // Te wywołania powinny być na generycznych RelayCommand, ale ok
                     ((RelayCommand)SaveCommand).RaiseCanExecuteChanged();
                     ((RelayCommand)CancelCommand).RaiseCanExecuteChanged();
                     ((RelayCommand)AddNewClientCommand).RaiseCanExecuteChanged();
@@ -207,7 +197,6 @@ namespace Wpf.ViewModel.Worker
             _ = LoadData();
         }
 
-        // --- Handlery zdarzeń kolekcji i elementów (bez zmian) ---
         private void ServicesToDo_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.OldItems != null)
@@ -269,7 +258,6 @@ namespace Wpf.ViewModel.Worker
         }
 
 
-        // --- Data Loading and Filtering Methods (bez zmian) ---
         private async Task LoadData()
         {
             try
@@ -377,7 +365,6 @@ namespace Wpf.ViewModel.Worker
             }
         }
 
-        // --- Command Methods ---
         private void ExecuteAddNewClient()
         {
             Console.WriteLine("Execute: Add New Client");
@@ -388,10 +375,10 @@ namespace Wpf.ViewModel.Worker
         {
             return !IsSaving;
         }
-        public Action OnExecuteAddNewVehicle { get; set; } = () => { };
+        public Action<ClientDTO> OnExecuteAddNewVehicle { get; set; } = (id) => { }; 
         private void ExecuteAddNewVehicle()
         {
-           OnExecuteAddNewVehicle?.Invoke();
+            if (_selectedClient != null) OnExecuteAddNewVehicle?.Invoke(_selectedClient);
         }
 
         private bool CanExecuteAddNewVehicle()
@@ -480,7 +467,6 @@ namespace Wpf.ViewModel.Worker
             IsSaving = true;
             try
             {
-                // ZMIANA: Dodano walidację przed wywołaniem CanExecuteSave
                 if (SelectedClient == null)
                 {
                     MessageBox.Show("Proszę wybrać klienta przed zapisaniem zlecenia.", "Błąd Walidacji", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -491,31 +477,19 @@ namespace Wpf.ViewModel.Worker
                     MessageBox.Show("Proszę wybrać pojazd przed zapisaniem zlecenia.", "Błąd Walidacji", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-
-                // ZMIANA: Walidacja, czy wybrano usługi katalogowe dla pozycji usług
-                if (Order.ServicesToDo.Any(s => s.Service == null || s.Service.Id == Guid.Empty)) // Upewnij się, że Service jest i jego Id nie jest puste
+                
+                if (Order.ServicesToDo.Any(s => s.Service == null || s.Service.Id == Guid.Empty)) 
                 {
                     MessageBox.Show("Każda dodana usługa musi mieć wybraną usługę katalogową (np. 'Wymiana oleju'). Proszę wybrać usługę z listy.", "Błąd Walidacji Usług", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-
-                // ZMIANA: Walidacja, czy wybrano części katalogowe dla pozycji części
-                if (Order.SpareParts.Any(p => p.SparePart == null || p.SparePart.Id == Guid.Empty)) // Upewnij się, że SparePart jest i jego Id nie jest puste
+                
+                if (Order.SpareParts.Any(p => p.SparePart == null || p.SparePart.Id == Guid.Empty)) 
                 {
                     MessageBox.Show("Każda dodana część musi mieć wybraną część katalogową (np. 'Filtr oleju'). Proszę wybrać część z listy.", "Błąd Walidacji Części", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-
-
-                // Upewnij się, że CanExecuteSave bierze pod uwagę nowe walidacje, jeśli jest wywoływane w innym miejscu
-                /*
-                if (!CanExecuteSave()) // Ta linia może być redundantna, jeśli walidacje są już wyżej
-                {
-                    // Tutaj można dodać ogólny komunikat, jeśli CanExecuteSave zwraca false z innego powodu
-                    MessageBox.Show("Nie można zapisać zlecenia. Sprawdź, czy wszystkie wymagane pola są wypełnione i czy nie ma błędów walidacji.", "Błąd Walidacji", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-                */
+                
                 foreach (var service in Order.ServicesToDo)
                 {
                     if (service.Price == null && service.Service != null)
@@ -551,10 +525,9 @@ namespace Wpf.ViewModel.Worker
 
         private bool CanExecuteSave()
         {
-            // ZMIANA: Dodano walidacje do CanExecuteSave
             return SelectedClient != null && SelectedVehicle != null && !IsSaving &&
-                   !Order.ServicesToDo.Any(s => s.Service == null || s.Service.Id == Guid.Empty) && // Wszystkie usługi muszą mieć wybraną usługę
-                   !Order.SpareParts.Any(p => p.SparePart == null || p.SparePart.Id == Guid.Empty); // Wszystkie części muszą mieć wybraną część
+                   !Order.ServicesToDo.Any(s => s.Service == null || s.Service.Id == Guid.Empty) && 
+                   !Order.SpareParts.Any(p => p.SparePart == null || p.SparePart.Id == Guid.Empty);
         }
 
         private void ClearForm()
@@ -572,7 +545,6 @@ namespace Wpf.ViewModel.Worker
             FilterVehicles();
         }
 
-        // --- INotifyPropertyChanged Implementation (bez zmian) ---
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

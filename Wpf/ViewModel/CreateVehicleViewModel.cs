@@ -21,7 +21,7 @@ namespace Wpf.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public event Action? CarCreated; 
-
+        public event Action? RequestGoBack;
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -427,8 +427,10 @@ namespace Wpf.ViewModels
 
         private void OnCancel()
         {
-            MessageBox.Show("Tworzenie samochodu anulowane.", "Anuluj", MessageBoxButton.OK, MessageBoxImage.Information);
-            ClearForm();
+            if (MessageBox.Show("Czy na pewno chcesz anulować edycję? Niezapisane zmiany zostaną utracone.", "Anuluj Edycję", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                RequestGoBack?.Invoke(); 
+            }
         }
 
         private void ClearForm()
