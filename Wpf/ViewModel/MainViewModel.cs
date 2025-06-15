@@ -298,6 +298,8 @@ namespace Wpf.ViewModel
             _orderFormViewModel.OrderCreated += OnOrderCreated;
             _orderFormViewModel.RequestCreateOrderView -= OnRequestCreateOrderViewFromList;
             _orderFormViewModel.RequestCreateOrderView += OnRequestCreateOrderViewFromList;*/
+            
+            _orderFormViewModel.OnExecuteAddNewVehicle += OnRequestCreateVehicleView;
             CurrentContent = _orderFormViewModel;
         }
 

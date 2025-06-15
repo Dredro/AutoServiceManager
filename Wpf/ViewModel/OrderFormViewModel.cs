@@ -388,11 +388,10 @@ namespace Wpf.ViewModel.Worker
         {
             return !IsSaving;
         }
-
+        public Action OnExecuteAddNewVehicle { get; set; } = () => { };
         private void ExecuteAddNewVehicle()
         {
-            Console.WriteLine("Execute: Add New Vehicle");
-            MessageBox.Show("Otwieranie formularza dodawania nowego pojazdu...", "Dodaj Pojazd", MessageBoxButton.OK, MessageBoxImage.Information);
+           OnExecuteAddNewVehicle?.Invoke();
         }
 
         private bool CanExecuteAddNewVehicle()
