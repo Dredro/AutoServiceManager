@@ -1,98 +1,72 @@
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Wpf.Core;
 using Wpf.Models.DTOs;
 using Wpf.Services;
-using Wpf.ViewModels; 
 
-namespace Wpf.ViewModels 
+namespace Wpf.ViewModels
 {
     public class VehiclesListViewModel : INotifyPropertyChanged
     {
         private readonly VehicleService _vehicleService;
-        private readonly ClientService _clientService; 
 
-        public event PropertyChangedEventHandler? PropertyChanged; 
-        
-        
+        public event PropertyChangedEventHandler? PropertyChanged;
         public event Action? RequestCreateVehicleView; 
+        public event Action<Guid>? RequestEditVehicleView;
 
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private ObservableCollection<VehicleDTO> _vehicles;
-        public ObservableCollection<VehicleDTO> Vehicles
-        {
-            get => _vehicles;
-            set
-            {
-                if (_vehicles != value) 
-                {
-                    _vehicles = value;
-                    OnPropertyChanged(nameof(Vehicles));
-                }
-            }
-        }
+        public ObservableCollection<VehicleDTO> Vehicles { get; } = new ObservableCollection<VehicleDTO>();
 
         private bool _isLoading;
-        
         public bool IsLoading
         {
             get => _isLoading;
             set
             {
-                if (_isLoading != value) 
+                if (_isLoading != value)
                 {
                     _isLoading = value;
                     OnPropertyChanged(nameof(IsLoading));
-                    
-                    ((RelayCommand)AddNewVehicleCommand).RaiseCanExecuteChanged();
                 }
             }
         }
+        public ICommand AddVehicleCommand { get; }
+        public ICommand LoadVehiclesCommand { get; }
+        public ICommand CreateVehicleCommand { get; }
+        public ICommand EditVehicleCommand { get; } 
+        public ICommand DeleteVehicleCommand { get; }
 
-        
-        public ICommand AddNewVehicleCommand { get; private set; }
-        public ICommand ShowVehicleCommand { get; private set; }
-        public ICommand EditVehicleCommand { get; private set; }
-        public ICommand DeleteVehicleCommand { get; private set; }
-
-        public VehiclesListViewModel(VehicleService vehicleService, ClientService clientService)
+        public VehiclesListViewModel(VehicleService vehicleService)
         {
             _vehicleService = vehicleService ?? throw new ArgumentNullException(nameof(vehicleService));
-            _clientService = clientService ?? throw new ArgumentNullException(nameof(clientService)); 
-
-            Vehicles = new ObservableCollection<VehicleDTO>();
-
+            AddVehicleCommand = new RelayCommand(OnAddNewVehicle);
+            LoadVehiclesCommand = new RelayCommand(async () => await LoadVehiclesAsync());
+            CreateVehicleCommand = new RelayCommand(() => RequestCreateVehicleView?.Invoke());
             
-            AddNewVehicleCommand = new RelayCommand(OnAddNewVehicle, () => !IsLoading);
+            EditVehicleCommand = new RelayCommand<VehicleDTO>(OnEditVehicle); 
+            
+            DeleteVehicleCommand = new RelayCommand<VehicleDTO>(async (vehicle) => await OnDeleteVehicle(vehicle)); 
 
-            ShowVehicleCommand = new RelayCommand<VehicleDTO>(OnShowVehicle, CanExecuteVehicleAction);
-            EditVehicleCommand = new RelayCommand<VehicleDTO>(OnEditVehicle, CanExecuteVehicleAction);
-            DeleteVehicleCommand = new RelayCommand<VehicleDTO>(async (vehicle) => await OnDeleteVehicle(vehicle), CanExecuteVehicleAction); 
-           
-            _ = LoadVehiclesAsync();
+            _ = LoadVehiclesAsync(); 
         }
 
-        public async Task LoadVehiclesAsync() 
+        public async Task LoadVehiclesAsync()
         {
             IsLoading = true;
             try
             {
-                var loadedVehicles = await _vehicleService.GetVehiclesAsync();
-                Vehicles.Clear(); 
-                if (loadedVehicles != null)
+                var vehicles = await _vehicleService.GetVehiclesAsync();
+                if (vehicles != null)
                 {
-                    foreach (var vehicle in loadedVehicles)
+                    Vehicles.Clear();
+                    foreach (var vehicle in vehicles)
                     {
-                        vehicle.Client = await _clientService.GetClientByIdAsync(vehicle.ClientId);
                         Vehicles.Add(vehicle);
                     }
                 }
@@ -110,56 +84,31 @@ namespace Wpf.ViewModels
                 IsLoading = false;
             }
         }
-
         private void OnAddNewVehicle()
         {
             RequestCreateVehicleView?.Invoke(); 
         }
-
-        private bool CanExecuteVehicleAction(VehicleDTO? vehicle) 
-        {
-            return vehicle != null && !IsLoading; 
-        }
-
-        private void OnShowVehicle(VehicleDTO? vehicle) 
-        {
-            if (vehicle != null) 
-            {
-                MessageBox.Show($"Wyświetl pojazd: {vehicle.Make} {vehicle.Model} (ID: {vehicle.Id})", "Pokaż pojazd", MessageBoxButton.OK, MessageBoxImage.Information);
-                
-            }
-        }
-        
         private void OnEditVehicle(VehicleDTO? vehicle) 
         {
             if (vehicle != null)
             {
-                MessageBox.Show($"Edytuj pojazd: {vehicle.Make} {vehicle.Model} (ID: {vehicle.Id})", "Edytuj pojazd", MessageBoxButton.OK, MessageBoxImage.Information);
-                
+                RequestEditVehicleView?.Invoke(vehicle.Id); 
             }
         }
 
-        private async Task OnDeleteVehicle(VehicleDTO? vehicle) 
+        private async Task OnDeleteVehicle(VehicleDTO vehicle) 
         {
-            if (vehicle == null) return;
-
-            var result = MessageBox.Show($"Czy na pewno chcesz usunąć pojazd: {vehicle.Make} {vehicle.Model} (ID: {vehicle.Id})?", "Potwierdź usunięcie", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if (result == MessageBoxResult.Yes)
+            if (MessageBox.Show($"Czy na pewno chcesz usunąć pojazd: {vehicle.Model}?", "Potwierdź usunięcie", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                IsLoading = true; 
-                try
+                var (success, errorMessage) = await _vehicleService.DeleteVehicleAsync(vehicle.Id.ToString()); 
+                if (success)
                 {
-                    MessageBox.Show($"Pojazd {vehicle.Make} {vehicle.Model} usunięty (symulacja).", "Usunięto", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Pojazd usunięto pomyślnie.", "Sukces", MessageBoxButton.OK, MessageBoxImage.Information);
                     await LoadVehiclesAsync(); 
-
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show($"Wystąpił błąd podczas usuwania pojazdu: {ex.Message}", "Błąd Krytyczny", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                finally
-                {
-                    IsLoading = false;
+                    MessageBox.Show($"Błąd podczas usuwania pojazdu: {errorMessage ?? "Nieznany błąd."}", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

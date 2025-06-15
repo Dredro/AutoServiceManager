@@ -26,7 +26,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/> <!-- Dodany wiersz dla paska ładowania -->
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Header -->
@@ -35,8 +35,8 @@
 
             <Button Content="Dodaj nowy" Style="{StaticResource MaterialDesignRaisedButton}"
                     HorizontalAlignment="Left" Margin="16,0,0,0"
-                    Command="{Binding AddNewVehicleCommand}"
-                    IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"> <!-- Wyłącz przycisk podczas ładowania -->
+                    Command="{Binding AddVehicleCommand}"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"> 
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -47,7 +47,6 @@
                 </Button.ContentTemplate>
             </Button>
             
-            <!-- ProgressBar dla ładowania listy pojazdów -->
             <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
                                         IsIndeterminate="True"
                                         Width="24" Height="24"

@@ -32,6 +32,7 @@ namespace Wpf.ViewModel
         private OrderFormViewModel? _orderFormViewModel;
         private EditClientFormViewModel? _editClientFormViewModel;
         private EditServiceFormViewModel? _editServiceFormViewModel;
+        private EditVehicleFormViewModel? _editVehicleFormViewModel;
         public ICommand LogoutCommand { get; }
         public ICommand SwitchViewCommand { get; }
 
@@ -44,7 +45,7 @@ namespace Wpf.ViewModel
             {
                 if (_currentContent != value)
                 {
-                    if (_currentContent is ClientsListViewModel oldClientsVm)
+                  if (_currentContent is ClientsListViewModel oldClientsVm)
                     {
                         oldClientsVm.RequestCreateClientView -= OnRequestCreateClientView;
                         oldClientsVm.RequestShowClientView -= OnRequestShowClientView;
@@ -53,16 +54,24 @@ namespace Wpf.ViewModel
                     if (_currentContent is CreateClientFormViewModel oldCreateClientVm)
                     {
                         oldCreateClientVm.ClientCreated -= OnClientCreated;
+                        oldCreateClientVm.RequestGoBack -= OnEditClientFormGoBack; 
                     }
                     
                     if (_currentContent is VehiclesListViewModel oldVehiclesVm)
                     {
                         oldVehiclesVm.RequestCreateVehicleView -= OnRequestCreateVehicleView;
+                        oldVehiclesVm.RequestEditVehicleView -= OnRequestEditVehicleView; // NEW: Unsubscribe
                     }
                     
                     if (_currentContent is CreateCarFormViewModel oldCreateCarVm)
                     {
                         oldCreateCarVm.CarCreated -= OnCarCreated;
+                    }
+
+                    if (_currentContent is EditVehicleFormViewModel oldEditVehicleVm) // NEW: Unsubscribe
+                    {
+                        oldEditVehicleVm.VehicleUpdated -= OnVehicleUpdated;
+                        oldEditVehicleVm.RequestGoBack -= OnEditVehicleFormGoBack;
                     }
                     
                     if (_currentContent is CreateServiceFormViewModel oldCreateServiceVm)
@@ -246,6 +255,8 @@ namespace Wpf.ViewModel
                     _vehiclesListViewModel = _serviceProvider.GetRequiredService<VehiclesListViewModel>(); 
                     _vehiclesListViewModel.RequestCreateVehicleView -= OnRequestCreateVehicleView; 
                     _vehiclesListViewModel.RequestCreateVehicleView += OnRequestCreateVehicleView;
+                    _vehiclesListViewModel.RequestEditVehicleView -= OnRequestEditVehicleView; 
+                    _vehiclesListViewModel.RequestEditVehicleView += OnRequestEditVehicleView; 
                     CurrentContent = _vehiclesListViewModel;
                     break;
                 case "CreateCar": 
@@ -291,6 +302,34 @@ namespace Wpf.ViewModel
                     CurrentContent = "Nieznany widok.";
                     break;
             }
+        }
+        private void OnRequestEditVehicleView(Guid vehicleId)
+        {
+            _editVehicleFormViewModel = _serviceProvider.GetRequiredService<EditVehicleFormViewModel>();
+            
+            _editVehicleFormViewModel.VehicleUpdated -= OnVehicleUpdated;
+            _editVehicleFormViewModel.RequestGoBack -= OnEditVehicleFormGoBack;
+
+            _editVehicleFormViewModel.VehicleUpdated += OnVehicleUpdated;
+            _editVehicleFormViewModel.RequestGoBack += OnEditVehicleFormGoBack;
+
+            CurrentContent = _editVehicleFormViewModel; 
+            _ = _editVehicleFormViewModel.LoadVehicleAsync(vehicleId); 
+        }
+
+        private async void OnVehicleUpdated() 
+        {
+            MessageBox.Show("Dane pojazdu zostały pomyślnie zaktualizowane! Odświeżam listę pojazdów.", "Sukces");
+            OnSwitchView("Cars"); 
+            if (_vehiclesListViewModel != null)
+            {
+                await _vehiclesListViewModel.LoadVehiclesAsync(); 
+            }
+        }
+
+        private void OnEditVehicleFormGoBack() 
+        {
+            OnSwitchView("Cars"); 
         }
         private void OnRequestEditServiceViewFromList(Guid serviceId)
         {

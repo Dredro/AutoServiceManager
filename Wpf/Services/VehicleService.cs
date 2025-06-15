@@ -22,8 +22,16 @@ public class VehicleService
         return await _apiClient.GetAsync<List<VehicleDTO>>(BaseEndpoint);
     }
 
-    public async Task<VehicleDTO?> GetVehicleByIdAsync(int vehicleId)
+    public async Task<VehicleDTO?> GetVehicleByIdAsync(string vehicleId)
     {
         return await _apiClient.GetAsync<VehicleDTO>($"{BaseEndpoint}/{vehicleId}");
+    }
+    public async Task<(string? Result, string? ErrorMessage)> EditVehicleAsync(EditVehicleCommand command)
+    {
+        return await _apiClient.PatchAsync<EditVehicleCommand, string>(BaseEndpoint, command);
+    }
+    public async Task<(bool Success, string? ErrorMessage)> DeleteVehicleAsync(string id)
+    {
+        return await _apiClient.DeleteAsync($"{BaseEndpoint}/{id}");
     }
 }

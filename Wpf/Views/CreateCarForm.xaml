@@ -9,10 +9,7 @@
              xmlns:converters1="clr-namespace:Wpf.Converters"
              mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="400">
-
-    <d:DesignData.DataContext>
-        <vm:CreateCarFormViewModel/>
-    </d:DesignData.DataContext>
+    
 
     <UserControl.Resources>
         <converters1:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
@@ -33,7 +30,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Label Content="Dodaj samochód" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
+            <Label Content="Dodaj pojazd" FontSize="24" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,20"/>
 
             <StackPanel Grid.Row="1">
                 <StackPanel Style="{StaticResource StackPanelMarginStyle}">

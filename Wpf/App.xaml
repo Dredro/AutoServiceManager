@@ -63,7 +63,7 @@
             <DataTemplate DataType="{x:Type vmworker:OrderDetailsDialogViewModel}">
                 <vworker:OrderDetailsDialogView/>
             </DataTemplate>
-
+        
             <!--<DataTemplate DataType="{x:Type vmworker:OrderEditDialogViewModel}">
                 <vworker:OrderEditDialogView/>
             </DataTemplate>-->
@@ -75,7 +75,9 @@
             <DataTemplate DataType="{x:Type viewModels:CreateCarFormViewModel}"> 
                 <view:CreateCarForm/> 
             </DataTemplate>
-
+            <DataTemplate DataType="{x:Type viewModels:EditVehicleFormViewModel}"> 
+                <view:EditVehicleForm/> 
+            </DataTemplate>
             <DataTemplate DataType="{x:Type viewModels:ClientsListViewModel}"> 
                 <view:ClientsListView/>
             </DataTemplate>
