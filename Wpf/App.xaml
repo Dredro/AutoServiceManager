@@ -67,7 +67,7 @@
             <!--<DataTemplate DataType="{x:Type vmworker:OrderEditDialogViewModel}">
                 <vworker:OrderEditDialogView/>
             </DataTemplate>-->
-
+    
             <DataTemplate DataType="{x:Type viewModels:VehiclesListViewModel}"> 
                 <view:VehiclesListView/>
             </DataTemplate>
@@ -93,7 +93,9 @@
             <DataTemplate DataType="{x:Type viewModels:CreatePartFormViewModel}">
                 <view:CreatePartForm/>
             </DataTemplate>
-          
+            <DataTemplate DataType="{x:Type viewModels:EditClientFormViewModel}">
+                <view:EditClientForm/>
+            </DataTemplate>
             <!-- Converters -->
             <core:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
             <core:NullToBooleanConverter x:Key="NullToBooleanConverter"/>

@@ -52,6 +52,7 @@ public partial class App : Application
         services.AddTransient<ServicesListViewModel>();
         services.AddTransient<CreateServiceFormViewModel>();
         services.AddTransient<CreatePartFormViewModel>();
+        services.AddTransient<EditClientFormViewModel>();
     }
 
     protected override void OnStartup(StartupEventArgs e)

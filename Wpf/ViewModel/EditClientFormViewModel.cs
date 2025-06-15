@@ -1,20 +1,21 @@
-using System;
 using System.ComponentModel;
-using System.Windows; 
+using System.Windows;
 using System.Windows.Input;
-using Wpf.Core; 
+using Wpf.Core;
 using Wpf.Services;
-
 
 namespace Wpf.ViewModels
 {
-    public class CreateClientFormViewModel : INotifyPropertyChanged
+    public class EditClientFormViewModel : INotifyPropertyChanged
     {
         private readonly ClientService _clientService;
+        private Guid _clientId; 
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        public event Action? ClientCreated; 
-        public event Action? RequestGoBack;
+        public event Action? ClientUpdated; 
+        public event Action? RequestGoBack; 
+
+        // Bound Properties
         private string _firstName = string.Empty;
         private string _lastName = string.Empty;
         private string _email = string.Empty;
@@ -83,6 +84,7 @@ namespace Wpf.ViewModels
                     _isSaving = value;
                     OnPropertyChanged(nameof(IsSaving));
                     ((RelayCommand)SaveCommand).RaiseCanExecuteChanged();
+                    ((RelayCommand)CancelCommand).RaiseCanExecuteChanged();
                 }
             }
         }
@@ -90,12 +92,48 @@ namespace Wpf.ViewModels
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
 
-        public CreateClientFormViewModel(ClientService clientService)
+        public EditClientFormViewModel(ClientService clientService)
         {
             _clientService = clientService ?? throw new ArgumentNullException(nameof(clientService));
+
             SaveCommand = new RelayCommand(async () => await OnSave(), CanSave);
-            CancelCommand = new RelayCommand(OnCancel);
-            ClearForm();
+            CancelCommand = new RelayCommand(OnCancel, CanCancel);
+        }
+
+        /// <summary>
+        /// Loads the client data into the form fields. This method should be called
+        /// by the parent ViewModel (e.g., MainViewModel) after creating an instance.
+        /// </summary>
+        /// <param name="clientId">The GUID of the client to edit.</param>
+        public async Task LoadClientAsync(Guid clientId)
+        {
+            _clientId = clientId;
+            IsSaving = true; 
+            try
+            {
+                var client = await _clientService.GetClientByIdAsync(clientId.ToString());
+                if (client != null)
+                {
+                    FirstName = client.FirstName;
+                    LastName = client.LastName;
+                    Email = client.Email;
+                    PhoneNumber = client.PhoneNumber;
+                }
+                else
+                {
+                    MessageBox.Show($"Nie znaleziono klienta o ID: {clientId}. Być może został usunięty.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                    RequestGoBack?.Invoke(); 
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Wystąpił błąd podczas ładowania danych klienta: {ex.Message}", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                RequestGoBack?.Invoke(); 
+            }
+            finally
+            {
+                IsSaving = false; 
+            }
         }
 
         private async Task OnSave()
@@ -108,31 +146,31 @@ namespace Wpf.ViewModels
                     MessageBox.Show("Proszę wypełnić wszystkie wymagane pola.", "Błąd Walidacji", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-                
-                var command = new CreateClientCommand
+
+                var command = new EditClientCommand()
                 {
-                    Email = _email,
-                    PhoneNumber = _phoneNumber,
-                    FirstName = _firstName,
-                    LastName = _lastName
-                    
+                    Id = _clientId.ToString(),
+                    FirstName = FirstName,
+                    LastName = LastName,
+                    Email = Email,
+                    PhoneNumber = PhoneNumber
                 };
 
-                var (resultClient, errorMessage) = await _clientService.CreateClientAsync(command);
+                var (result, errorMessage) = await _clientService.EditClientAsync(command);
 
-                if (resultClient != null)
+                if (errorMessage == null)
                 {
-                    ClearForm();
-                    ClientCreated?.Invoke(); 
+                    MessageBox.Show("Dane klienta zostały pomyślnie zaktualizowane.", "Sukces", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ClientUpdated?.Invoke();
                 }
                 else
                 {
-                    MessageBox.Show($"Błąd podczas dodawania klienta: {errorMessage ?? "Nieznany błąd."}", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Błąd podczas aktualizacji klienta: {errorMessage ?? "Nieznany błąd."}", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Wystąpił nieoczekiwany błąd: {ex.Message}", "Błąd Krytyczny", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Wystąpił nieoczekiwany błąd podczas aktualizacji: {ex.Message}", "Błąd Krytyczny", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -142,10 +180,11 @@ namespace Wpf.ViewModels
 
         private bool CanSave()
         {
-            /*return !IsSaving &&
+            /*// Simple validation: ensure essential fields are not empty and not currently saving
+            return !IsSaving &&
                    !string.IsNullOrWhiteSpace(FirstName) &&
                    !string.IsNullOrWhiteSpace(LastName) &&
-                   !string.IsNullOrWhiteSpace(PhoneNumber);*/
+                   !string.IsNullOrWhiteSpace(PhoneNumber); // Email might be optional based on business rules*/
             return true;
         }
 
@@ -157,18 +196,21 @@ namespace Wpf.ViewModels
             }
         }
 
-        private void ClearForm()
+        private bool CanCancel()
         {
-            FirstName = string.Empty;
-            LastName = string.Empty;
-            Email = string.Empty;
-            PhoneNumber = string.Empty;
+            return !IsSaving;
         }
 
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            ((RelayCommand)SaveCommand).RaiseCanExecuteChanged();
+            if (propertyName == nameof(FirstName) ||
+                propertyName == nameof(LastName) ||
+                propertyName == nameof(Email) ||
+                propertyName == nameof(PhoneNumber))
+            {
+                ((RelayCommand)SaveCommand).RaiseCanExecuteChanged();
+            }
         }
     }
 }

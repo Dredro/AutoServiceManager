@@ -30,6 +30,7 @@ namespace Wpf.ViewModel
         private CreatePartFormViewModel? _createPartFormViewModel;
         private OrdersViewModel? _ordersViewModel;
         private OrderFormViewModel? _orderFormViewModel;
+        private EditClientFormViewModel? _editClientFormViewModel;
         public ICommand LogoutCommand { get; }
         public ICommand SwitchViewCommand { get; }
 
@@ -188,7 +189,7 @@ namespace Wpf.ViewModel
             IsMechanicVisible = (CurrentRole == Role.Mechanic);
             IsStorageManagerVisible = (CurrentRole == Role.StorageManager);
         }
-
+        
         // --- View Switching Logic ---
         public void OnSwitchView(string viewName)
         {
@@ -256,6 +257,8 @@ namespace Wpf.ViewModel
                     _createClientFormViewModel = _serviceProvider.GetRequiredService<CreateClientFormViewModel>();
                     _createClientFormViewModel.ClientCreated -= OnClientCreated;
                     _createClientFormViewModel.ClientCreated += OnClientCreated;
+                    _createClientFormViewModel.RequestGoBack -= OnEditClientFormGoBack;
+                    _createClientFormViewModel.RequestGoBack += OnEditClientFormGoBack;
                     CurrentContent = _createClientFormViewModel;
                     break;
                 case "Services": 
@@ -275,9 +278,6 @@ namespace Wpf.ViewModel
                     break;
                 case "ShowClient":
                     MessageBox.Show("Nawigacja do szczegółów klienta niezaimplementowana.", "Info");
-                    break;
-                case "EditClient":
-                    MessageBox.Show("Nawigacja do edycji klienta niezaimplementowana.", "Info");
                     break;
                 case "CreatePart":
                     _createPartFormViewModel = _serviceProvider.GetRequiredService<CreatePartFormViewModel>();
@@ -351,9 +351,29 @@ namespace Wpf.ViewModel
 
         private void OnRequestEditClientView(Guid clientId)
         {
-            MessageBox.Show($"Edytuj klienta o ID: {clientId}", "Info");
+            _editClientFormViewModel = _serviceProvider.GetRequiredService<EditClientFormViewModel>();
+            
+            _editClientFormViewModel.ClientUpdated -= OnClientUpdated; 
+            _editClientFormViewModel.RequestGoBack -= OnEditClientFormGoBack;
+
+            _editClientFormViewModel.ClientUpdated += OnClientUpdated; 
+            _editClientFormViewModel.RequestGoBack += OnEditClientFormGoBack;
+
+            CurrentContent = _editClientFormViewModel;
+            
+            _ = _editClientFormViewModel.LoadClientAsync(clientId); 
+        }
+        private async void OnClientUpdated()
+        {
+            MessageBox.Show("Dane klienta zostały pomyślnie zaktualizowane! Odświeżam listę klientów.", "Sukces");
+            await (_clientsListViewModel?.LoadClientsAsync() ?? Task.CompletedTask); 
+            OnSwitchView("Customers"); 
         }
 
+        private void OnEditClientFormGoBack()
+        {
+            OnSwitchView("Customers"); 
+        }
         private async void OnClientCreated()
         {
             MessageBox.Show("Nowy klient został pomyślnie dodany! Odświeżam listę klientów.", "Sukces");

@@ -182,7 +182,11 @@ namespace Wpf.ViewModels
 
             if (result == MessageBoxResult.Yes)
             {
-                MessageBox.Show($"Funkcjonalność usuwania klienta '{client?.FirstName+" "+client?.LastName}' (ID: {client.Id}) niezaimplementowana.", "Informacja", MessageBoxButton.OK, MessageBoxImage.Information);
+                await _clientService.DeleteClientAsync(client!.Id.ToString());
+                MessageBox.Show($"Klient {client.FirstName} {client.LastName} został usunięty.", "Usunięto", MessageBoxButton.OK, MessageBoxImage.Information);
+                _allClients.Remove(client);
+                FilterClients();
+                OnPropertyChanged(nameof(FilteredClients)); 
             }
         }
 
