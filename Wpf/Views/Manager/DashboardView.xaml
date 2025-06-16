@@ -182,7 +182,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <!-- Widget 1: Statystyki Zleceń -->
-                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource WidgetBorderStyle}">
+                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource WidgetBorderStyle}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -291,7 +291,7 @@
                     </Grid>
                 </Border>
                 <!-- Widget 3: Zysk (Wykres Kołowy) -->
-                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource WidgetBorderStyle}">
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource WidgetBorderStyle}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -350,7 +350,7 @@
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" 
                                  Style="{StaticResource WidgetTitleStyle}" 
-                                 Text="=Części"/>
+                                 Text="Części"/>
                         <StackPanel Grid.Row="1">
                             <ListBox ItemsSource="{Binding SpareParts}">
                                 <ListBox.ItemTemplate>

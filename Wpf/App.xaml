@@ -108,7 +108,9 @@
             <core:MultiplyConverter x:Key="MultiplyConverter"/>
             <core:MultiplyMultiConverter x:Key="MultiplyMultiConverter"/>
             <core:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/> 
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <core:CollectionEmptyToVisibilityConverter x:Key="CollectionEmptyToVisibilityConverter"/>
+            <core:CollectionNotEmptyToVisibilityConverter x:Key="CollectionNotEmptyToVisibilityConverter"/>
         </ResourceDictionary>        
     </Application.Resources>
 </Application>
