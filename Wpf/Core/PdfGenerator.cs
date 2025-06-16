@@ -34,7 +34,7 @@ namespace Wpf.Core
                         content.Item().AlignLeft().Text($"Data ukończnia usługi: {order.FinalizationDate}")
                         .FontSize(12);
 
-                        content.Item().AlignLeft().Text($"Klient: {order.Client?.PersonalInfo?.FirstName} {order.Client?.PersonalInfo?.LastName}").FontSize(12);
+                        content.Item().AlignLeft().Text($"Klient: {order.Client?.FirstName} {order.Client?.LastName}").FontSize(12);
                         if (order.Vehicle != null)
                         {
                             content.Item().AlignLeft().Text($"Pojazd: {order.Vehicle.Make} {order.Vehicle.Model} ({order.Vehicle.RegistrationNumber})").FontSize(12);
