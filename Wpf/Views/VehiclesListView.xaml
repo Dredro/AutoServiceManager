@@ -30,22 +30,10 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
-            <TextBlock Text="Pojazdy" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White" VerticalAlignment="Center"/>
+        <DockPanel Grid.Row="0" HorizontalAlignment="Stretch">
+            <TextBlock Text="Pojazdy" Style="{StaticResource MaterialDesignHeadline5TextBlock}" VerticalAlignment="Center"/>
 
-            <Button Content="Dodaj nowy" Style="{StaticResource MaterialDesignRaisedButton}"
-                    HorizontalAlignment="Left" Margin="16,0,0,0"
-                    Command="{Binding AddVehicleCommand}"
-                    IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"> 
-                <Button.ContentTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Plus" Width="16" Height="16" Margin="0,0,8,0"/>
-                            <TextBlock Text="Dodaj nowy"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </Button.ContentTemplate>
-            </Button>
+
             
             <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
                                         IsIndeterminate="True"
@@ -58,12 +46,27 @@
                        Margin="5,0,0,0"
                        Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-        </StackPanel>
+            <Button Content="Dodaj" Style="{StaticResource MaterialDesignRaisedButton}"
+                    HorizontalAlignment="Right" Margin="16,0,0,0"
+                    Command="{Binding AddVehicleCommand}"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Plus" Width="16" Height="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Dodaj"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+
+        </DockPanel>
 
         <!-- Lista pojazdów -->
         <DataGrid Grid.Row="1" ItemsSource="{Binding Vehicles}" AutoGenerateColumns="False" Margin="10"
                   SelectionMode="Single" IsReadOnly="True"
-                  IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"> <!-- Wyłącz DataGrid podczas ładowania -->
+                  IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
+                  Background="White"> <!-- Wyłącz DataGrid podczas ładowania -->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/> 
                 <DataGridTextColumn Header="Marka" Binding="{Binding Make}"/>

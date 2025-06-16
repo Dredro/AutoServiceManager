@@ -16,27 +16,15 @@
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+           
         </Grid.RowDefinitions>
 
         <!-- Header and Controls -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,10">
-            <TextBlock Text="Klienci" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White" VerticalAlignment="Center"/>
+        <DockPanel Grid.Row="0" HorizontalAlignment="Stretch" Margin="0,0,0,10">
+            <TextBlock Text="Klienci" Style="{StaticResource MaterialDesignHeadline5TextBlock}" VerticalAlignment="Center"/>
 
-            <Button Content="Dodaj nowego" Style="{StaticResource MaterialDesignRaisedButton}"
-                    HorizontalAlignment="Left" Margin="16,0,0,0"
-                    Command="{Binding AddNewClientCommand}"
-                    IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
-                <Button.ContentTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Plus" Width="16" Height="16" Margin="0,0,8,0"/>
-                            <TextBlock Text="Dodaj nowego"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </Button.ContentTemplate>
-            </Button>
+
             
             <TextBox materialDesign:HintAssist.Hint="Wyszukaj..."
                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
@@ -55,12 +43,25 @@
                        VerticalAlignment="Center"
                        Margin="5,0,0,0"
                        Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Button Content="Dodaj" Style="{StaticResource MaterialDesignRaisedButton}"
+                    HorizontalAlignment="Right" Margin="16,0,0,0"
+                    Command="{Binding AddNewClientCommand}"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Plus" Width="16" Height="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Dodaj"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
 
-        </StackPanel>
+        </DockPanel>
 
         <DataGrid Grid.Row="1" ItemsSource="{Binding FilteredClients}" AutoGenerateColumns="False" Margin="10"
                   SelectionMode="Single" IsReadOnly="True"
-                  IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"> <!-- Wyłącz DataGrid podczas ładowania -->
+                  IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Background="White"> <!-- Wyłącz DataGrid podczas ładowania -->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Imię" Binding="{Binding FirstName}"/>
                 <DataGridTextColumn Header="Nazwisko" Binding="{Binding LastName}"/>

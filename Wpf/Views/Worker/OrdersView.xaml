@@ -13,25 +13,24 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
-            <TextBlock Text="Zlecenia serwisowe" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White"/>
-
-            <Button Content="Dodaj nowe" Style="{StaticResource MaterialDesignRaisedButton}"
+        <DockPanel Grid.Row="0">
+            <TextBlock DockPanel.Dock="Left" Text="Zlecenia serwisowe" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+            <Button Content="Dodaj" Style="{StaticResource MaterialDesignRaisedButton}"
                     HorizontalAlignment="Right" Margin="16,0,0,0"
-                    Command="{Binding AddNewOrderCommand}">
+                    Command="{Binding AddNewOrderCommand}" DockPanel.Dock="Right">
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Plus" Width="16" Height="16" Margin="0,0,8,0"/>
-                            <TextBlock Text="Dodaj nowe"/>
+                            <TextBlock Text="Dodaj"/>
                         </StackPanel>
                     </DataTemplate>
                 </Button.ContentTemplate>
             </Button>
-        </StackPanel>
+        </DockPanel>
 
         <DataGrid Grid.Row="1" ItemsSource="{Binding Orders}" AutoGenerateColumns="False" Margin="10"
-                  SelectionMode="Single" IsReadOnly="True">
+                  SelectionMode="Single" IsReadOnly="True" Background="White">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
                 <DataGridTextColumn Header="Klient" Binding="{Binding Client.Email}"/>
