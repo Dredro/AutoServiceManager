@@ -11,9 +11,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="400">
 
-    <UserControl.DataContext>
+    <!--<UserControl.DataContext>
         <vm:CreateServiceFormViewModel/>
-    </UserControl.DataContext>
+    </UserControl.DataContext>-->
     
     <UserControl.Resources>
         
