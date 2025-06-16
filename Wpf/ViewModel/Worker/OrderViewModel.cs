@@ -62,9 +62,14 @@ namespace Wpf.ViewModel.Worker
         public ICommand EditOrderCommand { get; }
         public ICommand DeleteOrderCommand { get; }
 
-        public OrdersViewModel(OrderService orderService)
+        public Visibility CanAdd { get; set; }
+
+        private readonly AuthService _authService;
+
+        public OrdersViewModel(OrderService orderService, AuthService authService)
         {
             _orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
 
             AddNewOrderCommand = new RelayCommand(OnAddNewOrder, () => !IsLoading);
             ShowOrderCommand = new RelayCommand<OrderDTO>(OnShowOrder);
@@ -73,6 +78,8 @@ namespace Wpf.ViewModel.Worker
 
             // Uruchomienie ładowania bez oczekiwania
             _ = LoadOrdersAsync();
+
+            if (AuthService.CurrentRole == Models.Role.Manager) CanAdd = Visibility.Visible; else CanAdd = Visibility.Hidden;
         }
 
         public async Task LoadOrdersAsync()

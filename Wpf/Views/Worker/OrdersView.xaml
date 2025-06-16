@@ -16,7 +16,7 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
             <TextBlock Text="Zlecenia serwisowe" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
 
-            <Button Content="Dodaj nowe" Style="{StaticResource MaterialDesignRaisedButton}"
+            <Button Content="Dodaj nowe" Style="{StaticResource MaterialDesignRaisedButton}" Visibility="{Binding CanAdd}"
                     HorizontalAlignment="Right" Margin="16,0,0,0"
                     Command="{Binding AddNewOrderCommand}">
                 <Button.ContentTemplate>
