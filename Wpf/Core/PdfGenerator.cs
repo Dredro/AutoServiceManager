@@ -17,8 +17,8 @@ namespace Wpf.Core
         public static void GenerateInvoice(string filePath, OrderDTO order)
         {
             QuestPDF.Settings.License = LicenseType.Community;
-            if(order.IsPaid==false || order.FinalizationDate == null)
-                throw new InvalidOperationException("Nie można wygenerować faktury dla niezapłaconego zamówienia.");
+            //if(order.IsPaid==false || order.FinalizationDate == null)
+            //    throw new InvalidOperationException("Nie można wygenerować faktury dla niezapłaconego zamówienia.");
             var document = QuestPDF.Fluent.Document.Create(container =>
             {
                 container.Page(page =>

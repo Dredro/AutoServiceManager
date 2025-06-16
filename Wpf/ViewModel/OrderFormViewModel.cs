@@ -506,6 +506,11 @@ namespace Wpf.ViewModel.Worker
                 if (resultOrder != null)
                 {
                     MessageBox.Show("Zlecenie zostało pomyślnie zapisane!", "Sukces", MessageBoxButton.OK, MessageBoxImage.Information);
+                    string invoiceFilePath = "I:/"+ resultOrder + ".pdf";
+                    //var order = await _orderService.GetOrderByIdAsync(resultOrder);
+                    //if (order!=null)
+                    //    PdfGenerator.GenerateInvoice(invoiceFilePath,order);
+                    PdfGenerator.GenerateInvoice(invoiceFilePath, Order);
                     ClearForm();
                 }
                 else
@@ -566,5 +571,7 @@ namespace Wpf.ViewModel.Worker
             OnPropertyChanged(propertyName);
             return true;
         }
+
+
     }
 }

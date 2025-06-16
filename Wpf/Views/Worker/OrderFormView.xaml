@@ -308,11 +308,15 @@
                         <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding PartsTotalCost, StringFormat=C}"
                                    Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,0,0,8"/>
 
-                        <Separator Grid.Row="2" Grid.ColumnSpan="2" Margin="0,8"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1"
+                        <StackPanel Grid.Row="2" Grid.ColumnSpan="2">
+                            
+                        <Separator Margin="0,0,0,8"/>
+                        <TextBlock 
+                                   HorizontalAlignment="Right"
                                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                                   Margin="0,8,0,0"
+                                   Margin="0,0,0,8"
                                    Text="{Binding TotalCost, StringFormat={}{0:C}}" />
+                        </StackPanel>
 
                         <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="0,8,0,0">
                             <TextBlock.Text>
