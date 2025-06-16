@@ -1,6 +1,8 @@
 ﻿using System.Configuration;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
+using Wpf.Services;
 using Wpf.Core;
 using Wpf.Models.DTOs;
 using Wpf.ViewModel;

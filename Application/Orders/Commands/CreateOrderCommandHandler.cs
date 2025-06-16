@@ -136,7 +136,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, str
         {
            servicesInProgress.Add(new ServiceInProgress
             {
-                Service = _context.Services.FirstOrDefault(s => s.Id == serviceDto.Id) ?? throw new InvalidOperationException(),
+                Service = _context.Services.FirstOrDefault(s => s.Id.ToString() == serviceDto.ServiceId) ?? throw new InvalidOperationException(),
                 Order = order,
                 ServiceStatus = serviceDto.ServiceStatus,
                 StartDate = serviceDto.StartDate,

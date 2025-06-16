@@ -38,19 +38,13 @@ public class ServicesController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> EditService(string id, [FromBody] EditServiceCommand command)
+    public async Task<IActionResult> EditService([FromBody] EditServiceCommand command)
     {
         try
         {
-            if (id != command.Id)
-            {
-                return BadRequest(new { message = "ID in URL must match ID in request body." });
-            }
-
             var serviceId = await _mediator.Send(command);
             return StatusCode(StatusCodes.Status202Accepted,
                 new { message = $"Service {serviceId} updated successfully." });
@@ -120,6 +114,29 @@ public class ServicesController : ControllerBase
             _logger.LogError(ex, "Error getting services: {Message}", ex.Message);
             return StatusCode(StatusCodes.Status500InternalServerError,
                 new { message = "An error occurred while retrieving services." });
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteService(Guid id) 
+    {
+        try
+        {
+            if (id == Guid.Empty) 
+            {
+                return BadRequest(new { message = "Service ID is required and must be a valid GUID." });
+            }
+
+            await _mediator.Send(new DeleteServiceCommand(id.ToString())); 
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
         }
     }
 }

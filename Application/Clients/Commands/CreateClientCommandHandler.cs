@@ -32,10 +32,15 @@ public class CreateClientCommandHandler : IRequestHandler<CreateClientCommand,st
              Email = request.Email,
              PhoneNumber = request.PhoneNumber
          };
-        if(_dbContext.Clients.Any(c=>c.PersonalInfo == personalInfo))
-        {
-            throw new InvalidOperationException("Client with the same personal info already exists.");
-        }
+         if(await _dbContext.Clients.AnyAsync(c =>
+                c.PersonalInfo.FirstName == personalInfo.FirstName &&
+                c.PersonalInfo.LastName == personalInfo.LastName &&
+                c.PersonalInfo.Email == personalInfo.Email &&
+                c.PersonalInfo.PhoneNumber == personalInfo.PhoneNumber, cancellationToken))
+         {
+             throw new InvalidOperationException("Client with the same personal info already exists.");
+         }
+
 
         var client = new Client
         {

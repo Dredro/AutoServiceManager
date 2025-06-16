@@ -17,9 +17,18 @@ public class OrderService
     /// </summary>
     /// <param name="command">The command containing data for the new order.</param>
     /// <returns>The created OrderDto or an error message.</returns>
-    public async Task<(OrderDTO? Result, string? ErrorMessage)> CreateOrderAsync(OrderDTO command)
+    public async Task<(string? Result, string? ErrorMessage)> CreateOrderAsync(OrderDTO orderDto)
     {
-        return await _apiClient.PostAsync<OrderDTO, OrderDTO>(BaseEndpoint, command);
+        var command = new CreateOrderCommand
+        (
+            orderDto.IsPaid,
+            orderDto.ClientId,
+            orderDto.VehicleId,
+            orderDto.ServicesToDo.ToList(),
+            orderDto.SpareParts.ToList()
+        );
+        
+        return await _apiClient.PostAsync<CreateOrderCommand, string>(BaseEndpoint, command);
     }
 
     /// <summary>
@@ -36,7 +45,7 @@ public class OrderService
     /// </summary>
     /// <param name="id">The ID of the order to retrieve.</param>
     /// <returns>The OrderDto object if found, otherwise null.</returns>
-    public async Task<OrderDTO?> GetOrderByIdAsync(int id)
+    public async Task<OrderDTO?> GetOrderByIdAsync(string id)
     {
         return await _apiClient.GetAsync<OrderDTO>($"{BaseEndpoint}/{id}");
     }

@@ -633,7 +633,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Client", "Client")
                         .WithMany("Orders")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Vehicle", "Vehicle")

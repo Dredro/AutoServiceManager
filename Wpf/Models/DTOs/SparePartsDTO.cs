@@ -21,7 +21,11 @@ public enum PartCategory
     Consumables,
     Other,
 }
-
+public enum PartQuality
+{
+    P, 
+    S
+}
 public class SparePartsDTO
 {
     public Guid Id { get; set; }

@@ -87,6 +87,42 @@ public class ClientsController : ControllerBase
         }
     }
 
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteClient(Guid id) 
+    {
+        try
+        {
+            if (id == Guid.Empty) 
+            {
+                return BadRequest(new { message = "Client ID is required and must be a valid GUID." });
+            }
+
+            await _mediator.Send(new DeleteClientCommand(id.ToString())); 
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
+        }
+    }
+    [HttpPatch]
+    public async Task<IActionResult> UpdateClient([FromBody] EditClientCommand command)
+    {
+        try
+        {
+           await _mediator.Send(command);
+           return Ok();
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(new { message = e.Message });
+        }
+        
+    }
     /// <summary>
     /// Gets a list of all clients.
     /// </summary>

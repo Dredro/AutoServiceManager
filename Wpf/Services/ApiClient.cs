@@ -13,7 +13,7 @@ public class ApiClient : IDisposable
 
     public string? CurrentJwtToken { get; private set; }
 
-    public ApiClient()
+    public ApiClient(HttpClient httpClient)
     {
         _httpClient = new HttpClient();
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -83,7 +83,81 @@ public class ApiClient : IDisposable
         Console.WriteLine($"Error POST {endpoint}: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
         return default;
     }
+    public async Task<(TResponse? Result, string? ErrorMessage)> PatchAsync<TRequest, TResponse>(string endpoint, TRequest data)
+    {
+        var requestUri = $"{_baseUrl}/{endpoint}";
 
+        // Create JsonContent from the request data
+        var content = JsonContent.Create(data);
+
+        // Create an HttpRequestMessage specifically for the PATCH method
+        var request = new HttpRequestMessage(HttpMethod.Patch, requestUri);
+        request.Content = content;
+
+        // Send the request
+        var response = await _httpClient.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // PATCH success can return 200 OK (with content) or 204 No Content.
+            if (response.Content.Headers.ContentLength > 0)
+            {
+                try
+                {
+                    var result = await response.Content.ReadFromJsonAsync<TResponse>();
+                    return (result, null); // Success with result
+                }
+                 catch (JsonException ex)
+                {
+                    // Handle cases where success status is returned but content is not valid TResponse JSON
+                    Console.WriteLine($"Error deserializing PATCH {endpoint} success response: {ex.Message}");
+                    return (default, $"Failed to deserialize success response: {ex.Message}");
+                }
+            }
+            else
+            {
+                // Success with No Content (e.g., 204)
+                return (default, null); // Success, but no result body
+            }
+        }
+        else // Not successful status code
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Error PATCH {endpoint}: {response.StatusCode} - {errorContent}");
+
+            // Attempt to parse ValidationProblemDetails, similar to PostAsync
+            if (response.Content.Headers.ContentType?.MediaType == "application/problem+json")
+            {
+                 try
+                 {
+                    var problemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(errorContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (problemDetails != null && problemDetails.Errors.Any())
+                    {
+                        var sb = new StringBuilder();
+                        foreach(var err in problemDetails.Errors)
+                        {
+                            sb.AppendLine($"{err.Key}: {string.Join(", ", err.Value)}");
+                        }
+                        // Return default TResponse and the formatted error message
+                        return (default, sb.ToString());
+                    }
+                 }
+                 catch (JsonException ex)
+                 {
+                     // Log deserialization error but return the raw error content
+                     Console.WriteLine($"Error deserializing ValidationProblemDetails for PATCH {endpoint}: {ex.Message}");
+                     // Fall through to returning raw errorContent
+                 }
+                 catch (Exception ex) // Catch other potential exceptions during processing problemDetails
+                 {
+                      Console.WriteLine($"Unexpected error processing ValidationProblemDetails for PATCH {endpoint}: {ex.Message}");
+                     // Fall through to returning raw errorContent
+                 }
+            }
+            // If not problem+json or deserialization failed, return default TResponse and the raw error content
+            return (default, errorContent);
+        }
+    }
 
     public async Task<(bool Success, string? ErrorMessage)> PutAsync<TRequest>(string endpoint, TRequest data)
     {

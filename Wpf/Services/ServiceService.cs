@@ -12,9 +12,9 @@ public class ServiceService
         _apiClient = apiClient;
     }
 
-    public async Task<(ServiceDTO? Result, string? ErrorMessage)> CreateServiceAsync(CreateServiceCommand command)
+    public async Task<(string? Result, string? ErrorMessage)> CreateServiceAsync(CreateServiceCommand command)
     {
-        return await _apiClient.PostAsync<CreateServiceCommand, ServiceDTO>(BaseEndpoint, command);
+        return await _apiClient.PostAsync<CreateServiceCommand, string>(BaseEndpoint, command);
     }
 
     public async Task<List<ServiceDTO>?> GetServicesAsync()
@@ -22,14 +22,17 @@ public class ServiceService
         return await _apiClient.GetAsync<List<ServiceDTO>>(BaseEndpoint);
     }
 
-    public async Task<(bool Success, string? ErrorMessage)> UpdateServiceAsync(int id, EditServiceCommand command)
+    public async Task<(string? Success, string? ErrorMessage)> UpdateServiceAsync( EditServiceCommand command)
     {
-        return await _apiClient.PutAsync($"{BaseEndpoint}/{id}", command);
+        return await _apiClient.PatchAsync<EditServiceCommand, string>($"{BaseEndpoint}", command);
     }
 
-    public async Task<ServiceDTO?> GetServiceByIdAsync(int id)
+    public async Task<ServiceDTO?> GetServiceByIdAsync(string id)
     {
         return await _apiClient.GetAsync<ServiceDTO>($"{BaseEndpoint}/{id}");
     }
-    
+    public async Task<(bool Success, string? ErrorMessage)> DeleteServiceAsync(string id)
+    {
+        return await _apiClient.DeleteAsync($"{BaseEndpoint}/{id}");
+    }
 }

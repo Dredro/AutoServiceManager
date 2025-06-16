@@ -1,16 +1,14 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Wpf.Services;
 using Wpf.ViewModel;
-using Wpf.ViewModel.Worker;
+using Wpf.ViewModel.Manager;      
+using Wpf.ViewModel.Worker;      
+using Wpf.ViewModels;
+using Wpf.ViewModels.StorageManager; 
 
 namespace Wpf;
 
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
 public partial class App : Application
 {
     private readonly ServiceProvider _serviceProvider;
@@ -24,6 +22,8 @@ public partial class App : Application
 
     private void ConfigureServices(IServiceCollection services)
     {
+        services.AddHttpClient();
+
         services.AddSingleton<ApiClient>();
         services.AddSingleton<AuthService>();
         services.AddSingleton<ClientService>();
@@ -33,13 +33,28 @@ public partial class App : Application
         services.AddSingleton<VehicleService>();
         services.AddSingleton<WorkerService>();
         
-        services.AddSingleton<MainWindowViewModel>();
+        services.AddSingleton<MainWindowViewModel>(); 
+        
         services.AddTransient<LoginViewModel>(); 
+        
         services.AddTransient<MainViewModel>();
+
+        services.AddTransient<WorkerDashboardViewModel>();
+        services.AddTransient<StorageManagerDashboardViewModel>();
+        services.AddTransient<ManagerDashboardViewModel>();
+        
         services.AddTransient<OrdersViewModel>();
         services.AddTransient<OrderFormViewModel>();
-        services.AddTransient<OrdersViewModel>();
-        services.AddTransient<WorkerDashboardViewModel>();
+        services.AddTransient<VehiclesListViewModel>();
+        services.AddTransient<CreateCarFormViewModel>(); 
+        services.AddTransient<ClientsListViewModel>(); 
+        services.AddTransient<CreateClientFormViewModel>();
+        services.AddTransient<ServicesListViewModel>();
+        services.AddTransient<CreateServiceFormViewModel>();
+        services.AddTransient<CreatePartFormViewModel>();
+        services.AddTransient<EditClientFormViewModel>();
+        services.AddTransient<EditServiceFormViewModel>();
+        services.AddTransient<EditVehicleFormViewModel>();
     }
 
     protected override void OnStartup(StartupEventArgs e)
@@ -47,8 +62,7 @@ public partial class App : Application
         base.OnStartup(e);
         
         var mainWindow = new MainWindow(); 
-        mainWindow.DataContext = _serviceProvider.GetService<MainWindowViewModel>();
+        mainWindow.DataContext = _serviceProvider.GetRequiredService<MainWindowViewModel>();
         mainWindow.Show();
-      
     }
 }

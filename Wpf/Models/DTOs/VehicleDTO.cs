@@ -28,5 +28,7 @@ public class VehicleDTO
     public decimal Power { get; set; }
     public VehicleType Type { get; set; }
     public ClientDTO? Client { get; set; }
+    public string ClientId { get; set; }
+    public IReadOnlyCollection<string> OrderIds { get; init; }
     public ICollection<OrderDTO> Orders { get; set; } = [];
 }

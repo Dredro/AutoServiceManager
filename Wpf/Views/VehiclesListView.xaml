@@ -4,21 +4,39 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:viewmodels="clr-namespace:Wpf.ViewModel"
+             xmlns:converters="clr-namespace:Wpf.Core" 
+             xmlns:vm="clr-namespace:Wpf.ViewModel"
+             xmlns:converters1="clr-namespace:Wpf.Converters"
              mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="800">
+
+    <!--<UserControl.DataContext>
+        <viewModels:VehiclesListViewModel d:IsDataSource="True"/>
+    </UserControl.DataContext>-->
+   
+    <!-- Zasoby dla UserControla -->
+    <UserControl.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters1:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <!-- Usunięto DataTemplate dla VehiclesListViewModel -->
+    </UserControl.Resources>
+    
 
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Header -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
-            <TextBlock Text="Pojazdy" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White"/>
+            <TextBlock Text="Pojazdy" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White" VerticalAlignment="Center"/>
 
             <Button Content="Dodaj nowy" Style="{StaticResource MaterialDesignRaisedButton}"
-                    HorizontalAlignment="Right" Margin="16,0,0,0"
-                    Command="{Binding AddNewVehicleCommand}">
+                    HorizontalAlignment="Left" Margin="16,0,0,0"
+                    Command="{Binding AddVehicleCommand}"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"> 
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -28,37 +46,51 @@
                     </DataTemplate>
                 </Button.ContentTemplate>
             </Button>
+            
+            <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                        IsIndeterminate="True"
+                                        Width="24" Height="24"
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <TextBlock Text="Ładowanie pojazdów..."
+                       VerticalAlignment="Center"
+                       Margin="5,0,0,0"
+                       Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
         </StackPanel>
 
         <!-- Lista pojazdów -->
         <DataGrid Grid.Row="1" ItemsSource="{Binding Vehicles}" AutoGenerateColumns="False" Margin="10"
-                  SelectionMode="Single" IsReadOnly="True">
+                  SelectionMode="Single" IsReadOnly="True"
+                  IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"> <!-- Wyłącz DataGrid podczas ładowania -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding VehicleId}" Width="Auto"/>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/> 
                 <DataGridTextColumn Header="Marka" Binding="{Binding Make}"/>
                 <DataGridTextColumn Header="Model" Binding="{Binding Model}"/>
                 <DataGridTextColumn Header="VIN" Binding="{Binding Vin}"/>
                 <DataGridTextColumn Header="Nr rej." Binding="{Binding RegistrationNumber}"/>
                 <DataGridTextColumn Header="Rok" Binding="{Binding YearOfProduction}"/>
-                <DataGridTextColumn Header="Klient" Binding="{Binding Client.PersonalInfo.FullName}"/>
+                <DataGridTextColumn Header="Typ" Binding="{Binding Type}"/>
+                <DataGridTextColumn Header="Klient" Binding="{Binding Client.FullName}"/>
                 <DataGridTemplateColumn Header="Akcje">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Button Style="{StaticResource MaterialDesignFlatButton}" 
-                                        Content="{materialDesign:PackIcon Kind=BookOpenBlankVariant}" 
+                                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                        Content="{materialDesign:PackIcon Kind=BookOpenBlankVariant}"
                                         ToolTip="Wyświetl"
                                         Command="{Binding DataContext.ShowVehicleCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                         CommandParameter="{Binding}"/>
 
-                                <Button Style="{StaticResource MaterialDesignFlatButton}" 
-                                        Content="{materialDesign:PackIcon Kind=Edit}" 
+                                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                        Content="{materialDesign:PackIcon Kind=Edit}"
                                         ToolTip="Edytuj"
                                         Command="{Binding DataContext.EditVehicleCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                         CommandParameter="{Binding}"/>
 
-                                <Button Style="{StaticResource MaterialDesignFlatButton}" 
-                                        Content="{materialDesign:PackIcon Kind=Delete}" 
+                                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                        Content="{materialDesign:PackIcon Kind=Delete}"
                                         ToolTip="Usuń"
                                         Command="{Binding DataContext.DeleteVehicleCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                         CommandParameter="{Binding}"/>
@@ -70,4 +102,3 @@
         </DataGrid>
     </Grid>
 </UserControl>
-

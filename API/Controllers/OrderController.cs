@@ -70,7 +70,7 @@ public class OrdersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetOrders([FromQuery] GetOrderQuery query)
+    public async Task<IActionResult> GetOrders([FromQuery] GetAllOrdersQuery query)
     {
         try
         {

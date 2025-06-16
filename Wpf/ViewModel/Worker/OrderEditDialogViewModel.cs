@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,7 +79,6 @@ public class OrderEditDialogViewModel : BaseViewModel
 
     private void Save()
     {
-        // Tutaj można dodać walidację
         OnRequestClose(true);
     }
 
@@ -121,3 +121,4 @@ public class OrderEditDialogViewModel : BaseViewModel
         }
     }
 }
+*/

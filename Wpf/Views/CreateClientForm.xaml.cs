@@ -17,7 +17,7 @@ namespace Wpf.Views
     /// <summary>
     /// Logika interakcji dla klasy CreateClientForm.xaml
     /// </summary>
-    public partial class CreateClientForm : Window
+    public partial class CreateClientForm : UserControl
     {
         public CreateClientForm()
         {

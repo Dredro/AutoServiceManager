@@ -15,6 +15,7 @@ public class Vehicle : Entity
     public int EngineDisplacement { get; set; }
     public decimal Power { get; set; }
     public required VehicleType Type { get; set; }
+    [System.Text.Json.Serialization.JsonIgnore]
     public required Client Client { get; set; }
     public ICollection<Order> Orders { get; set; } = [];
 

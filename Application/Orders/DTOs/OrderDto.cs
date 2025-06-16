@@ -1,3 +1,6 @@
+using Application.Clients.DTOs;
+using Application.Vehicles.DTOs;
+
 namespace Application.Orders.DTOs;
 
 public class OrderDto
@@ -5,6 +8,8 @@ public class OrderDto
     public Guid Id { get; set; }
     public string ClientId { get; set; }
     public string? VehicleId { get; set; }
+    public GetClientDto Client { get; set; }
+    public GetVehicleDto Vehicle { get; set; }
     public bool IsPaid { get; set; }
     public DateOnly? FinalizationDate { get; set; }
     public List<ServiceInProgressDto> ServicesToDo { get; set; } = new List<ServiceInProgressDto>();

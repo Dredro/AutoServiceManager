@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:Wpf"
-             xmlns:core="clr-namespace:Wpf.Core"
+             xmlns:core="clr-namespace:Wpf.Core" 
              xmlns:vmworker="clr-namespace:Wpf.ViewModel.Worker"
              xmlns:vworker="clr-namespace:Wpf.Views.Worker"
              xmlns:vmanager="clr-namespace:Wpf.Views.Manager"
@@ -12,8 +12,11 @@
              xmlns:vmodel="clr-namespace:Wpf.ViewModel"
              xmlns:models="clr-namespace:Wpf.Models" 
              xmlns:vmmanager="clr-namespace:Wpf.ViewModel.Manager"
-             xmlns:vmstoragemanager="clr-namespace:Wpf.ViewModel.StorageManager"
-             >
+             xmlns:vm="clr-namespace:Wpf.ViewModel"
+             xmlns:converters="clr-namespace:Wpf.Converters"
+             xmlns:viewModels="clr-namespace:Wpf.ViewModels"
+             xmlns:admin="clr-namespace:Wpf.Views.Admin"
+             xmlns:storageManager="clr-namespace:Wpf.ViewModels.StorageManager">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -27,6 +30,7 @@
 
             </ResourceDictionary.MergedDictionaries>
 
+            <!-- Dashboards -->
             <DataTemplate DataType="{x:Type vmworker:WorkerDashboardViewModel}">
                 <vworker:DashboardView/>
             </DataTemplate>
@@ -34,9 +38,11 @@
             <DataTemplate DataType="{x:Type vmmanager:ManagerDashboardViewModel}">
                 <vmanager:DashboardView/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vmstoragemanager:StorageManagerDashboardViewModel}">
+            <DataTemplate DataType="{x:Type storageManager:StorageManagerDashboardViewModel}">
                 <vstoragemanager:DashboardView/>
             </DataTemplate>
+            
+            <!-- Main navigation ViewModels -->
             <DataTemplate DataType="{x:Type vmodel:LoginViewModel}">
                 <view:LoginPage/>
             </DataTemplate>
@@ -45,6 +51,7 @@
                 <local:MainView /> 
             </DataTemplate>
 
+            <!-- Worker/Order related ViewModels -->
             <DataTemplate DataType="{x:Type vmworker:OrderFormViewModel}">
                 <vworker:OrderFormView/>
             </DataTemplate>
@@ -56,17 +63,52 @@
             <DataTemplate DataType="{x:Type vmworker:OrderDetailsDialogViewModel}">
                 <vworker:OrderDetailsDialogView/>
             </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vmworker:OrderEditDialogViewModel}">
+        
+            <!--<DataTemplate DataType="{x:Type vmworker:OrderEditDialogViewModel}">
                 <vworker:OrderEditDialogView/>
+            </DataTemplate>-->
+    
+            <DataTemplate DataType="{x:Type viewModels:VehiclesListViewModel}"> 
+                <view:VehiclesListView/>
+            </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type viewModels:CreateCarFormViewModel}"> 
+                <view:CreateCarForm/> 
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:EditVehicleFormViewModel}"> 
+                <view:EditVehicleForm/> 
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:ClientsListViewModel}"> 
+                <view:ClientsListView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewModels:CreateClientFormViewModel}"> 
+                <view:CreateClientForm/> 
+            </DataTemplate>
+            <!-- DataTemplate dla ServicesListViewModel -->
+            <DataTemplate DataType="{x:Type viewModels:ServicesListViewModel}">
+                <admin:ServiceManagementView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:CreateServiceFormViewModel}">
+                <view:CreateServiceForm/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:CreatePartFormViewModel}">
+                <view:CreatePartForm/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:EditClientFormViewModel}">
+                <view:EditClientForm/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:EditServiceFormViewModel}">
+                <view:EditServiceForm/>
+            </DataTemplate>
+            <!-- Converters -->
             <core:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
             <core:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
             <core:SumConverter x:Key="SumConverter"/>
             <core:MultiplyConverter x:Key="MultiplyConverter"/>
             <core:MultiplyMultiConverter x:Key="MultiplyMultiConverter"/>
             <core:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/> 
         </ResourceDictionary>        
     </Application.Resources>
 </Application>

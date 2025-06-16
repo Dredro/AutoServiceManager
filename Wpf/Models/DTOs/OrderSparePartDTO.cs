@@ -1,18 +1,76 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-namespace Wpf.Models.DTOs;
-
-public class OrderSparePartDTO
+namespace Wpf.Models.DTOs
 {
-    public Guid OrderId { get; set; }
-    public OrderDTO? Order { get; set; }
-    public Guid ProductId { get; set; }
-    public SparePartsDTO? SparePart { get; set; }
-    public int Quantity { get; set; }
+    public class OrderSparePartDTO : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-    public decimal TotalCost => Quantity * SparePart.Price;
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        private string _id = Guid.NewGuid().ToString();
+        public string Id
+        {
+            get => _id;
+            set => SetField(ref _id, value);
+        }
+
+        private int _quantity = 1;
+        public int Quantity
+        {
+            get => _quantity;
+            set
+            {
+                if (SetField(ref _quantity, value))
+                {
+                    OnPropertyChanged(nameof(TotalItemCost));
+                }
+            }
+        }
+
+        private SparePartsDTO? _sparePart;
+        public SparePartsDTO? SparePart
+        {
+            get => _sparePart;
+            set
+            {
+                if (SetField(ref _sparePart, value))
+                {
+                    Id = value?.Id.ToString() ?? string.Empty;
+                    if (value != null)
+                        Price = value.Price;
+                    OnPropertyChanged(nameof(Id));
+                    OnPropertyChanged(nameof(TotalItemCost));
+                }
+            }
+        }
+
+        private decimal _price;
+        public decimal Price
+        {
+            get => _price;
+            set
+            {
+                if (SetField(ref _price, value))
+                {
+                    OnPropertyChanged(nameof(TotalItemCost));
+                }
+            }
+        }
+
+        public decimal TotalItemCost => Price * Quantity;
+    }
 }
