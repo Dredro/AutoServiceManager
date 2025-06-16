@@ -203,6 +203,11 @@ namespace Wpf.ViewModel
             IsStorageManagerVisible = (CurrentRole == Role.StorageManager);
         }
         
+        private void GotoOrders()
+        {
+            OnSwitchView("Orders");
+        }
+
         // --- View Switching Logic ---
         public void OnSwitchView(string viewName)
         {
@@ -228,6 +233,12 @@ namespace Wpf.ViewModel
                     else if (CurrentRole == Role.Manager)
                     {
                         CurrentContent = _serviceProvider.GetRequiredService<ManagerDashboardViewModel>();
+
+                        if (CurrentContent is ManagerDashboardViewModel vm)
+                        {
+                            vm.GotoOrders -= GotoOrders;
+                            vm.GotoOrders += GotoOrders;
+                        }
                     }
                     else if (CurrentRole == Role.Admin) 
                     {

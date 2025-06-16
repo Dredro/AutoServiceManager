@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:local="clr-namespace:Wpf.Views.Manager"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1200">
     <UserControl.Resources>
@@ -231,32 +233,60 @@
                         <TextBlock Grid.Row="0" 
                                  Style="{StaticResource WidgetTitleStyle}" 
                                  Text="Lista Aktywnych Zleceń"/>
-                        <DataGrid Grid.Row="1" 
-                                x:Name="OrdersDataGrid" 
-                                Style="{StaticResource StyledDataGridStyle}"
-                                ItemsSource="{Binding ActiveOrders}" 
-                                d:ItemsSource="{d:SampleData ItemCount=5}">
+                        <DataGrid ItemsSource="{Binding Orders}" Grid.Row="1"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  CanUserAddRows="False"
+                                  SelectionMode="Single"
+                                  materialDesign:DataGridAssist.CellPadding="16 8 8 8"
+                                  materialDesign:DataGridAssist.ColumnHeaderPadding="8">
+
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="ID Zlecenia" Binding="{Binding OrderId}" Width="*"/>
-                                <DataGridTextColumn Header="Klient" Binding="{Binding ClientName}" Width="2*"/>
-                                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
-                                <DataGridTextColumn Header="Pracownik" Binding="{Binding AssignedEmployee}" Width="*"/>
-                                <DataGridTemplateColumn Header="Priorytet" Width="Auto">
+                                <!-- Kolumna z podstawowymi informacjami -->
+                                <DataGridTemplateColumn Header="Zlecenie">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Border Background="{Binding PriorityColor, FallbackValue=LightGray}" 
-                                                  CornerRadius="10" 
-                                                  Height="10" 
-                                                  Width="10"
-                                                  ToolTip="{Binding PriorityText}" 
-                                                  VerticalAlignment="Center"/>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding DescriptionOfWork}" 
+                         Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                         FontSize="16"/>
+                                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                    <TextBlock Text="Klient:" Margin="0,0,4,0"
+                             Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                                    <TextBlock Text="{Binding Client.FirstName}"
+                             Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Pojazd:" Margin="0,0,4,0"
+                             Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                                    <TextBlock Text="{Binding Vehicle.Type}"
+                             Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                                                </StackPanel>
+                                            </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
+
+                                <!-- Kolumna statusu -->
+                                <DataGridTemplateColumn Header="Status" Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Status}" 
+                     Style="{StaticResource MaterialDesignBody1TextBlock}"
+                     HorizontalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <!-- Kolumna kosztu -->
+                                <DataGridTextColumn Header="Koszt" 
+                 Binding="{Binding TotalCost, StringFormat={}{0:C}}"
+                 Width="Auto"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <Button Grid.Row="2" 
                               Content="Zobacz wszystkie zlecenia" 
+                              Command="{Binding GoToOrdersCommand}"
                               Style="{StaticResource PrimaryLinkButtonStyle}"/>
                     </Grid>
                 </Border>
@@ -320,25 +350,23 @@
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" 
                                  Style="{StaticResource WidgetTitleStyle}" 
-                                 Text="Historia Pobrań i Dostaw Części"/>
-                        <DataGrid Grid.Row="1" 
-                                x:Name="PartsHistoryDataGrid" 
-                                Style="{StaticResource StyledDataGridStyle}"
-                                ItemsSource="{Binding PartsTransactionHistory}" 
-                                d:ItemsSource="{d:SampleData ItemCount=7}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Data" 
-                                                  Binding="{Binding TransactionDate, StringFormat='yyyy-MM-dd HH:mm'}" 
-                                                  Width="1.5*"/>
-                                <DataGridTextColumn Header="Typ" Binding="{Binding TransactionType}" Width="*"/>
-                                <DataGridTextColumn Header="Nazwa Części" Binding="{Binding PartName}" Width="2*"/>
-                                <DataGridTextColumn Header="Ilość" Binding="{Binding Quantity}" Width="Auto"/>
-                                <DataGridTextColumn Header="Pracownik" Binding="{Binding EmployeeName}" Width="*"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <Button Grid.Row="2" 
+                                 Text="=Części"/>
+                        <StackPanel Grid.Row="1">
+                            <ListBox ItemsSource="{Binding SpareParts}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding CatalogNumber, StringFormat=' ({0})'}" Margin="5,0,0,0" Foreground="Gray"/>
+                                            <TextBlock Text="{Binding QuantityInStock, StringFormat=' - Ilość: {0}'}" Margin="5,0,0,0" Foreground="DimGray"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                        <!--<Button Grid.Row="2" 
                               Content="Pokaż pełną historię" 
-                              Style="{StaticResource PrimaryLinkButtonStyle}"/>
+                              Style="{StaticResource PrimaryLinkButtonStyle}"/>-->
                     </Grid>
                 </Border>
             </Grid>
