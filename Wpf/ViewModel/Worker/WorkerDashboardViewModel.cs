@@ -11,30 +11,75 @@ using System.Windows.Input;
 using Wpf.Core;
 using Wpf.Models;
 using Wpf.Models.DTOs;
+using Wpf.Services;
 
 namespace Wpf.ViewModel.Worker;
 
-public class WorkerDashboardViewModel
+public class WorkerDashboardViewModel : BaseViewModel
 {
-    public WorkerDashboardModel DataModel { get; set; } = new();
+    private readonly OrderService _orderService;
+    private readonly ServiceService _serviceService;
 
-    public ICommand AddNewOrderCommand { get; set; }
-
-
-    public WorkerDashboardViewModel()
+    private WorkerDashboardModel _dataModel = new WorkerDashboardModel();
+    public WorkerDashboardModel DataModel
     {
-        DataModel.ActiveOrders = 3;
-        DataModel.ServicesProvided = 12;
-        DataModel.OrdersToday = 2;
-
-        AddNewOrderCommand = new RelayCommand(TestFunc);
+        get => _dataModel;
+        set
+        {
+            _dataModel = value;
+            OnPropertyChanged(nameof(_dataModel));
+        }
     }
 
-    private void TestFunc()
+    public WorkerDashboardViewModel(OrderService orderService, ServiceService serviceService)
     {
-        DataModel.ActiveOrders++;
-        DataModel.ServicesProvided++;
-        DataModel.OrdersToday++;
-        MessageBox.Show("ADDING STUFF", "INFO");
+        _orderService = orderService;
+        _serviceService = serviceService;
+
+        LoadDataAsync();
+    }
+
+    public async Task LoadDataAsync()
+    {
+        await LoadActiveOrders();
+        await LoadServices();
+        await LoadStatistics();
+    }
+
+    private async Task LoadActiveOrders()
+    {
+        var orders = await _orderService.GetOrdersWithFiltersAsync(isPaid: false);
+        if (orders != null)
+        {
+            DataModel.Orders = new ObservableCollection<OrderDTO>(orders);
+            DataModel.OnPropertyChanged(nameof(DataModel.Orders));
+        }
+    }
+
+    private async Task LoadServices()
+    {
+        var services = await _serviceService.GetServicesAsync();
+        if (services != null)
+        {
+            DataModel.Services = new ObservableCollection<ServiceDTO>(services);
+            DataModel.ServicesProvided = services.Count;
+            DataModel.OnPropertyChanged(nameof(DataModel.Services));
+        }
+    }
+
+    private async Task LoadStatistics()
+    {
+        var allOrders = await _orderService.GetOrdersAsync();
+        if (allOrders != null)
+        {
+            // Aktywne zlecenia (nieopłacone)
+            DataModel.ActiveOrders = allOrders.Count(o => !o.IsPaid);
+
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            // Zlecenia dzisiaj (utworzone dzisiaj)
+            DataModel.OrdersToday = allOrders.Count(o =>
+                o.FinalizationDate <= today || o.FinalizationDate == null);
+        }
     }
 }

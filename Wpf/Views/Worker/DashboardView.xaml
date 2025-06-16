@@ -15,7 +15,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Panel Serwisanta" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" FontSize="25" Margin="10" Foreground="White" />
+            <TextBlock Text="Panel Serwisanta" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" FontSize="25" Margin="10" />
 
             <!-- Statystyki -->
             <materialDesign:Card Grid.Row="1" Margin="0,0,0,16">
@@ -45,75 +45,152 @@
 
             <materialDesign:Card Grid.Row="2" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="Twoje aktywne zlecenia" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="8"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Twoje aktywne zlecenia" 
+                       Style="{StaticResource MaterialDesignHeadline6TextBlock}" 
+                       Margin="8"/>
+                    </StackPanel>
 
-                    <ItemsControl ItemsSource="{Binding DataModel.Orders}" Background="DarkGray">
-                        <ItemsControl.ItemTemplate>
+                    <DataGrid ItemsSource="{Binding DataModel.Orders}" 
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  SelectionMode="Single"
+                  materialDesign:DataGridAssist.CellPadding="16 8 8 8"
+                  materialDesign:DataGridAssist.ColumnHeaderPadding="8">
+
+                        <DataGrid.Columns>
+                            <!-- Kolumna z podstawowymi informacjami -->
+                            <DataGridTemplateColumn Header="Zlecenie">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding DescriptionOfWork}" 
+                                           Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                           FontSize="16"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                <TextBlock Text="Klient:" Margin="0,0,4,0"
+                                               Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                                <TextBlock Text="{Binding Client.FirstName}"
+                                               Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Pojazd:" Margin="0,0,4,0"
+                                               Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                                <TextBlock Text="{Binding Vehicle.Type}"
+                                               Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Kolumna statusu -->
+                            <DataGridTemplateColumn Header="Status" Width="Auto">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Status}" 
+                                       Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                       HorizontalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- Kolumna kosztu -->
+                            <DataGridTextColumn Header="Koszt" 
+                                   Binding="{Binding TotalCost, StringFormat={}{0:C}}"
+                                   Width="Auto"/>
+
+                            <!-- Kolumna akcji -->
+                            <!--<DataGridTemplateColumn Header="Akcje" Width="Auto">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                        ToolTip="Edytuj zlecenie"
+                                        Command="{Binding DataContext.EditOrderCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding Id}">
+                                                <materialDesign:PackIcon Kind="Edit" Width="16" Height="16"/>
+                                            </Button>
+                                            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                        ToolTip="Usuń zlecenie"
+                                        Command="{Binding DataContext.DeleteOrderCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding Id}">
+                                                <materialDesign:PackIcon Kind="Delete" Width="16" Height="16"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>-->
+                        </DataGrid.Columns>
+
+                        <!-- Szczegóły rozwijane -->
+                        <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
-                                <materialDesign:Card Margin="8" Padding="8">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
+                                <StackPanel Margin="16 8 16 16">
+                                    <TextBlock Text="Usługi do wykonania:" 
+                                   Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+                                   Margin="0 0 0 8"/>
 
-                                        <StackPanel Grid.Column="0">
-                                            <TextBlock Text="{Binding DescriptionOfWork}" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" FontSize="20"/>
-                                            <TextBlock Text="{Binding Customer.Name}" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                            <TextBlock Text="{Binding Vehicle.Model}" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                            <TextBlock Text="{Binding Status}" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10">
-                                            <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}" Margin="10"
-                                                    Content="{materialDesign:PackIcon Kind=Edit}" 
-                                                    ToolTip="Edytuj zlecenie"/>
-                                            <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}" Margin="10"
-                                                    Content="{materialDesign:PackIcon Kind=Delete}" 
-                                                    ToolTip="Usuń zlecenie"/>
-                                        </StackPanel>
-                                    </Grid>
-                                </materialDesign:Card>
+                                    <DataGrid ItemsSource="{Binding ServicesToDo}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  HeadersVisibility="None"
+                                  BorderThickness="0">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Binding="{Binding Service.Name}"/>
+                                            <DataGridTextColumn Binding="{Binding Price, StringFormat={}{0:C}}"/>
+                                            <DataGridTemplateColumn>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding ServiceStatus}"/>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
                             </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                        </DataGrid.RowDetailsTemplate>
+                    </DataGrid>
                 </StackPanel>
             </materialDesign:Card>
 
             <materialDesign:Card Grid.Row="3">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Swiadczone usługi" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="8"/>
-                        <Button Content="Dodaj nowe" Style="{StaticResource MaterialDesignRaisedButton}"
-                                HorizontalAlignment="Right" Margin="10"
-                                Command="{Binding AddNewOrderCommand}">
-                            <Button.ContentTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Kind="Plus" Width="16" Height="16" Margin="0,0,8,0"/>
-                                        <TextBlock Text="Dodaj nowe"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </Button.ContentTemplate>
-                        </Button>
-
+                        <TextBlock Text="Świadczone usługi" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Margin="8"/>
                     </StackPanel>
-                    <DataGrid ItemsSource="{Binding DataModel.Services}" AutoGenerateColumns="False" IsReadOnly="True">
+                    <DataGrid ItemsSource="{Binding DataModel.Services}" 
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True"
+                  CanUserAddRows="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Nazwa" Binding="{Binding ServiceName}"/>
+                            <DataGridTextColumn Header="Nazwa" Binding="{Binding Name}"/>
                             <DataGridTextColumn Header="Opis" Binding="{Binding Description}"/>
-                            <DataGridTextColumn Header="Cena" Binding="{Binding Price, StringFormat={}{0:C}}"/>
+                            <DataGridTextColumn Header="Cena minimalna" 
+                                   Binding="{Binding MinimalPrice, StringFormat={}{0:C}}"/>
+                            <DataGridTextColumn Header="Cena maksymalna" 
+                                   Binding="{Binding MaximalPrice, StringFormat={}{0:C}}"/>
                             <DataGridTextColumn Header="Kategoria" Binding="{Binding Category}"/>
-                            <DataGridTemplateColumn Header="Akcje">
+                            <DataGridTextColumn Header="Aktywne" 
+                                   Binding="{Binding ServicesInProgress.Count}"/>
+                            <!--<DataGridTemplateColumn Header="Akcje">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button Style="{StaticResource MaterialDesignFlatButton}" Content="Edytuj"/>
-                                            <Button Style="{StaticResource MaterialDesignFlatButton}" Content="Usuń"/>
+                                            <Button Style="{StaticResource MaterialDesignFlatButton}" 
+                                        Content="Edytuj"
+                                        Command="{Binding DataContext.EditServiceCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding Id}"/>
+                                            <Button Style="{StaticResource MaterialDesignFlatButton}" 
+                                        Content="Usuń"
+                                        Command="{Binding DataContext.DeleteServiceCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding Id}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            </DataGridTemplateColumn>-->
                         </DataGrid.Columns>
                     </DataGrid>
                 </StackPanel>

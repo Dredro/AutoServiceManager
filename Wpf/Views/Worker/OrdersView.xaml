@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
-            <TextBlock Text="Zlecenia serwisowe" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White"/>
+            <TextBlock Text="Zlecenia serwisowe" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
 
             <Button Content="Dodaj nowe" Style="{StaticResource MaterialDesignRaisedButton}"
                     HorizontalAlignment="Right" Margin="16,0,0,0"

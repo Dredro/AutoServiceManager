@@ -11,11 +11,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="400">
 
-    <d:DesignData.DataContext>
-        <vm:CreateServiceFormViewModel/> 
-    </d:DesignData.DataContext>
+    <UserControl.DataContext>
+        <vm:CreateServiceFormViewModel/>
+    </UserControl.DataContext>
     
     <UserControl.Resources>
+        
         <converters1:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/> 
 

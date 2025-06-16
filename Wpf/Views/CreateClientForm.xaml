@@ -11,9 +11,9 @@
         mc:Ignorable="d"
         d:DesignHeight="450" d:DesignWidth="400"> 
 
-    <d:DesignData.DataContext>
+    <!--<d:DesignData.DataContext>
         <vm:CreateClientFormViewModel/>
-    </d:DesignData.DataContext>
+    </d:DesignData.DataContext>-->
 
     <UserControl.Resources>
         <converters1:InverseBooleanConverter x:Key="InverseBooleanConverter"/> 

@@ -35,6 +35,7 @@ namespace Wpf.ViewModel
         private EditClientFormViewModel? _editClientFormViewModel;
         private EditServiceFormViewModel? _editServiceFormViewModel;
         private EditVehicleFormViewModel? _editVehicleFormViewModel;
+        private WorkerDashboardViewModel? _workerDashboardViewModel;
         public ICommand LogoutCommand { get; }
         public ICommand SwitchViewCommand { get; }
 
@@ -211,6 +212,11 @@ namespace Wpf.ViewModel
                     if (CurrentRole == Role.Mechanic)
                     {
                         CurrentContent = _serviceProvider.GetRequiredService<WorkerDashboardViewModel>();
+                        if (CurrentContent is WorkerDashboardViewModel vm)
+                        {
+                            vm.LoadDataAsync();
+                        }
+
                     }
                     else if (CurrentRole == Role.StorageManager)
                     {

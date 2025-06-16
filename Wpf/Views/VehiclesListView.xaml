@@ -31,7 +31,7 @@
 
         <!-- Header -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
-            <TextBlock Text="Pojazdy" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="Pojazdy" Style="{StaticResource MaterialDesignHeadline5TextBlock}" VerticalAlignment="Center"/>
 
             <Button Content="Dodaj nowy" Style="{StaticResource MaterialDesignRaisedButton}"
                     HorizontalAlignment="Left" Margin="16,0,0,0"

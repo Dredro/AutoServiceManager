@@ -39,11 +39,11 @@ public class WorkerDashboardModel : INotifyPropertyChanged
     }
 
     public ObservableCollection<OrderDTO> Orders { get; set; } = new();
-    public ObservableCollection<ServiceInProgressDTO> Services { get; set; } = new();
+    public ObservableCollection<ServiceDTO> Services { get; set; } = new();
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)

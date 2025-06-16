@@ -23,37 +23,53 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="0,0,0,20">
-            <TextBlock Text="Panel zarządzania usługami" 
-                       FontSize="20" FontWeight="Bold" 
-                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        </Border>
+        <!-- Nagłówek -->
+        <TextBlock Text="Zarządzanie usługami" 
+                   Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                   Grid.Row="0" Margin="0,0,0,20"/>
 
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Services}" 
+        <!-- Lista usług -->
+        <DataGrid Grid.Row="1" 
+                  ItemsSource="{Binding Services}"
                   SelectedItem="{Binding SelectedService, Mode=TwoWay}"
-                  AutoGenerateColumns="False" Margin="10"
-                  SelectionMode="Single" IsReadOnly="True"
-                  IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"> 
+                  AutoGenerateColumns="False"
+                  SelectionMode="Single"
+                  IsReadOnly="True"
+                  IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
-                <DataGridTextColumn Header="Nazwa" Binding="{Binding Name}" Width="150"/>
-                <DataGridTextColumn Header="Opis" Binding="{Binding Description}" Width="200"/>
-                <DataGridTextColumn Header="Cena" Binding="{Binding MaximalPrice, StringFormat={}{0:C2}}" Width="100"/> 
-               
-                <DataGridTemplateColumn Header="Akcje" Width="Auto"> 
+                <DataGridTextColumn Header="Nazwa" 
+                                   Binding="{Binding Name}" 
+                                   ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+
+                <DataGridTextColumn Header="Opis" 
+                                   Binding="{Binding Description}" 
+                                   ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+
+                <DataGridTextColumn Header="Cena minimalna" 
+                                   Binding="{Binding MinimalPrice, StringFormat={}{0:C2}}" 
+                                   ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+
+                <DataGridTextColumn Header="Cena maksymalna" 
+                                   Binding="{Binding MaximalPrice, StringFormat={}{0:C2}}"
+                                   ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"/>
+
+                <DataGridTemplateColumn Header="Akcje">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                <Button Style="{StaticResource MaterialDesignFlatButton}" 
-                                        Content="{materialDesign:PackIcon Kind=Edit}" 
-                                        ToolTip="Edytuj"
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource MaterialDesignIconButton}"
+                                        ToolTip="Edytuj usługę"
                                         Command="{Binding DataContext.EditServiceCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                        CommandParameter="{Binding}"/> 
-                                <Button Style="{StaticResource MaterialDesignFlatButton}" 
-                                        Content="{materialDesign:PackIcon Kind=Delete}" 
-                                        ToolTip="Usuń"
+                                        CommandParameter="{Binding}">
+                                    <materialDesign:PackIcon Kind="Edit" Width="20" Height="20"/>
+                                </Button>
+                                <Button Style="{StaticResource MaterialDesignIconButton}"
+                                        ToolTip="Usuń usługę"
                                         Command="{Binding DataContext.DeleteServiceCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                        CommandParameter="{Binding}"/>
+                                        CommandParameter="{Binding}">
+                                    <materialDesign:PackIcon Kind="Delete" Width="20" Height="20"/>
+                                </Button>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -61,17 +77,36 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="0,20,0,0">
-            <Button Content="Dodaj nową usługę" Width="180" Height="30" HorizontalAlignment="Center"
+        <!-- Przycisk dodawania -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="DODAJ NOWĄ USŁUGĘ"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
                     Command="{Binding CreateServiceCommand}"
-                    IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/> 
-        </Border>
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
+                    Margin="0,10,10,10">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Plus" Width="16" Height="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="DODAJ NOWĄ USŁUGĘ"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+        </StackPanel>
 
-        <Grid Grid.Row="0" Grid.RowSpan="3" Background="#80FFFFFF" 
+        <!-- Overlay ładowania -->
+        <Grid Grid.Row="0" Grid.RowSpan="3" 
+              Background="#80000000"
               Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <mah:ProgressRing IsActive="True" Width="50" Height="50"/>
-                <TextBlock Text="Ładowanie..." Margin="0,10,0,0" FontSize="16" FontWeight="SemiBold"/>
+                <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                            IsIndeterminate="True"
+                            Width="40" Height="40"/>
+                <TextBlock Text="Ładowanie..." 
+                           Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                           Margin="0,10,0,0"
+                           Foreground="White"/>
             </StackPanel>
         </Grid>
     </Grid>

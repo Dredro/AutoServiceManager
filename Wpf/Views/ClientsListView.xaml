@@ -22,7 +22,7 @@
 
         <!-- Header and Controls -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,10">
-            <TextBlock Text="Klienci" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Foreground="White" VerticalAlignment="Center"/>
+            <TextBlock Text="Klienci" Style="{StaticResource MaterialDesignHeadline5TextBlock}" VerticalAlignment="Center"/>
 
             <Button Content="Dodaj nowego" Style="{StaticResource MaterialDesignRaisedButton}"
                     HorizontalAlignment="Left" Margin="16,0,0,0"

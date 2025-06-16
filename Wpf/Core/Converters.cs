@@ -60,7 +60,7 @@ public class SumConverter : IMultiValueConverter
                 sum += parsedValue;
             }
         }
-        return sum;
+        return sum.ToString();
     }
 
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
