@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using QuestPDF.Infrastructure;
 using Wpf.Services;
 using Wpf.ViewModel;
 using Wpf.ViewModel.Manager;      
@@ -22,6 +23,7 @@ public partial class App : Application
 
     private void ConfigureServices(IServiceCollection services)
     {
+        QuestPDF.Settings.License = LicenseType.Community;
         services.AddHttpClient();
 
         services.AddSingleton<ApiClient>();
