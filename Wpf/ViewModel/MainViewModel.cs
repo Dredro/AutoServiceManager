@@ -375,8 +375,14 @@ namespace Wpf.ViewModel
             _orderFormViewModel.RequestCreateOrderView -= OnRequestCreateOrderViewFromList;
             _orderFormViewModel.RequestCreateOrderView += OnRequestCreateOrderViewFromList;*/
             
+            _orderFormViewModel.RequestGoBack += OrderFormViewModelOnRequestGoBack;
             _orderFormViewModel.OnExecuteAddNewVehicle += OnRequestCreateVehicleView;
             CurrentContent = _orderFormViewModel;
+        }
+
+        private void OrderFormViewModelOnRequestGoBack()
+        {
+           OnSwitchView("Orders");
         }
 
         private void OnPartCreated()

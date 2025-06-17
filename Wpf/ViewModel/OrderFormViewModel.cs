@@ -20,9 +20,11 @@ namespace Wpf.ViewModel.Worker
         private readonly ServiceService _serviceService;
         private readonly WorkerService _workerService;
         private readonly SparePartService _sparePartService;
-
+    
         private List<ClientDTO> _allClients = new List<ClientDTO>();
         private List<VehicleDTO> _allVehicles = new List<VehicleDTO>();
+        
+        public event Action? RequestGoBack;
 
         private OrderDTO _order;
         public OrderDTO Order
@@ -452,9 +454,10 @@ namespace Wpf.ViewModel.Worker
 
         private void ExecuteCancel()
         {
-            Console.WriteLine("Execute: Cancel");
-            MessageBox.Show("Tworzenie zlecenia anulowane.", "Anuluj", MessageBoxButton.OK, MessageBoxImage.Information);
-            ClearForm();
+            if (MessageBox.Show("Czy na pewno chcesz anulować edycję? Niezapisane zmiany zostaną utracone.", "Anuluj Edycję", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                RequestGoBack?.Invoke(); 
+            }
         }
 
         private bool CanExecuteCancel()
